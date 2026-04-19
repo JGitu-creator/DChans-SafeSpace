@@ -39,12 +39,12 @@ export default function Home() {
   const backgroundImages: Record<string, string> = {
     mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070',
     valley: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560',
-    forest: 'https://images.unsplash.com/photo-1448375033489-c89b8319895c?auto=format&fit=crop&q=80&w=2070',
+    forest: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bcc0?auto=format&fit=crop&q=80&w=2560', // Starry night sky
     desert: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=2070',
   };
 
   const handleUnlock = () => {
-    if (passcode === '1234') {
+    if (passcode === '1122') {
       setIsLocked(false);
     } else {
       alert('Wrong code, mi hermana.');
@@ -211,9 +211,30 @@ export default function Home() {
                       <h2 className="text-5xl md:text-6xl font-black text-white leading-tight italic tracking-tighter">
                         {currentMood.greeting}
                       </h2>
-                    </motion.div>
+                      </motion.div>
 
-                    <AffirmationCard 
+                      {/* Bike Representation */}
+                      <motion.div
+                      key={currentMood.bike}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="mb-6 flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-white"
+                      >
+                      <div className="p-3 bg-white/20 rounded-xl">
+                        <Bike size={32} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-widest text-white/60">Current Gear</p>
+                        <p className="text-xl font-black uppercase italic tracking-tight">{currentMood.bike} Ride</p>
+                      </div>
+                      <div className="ml-auto flex items-center gap-2 text-xs font-bold bg-white text-black px-3 py-1 rounded-full uppercase tracking-tighter">
+                        <Zap size={12} />
+                        <span>Selah Speed</span>
+                      </div>
+                      </motion.div>
+
+                      <AffirmationCard 
+ 
                       affirmation={INITIAL_AFFIRMATION} 
                       accentColor={currentMood.accentColor} 
                     />

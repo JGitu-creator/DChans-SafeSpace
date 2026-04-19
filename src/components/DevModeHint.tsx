@@ -52,9 +52,14 @@ export default function DevModeHint() {
         <p className="text-white/60 italic text-sm mb-4">
           "God is the ultimate Designer, and you are His masterpiece. Every line of code, like every breath, has a purpose."
         </p>
-        <button className="text-white font-bold underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all">
+        <a 
+          href="https://github.com/JGitu-creator/Selah-Ride"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white font-bold underline decoration-white/30 underline-offset-4 hover:decoration-white transition-all"
+        >
           Want to see the full source code?
-        </button>
+        </a>
       </div>
     </div>
   );

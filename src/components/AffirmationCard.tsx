@@ -1,8 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Quote, BookOpen, Lightbulb } from 'lucide-react';
+import { Quote, BookOpen, Lightbulb, Volume2, VolumeX } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
+import { useState, useEffect } from 'react';
 
 interface AffirmationCardProps {
   affirmation: Affirmation;
@@ -10,14 +11,60 @@ interface AffirmationCardProps {
 }
 
 export default function AffirmationCard({ affirmation, accentColor }: AffirmationCardProps) {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
+  const speak = () => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (isSpeaking) {
+        window.speechSynthesis.cancel();
+        setIsSpeaking(false);
+        return;
+      }
+
+      const text = `${affirmation.proverbHook}. ${affirmation.growthWord.word}. ${affirmation.spanishPhrase.phrase}. ${affirmation.deepExegesis}.`;
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Try to find a nice 'British' voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const britishVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Female'));
+      if (britishVoice) utterance.voice = britishVoice;
+      
+      utterance.pitch = 1.1;
+      utterance.rate = 0.9;
+      
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      
+      setIsSpeaking(true);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20"
+      className="relative w-full max-w-2xl bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-white/20"
       style={{ borderLeft: `8px solid ${accentColor}` }}
     >
+      {/* Speech Toggle */}
+      <button 
+        onClick={speak}
+        className="absolute top-6 right-6 p-3 bg-zinc-100 rounded-2xl text-zinc-600 hover:bg-zinc-200 transition-all active:scale-90"
+        title="Listen to Selig"
+      >
+        {isSpeaking ? <VolumeX size={20} className="animate-pulse" /> : <Volume2 size={20} />}
+      </button>
+
       {/* Proverb Hook */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-2 text-zinc-500 uppercase tracking-widest text-xs font-bold">
