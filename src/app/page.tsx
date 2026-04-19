@@ -218,17 +218,22 @@ export default function Home() {
                       key={currentMood.bike}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="mb-6 flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-white"
+                      className="mb-6 flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-3xl p-4 border border-white/20 text-white"
                       >
-                      <div className="p-3 bg-white/20 rounded-xl">
-                        <Bike size={32} />
+                      <div className="relative w-20 h-20 bg-white/20 rounded-2xl overflow-hidden border border-white/30">
+                        <Image 
+                          src="/hadassah-bike.png" 
+                          alt="Hadassah on her bike" 
+                          fill 
+                          className="object-cover"
+                        />
                       </div>
                       <div>
                         <p className="text-xs font-bold uppercase tracking-widest text-white/60">Current Gear</p>
-                        <p className="text-xl font-black uppercase italic tracking-tight">{currentMood.bike} Ride</p>
+                        <p className="text-xl font-black uppercase italic tracking-tight leading-tight">{currentMood.bike} Ride</p>
                       </div>
-                      <div className="ml-auto flex items-center gap-2 text-xs font-bold bg-white text-black px-3 py-1 rounded-full uppercase tracking-tighter">
-                        <Zap size={12} />
+                      <div className="ml-auto flex items-center gap-2 text-xs font-bold bg-white text-black px-4 py-2 rounded-full uppercase tracking-tighter shadow-xl">
+                        <Zap size={14} />
                         <span>Selah Speed</span>
                       </div>
                       </motion.div>
