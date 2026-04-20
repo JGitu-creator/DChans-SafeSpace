@@ -4,20 +4,45 @@
   --font-sans: "Geist", sans-serif;
   --font-mono: "Geist Mono", monospace;
   --font-serif: "Libre Baskerville", serif;
+  --font-hand: "Satisfy", cursive;
 }
 
 :root {
-  --background: #000000;
+  --background: #121212;
   --foreground: #ffffff;
-  --accent-purple: #8b5cf6;
+  --accent-purple: #6d28d9;
   --accent-sky: #0ea5e9;
+  --chrome: #e2e8f0;
 }
 
 @layer base {
   body {
-    @apply bg-black text-white;
+    @apply bg-[#121212] text-white overflow-x-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-overflow-scrolling: touch;
   }
+}
+
+/* Scrapbook Textures */
+.scrapbook-paper {
+  background-color: #fdf6e3;
+  background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
+  position: relative;
+}
+
+.scrapbook-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.05));
+  pointer-events: none;
+}
+
+/* Spiral Binding */
+.spiral-binding {
+  background-image: radial-gradient(circle, #333 2px, transparent 3px);
+  background-size: 20px 20px;
+  width: 20px;
 }
 
 /* Custom Minimalist Styling */
@@ -29,9 +54,13 @@
   scrollbar-width: none;
 }
 
-/* Glassmorphism Refinement */
-.glass {
-  @apply bg-black/40 backdrop-blur-xl border border-white/10;
+/* Neon Glows */
+.glow-purple {
+  box-shadow: 0 0 20px rgba(109, 40, 217, 0.4);
+}
+
+.glow-sky {
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
 }
 
 /* High-end Typography */
@@ -41,4 +70,9 @@ h1, h2, h3, h4 {
 
 .italic-bold {
   @apply font-black italic tracking-tighter uppercase;
+}
+
+/* Hand-written effect */
+.handwritten {
+  font-family: var(--font-hand);
 }

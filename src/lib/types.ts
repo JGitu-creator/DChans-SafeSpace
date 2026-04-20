@@ -10,61 +10,64 @@ export interface UserSettings {
   lastOpened?: Date;
 }
 
-export interface ThemeConfig {
+export type View = 'affirmation' | 'journal' | 'study' | 'pitstop' | 'garage' | 'dev' | 'chat' | 'trail' | 'basket' | 'spanish' | 'midnight';
+
+export interface RouteConfig {
   id: string;
   name: string;
   description: string;
   bike: MotorbikeType;
   terrain: TerrainType;
   accentColor: string;
+  secondaryColor: string; 
   greeting: string;
+  sticker?: string; 
 }
 
-export const MOODS: ThemeConfig[] = [
+export const ROUTES: RouteConfig[] = [
   {
-    id: 'uphill-climb',
-    name: 'Uphill Climb',
-    description: 'When the path is steep and you need courage.',
-    bike: 'adventure',
-    terrain: 'mountain',
-    accentColor: '#8b5cf6', // Purple-500
-    greeting: '¡Hola, Hadassah! For such a time as this.'
-  },
-  {
-    id: 'peaceful-valley',
-    name: 'Peaceful Valley',
-    description: 'A quiet ride to restore your soul.',
-    bike: 'cafe',
-    terrain: 'valley',
-    accentColor: '#0ea5e9', // Sky Blue-500
-    greeting: '¡Bendiciones, querida! Rest in His peace.'
-  },
-  {
-    id: 'midnight-run',
-    name: 'Midnight Run',
-    description: 'Deep reflection under the stars.',
+    id: 'palace-pass',
+    name: 'The Palace Pass',
+    description: 'A royal journey through Esther’s courage.',
     bike: 'harley',
-    terrain: 'forest',
-    accentColor: '#c084fc', // Light Purple
-    greeting: '¡Buenas noches, Hadassah! His faithfulness is your shield.'
+    terrain: 'mountain',
+    accentColor: '#8b5cf6', 
+    secondaryColor: '#f59e0b', 
+    greeting: '¡Hola, Hadassah! Walk with the King today.',
+    sticker: '👑'
   },
   {
-    id: 'desert-speed',
-    name: 'Desert Speed',
-    description: 'Fast, bold, and forward-looking.',
-    bike: 'speed',
-    terrain: 'desert',
-    accentColor: '#38bdf8', // Sky Blue
-    greeting: '¡Hola, mi hermana! The King is with you on the open road.'
+    id: 'bethlehem-trail',
+    name: 'The Bethlehem Trail',
+    description: 'Loyalty and harvest with Ruth.',
+    bike: 'adventure',
+    terrain: 'valley',
+    accentColor: '#10b981', 
+    secondaryColor: '#0ea5e9', 
+    greeting: '¡Bendiciones, mi hermana! He provides in the field.',
+    sticker: '🌾'
   },
   {
-    id: 'neon-future',
-    name: 'Neon Future',
-    description: 'A futuristic ride through digital grace.',
+    id: 'midnight-galaxy',
+    name: 'Midnight Galaxy',
+    description: 'Riding through the stars of His promise.',
     bike: 'futuristic',
     terrain: 'galaxy',
-    accentColor: '#d946ef', // Fuchsia/Purple
-    greeting: '¡Hola, Hadassah! Your future is bright in His hands.'
+    accentColor: '#c084fc', 
+    secondaryColor: '#38bdf8', 
+    greeting: '¡Buenas noches, Hadassah! His Word is your light.',
+    sticker: '✨'
+  },
+  {
+    id: 'chrome-canyon',
+    name: 'Chrome Canyon',
+    description: 'Raw strength in the desert of grace.',
+    bike: 'naked',
+    terrain: 'desert',
+    accentColor: '#38bdf8', 
+    secondaryColor: '#e2e8f0', 
+    greeting: '¡Hola! Courage is your gear on this open road.',
+    sticker: '🏍️'
   }
 ];
 
@@ -87,7 +90,7 @@ export interface EbenezerStone {
   id?: number;
   date: Date;
   note: string;
-  intensity: number; // 0-1
+  intensity: number; 
 }
 
 export interface GratitudeGrain {
