@@ -10,7 +10,7 @@ export interface UserSettings {
   lastOpened?: Date;
 }
 
-export type View = 'affirmation' | 'journal' | 'study' | 'pitstop' | 'garage' | 'dev' | 'chat' | 'trail' | 'basket' | 'spanish' | 'midnight';
+export type View = 'affirmation' | 'journal' | 'study' | 'pitstop' | 'garage' | 'dev' | 'chat' | 'trail' | 'basket' | 'spanish' | 'midnight' | 'thread';
 
 export interface RouteConfig {
   id: string;

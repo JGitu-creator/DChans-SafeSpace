@@ -22,6 +22,7 @@ import RoyalDecree from '@/components/RoyalDecree';
 import AudioHug from '@/components/AudioHug';
 import CharmBracelet from '@/components/CharmBracelet';
 import LoginSequence from '@/components/LoginSequence';
+import GoldenThread from '@/components/GoldenThread';
 
 const LOCK_SCREEN_BIKES = [
   '/hadassah-bike.png',
@@ -31,12 +32,68 @@ const LOCK_SCREEN_BIKES = [
   'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070',
 ];
 
-const INITIAL_AFFIRMATION: Affirmation = {
-  proverbHook: "A journey of a thousand miles begins with a single turn of the key.",
-  growthWord: { word: "Resilience", definition: "The capacity to recover quickly from difficulties; toughness." },
-  spanishPhrase: { phrase: "Eres amada y elegida.", translation: "You are loved and chosen." },
-  deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
-  bibleVerse: "Ruth 1:16"
+const getDailyAffirmation = (routeId: string): Affirmation => {
+  const day = new Date().getDay();
+  const affirmations: Record<number, Affirmation> = {
+    0: {
+      proverbHook: "A quiet heart is a royal sanctuary.",
+      growthWord: { word: "Serenity", definition: "The state of being calm, peaceful, and untroubled." },
+      spanishPhrase: { phrase: "Dios es mi refugio.", translation: "God is my refuge." },
+      deepExegesis: "Like a calm lake reflecting the mountain, let your soul reflect the King's peace today.",
+      bibleVerse: "Psalm 46:10"
+    },
+    1: {
+      proverbHook: "A journey of a thousand miles begins with a single turn of the key.",
+      growthWord: { word: "Resilience", definition: "The capacity to recover quickly from difficulties; toughness." },
+      spanishPhrase: { phrase: "Eres amada y elegida.", translation: "You are loved and chosen." },
+      deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
+      bibleVerse: "Ruth 1:16"
+    },
+    2: {
+      proverbHook: "The hardest roads often lead to the most beautiful vistas.",
+      growthWord: { word: "Persistence", definition: "Firm or obstinate continuance in a course of action in spite of difficulty." },
+      spanishPhrase: { phrase: "Sigue adelante con fe.", translation: "Go forward with faith." },
+      deepExegesis: "The road may be steep, but your gear is divine. Every climb is a lesson in His strength.",
+      bibleVerse: "Isaiah 40:31"
+    },
+    3: {
+      proverbHook: "True beauty is found in the brushstrokes of grace.",
+      growthWord: { word: "Elegance", definition: "The quality of being graceful and stylish in appearance or manner." },
+      spanishPhrase: { phrase: "Gracia sobre gracia.", translation: "Grace upon grace." },
+      deepExegesis: "You are the King's masterpiece. Every detail of your life is being painted with intentional love.",
+      bibleVerse: "Ephesians 2:10"
+    },
+    4: {
+      proverbHook: "Strength isn't just about speed; it's about staying the course.",
+      growthWord: { word: "Fortitude", definition: "Courage in pain or adversity." },
+      spanishPhrase: { phrase: "Fuerte y valiente.", translation: "Strong and courageous." },
+      deepExegesis: "Like Esther entering the court, your courage is your crown. Ride with the authority given to you.",
+      bibleVerse: "Joshua 1:9"
+    },
+    5: {
+      proverbHook: "Rest is not idleness; it is the rhythm of the soul.",
+      growthWord: { word: "Restoration", definition: "The action of returning something to a former owner, place, or condition." },
+      spanishPhrase: { phrase: "Descansa en su amor.", translation: "Rest in His love." },
+      deepExegesis: "The King invites you to a banquet of rest. Lay down the heavy gear and just be His daughter.",
+      bibleVerse: "Matthew 11:28"
+    },
+    6: {
+      proverbHook: "Light always finds a way through the thickest forest.",
+      growthWord: { word: "Luminosity", definition: "Luminous quality." },
+      spanishPhrase: { phrase: "Luz en mi camino.", translation: "Light on my path." },
+      deepExegesis: "Your light shines brightest in the dark valleys. Do not fear the shadows; the Sun of Righteousness is rising.",
+      bibleVerse: "Psalm 119:105"
+    }
+  };
+  return affirmations[day] || affirmations[1];
+};
+
+const NATURE_PAINTINGS: Record<string, string> = {
+  mountain: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=600',
+  valley: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=600',
+  forest: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=600',
+  desert: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=600',
+  galaxy: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&q=80&w=600',
 };
 
 export default function Home() {
@@ -58,11 +115,19 @@ export default function Home() {
   });
 
   const stones = useLiveQuery(() => db.ebenezerStones.toArray()) || [];
+  const journalEntries = useLiveQuery(() => db.journalEntries.toArray()) || [];
+  const dailyAffirmation = getDailyAffirmation(currentRoute.id);
 
   useEffect(() => {
     const interval = setInterval(() => setLockImageIndex((prev) => (prev + 1) % LOCK_SCREEN_BIKES.length), 7000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    // Synchronize current route with preferred bike from settings
+    const route = ROUTES.find(r => r.bike === settings.preferredBike) || ROUTES[1];
+    setCurrentRoute(route);
+  }, [settings.preferredBike]);
 
   useEffect(() => {
     if (!isLocked) {
@@ -101,8 +166,8 @@ export default function Home() {
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentRoute.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
-            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-30 blur-[4px] grayscale" alt="Background" />
-            <div className="absolute inset-0 bg-black/60" />
+            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-60 grayscale-[0.2]" alt="Background" />
+            <div className="absolute inset-0 bg-black/40" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -111,7 +176,7 @@ export default function Home() {
         {isPINAccepted && <LoginSequence onComplete={finishLogin} />}
 
         {isLocked ? (
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[1px]">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
@@ -121,11 +186,11 @@ export default function Home() {
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="Enter Sanctuary" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-2xl tracking-[0.5em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/40 placeholder:tracking-normal placeholder:text-sm" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
                 </div>
-                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Begin to Journal</button>
+                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Begin Journaling</button>
               </div>
-              <div className="flex items-center gap-2 text-white/20 text-[10px] font-black uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-white/40 text-[10px] font-black uppercase tracking-widest">
                 <Lock size={10} /><span>Personal & Protected</span>
               </div>
             </motion.div>
@@ -134,15 +199,14 @@ export default function Home() {
           <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-4 md:px-8">
             <CharmBracelet activeView={activeView} onViewChange={setActiveView} accentColor={currentRoute.accentColor} />
 
-            <div className="flex-1 mt-8">
-              <div className="notebook-container">
-                <div className="spiral-binding">
-                  {Array.from({ length: 24 }).map((_, i) => (
-                    <div key={i} className="spiral-ring" />
-                  ))}
-                </div>
+            <div className="flex-1 mt-8 pb-12">
+              <div className="canvas-container canvas-texture">
+                <div className="canvas-surface" style={{ '--canvas-bg': `${currentRoute.accentColor}10` } as React.CSSProperties}>
+                  {/* Nature Painting Accent */}
+                  <div className="nature-accent top-4 right-4 w-32 h-32 md:w-48 md:h-48 rounded-lg overflow-hidden border-2 border-[#2c1a10] shadow-md rotate-3">
+                    <img src={NATURE_PAINTINGS[currentRoute.terrain]} alt="Nature Painting" className="w-full h-full object-cover" />
+                  </div>
 
-                <div className="notebook-page">
                   <AnimatePresence mode="wait">
                     {activeView === 'affirmation' && (
                       <motion.div key="affirmation-view" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10">
@@ -150,26 +214,26 @@ export default function Home() {
                           <div className="flex items-center gap-4">
                             <span className="text-4xl filter drop-shadow-md">{currentRoute.sticker}</span>
                             <div>
-                              <p className="text-zinc-400 text-[10px] font-black uppercase tracking-[0.4em]">{currentRoute.name}</p>
+                              <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">{currentRoute.name}</p>
                               <h2 className="text-4xl md:text-5xl font-black text-zinc-900 leading-tight italic tracking-tighter handwritten">{currentRoute.greeting}</h2>
                             </div>
                           </div>
                         </div>
                         
-                        <div className="relative scrapbook-paper p-8 rounded-3xl shadow-xl border border-black/5 rotate-[-1deg]">
+                        <div className="relative p-8 rounded-xl shadow-inner border border-black/5 bg-white/40 backdrop-blur-sm">
                           <div className="flex items-center gap-6">
-                            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border-4 border-white shadow-lg flex-shrink-0 rotate-2">
-                              <img src="/hadassah-bike.png" alt="Hadassah" className="w-full h-full object-cover" />
+                            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden border-2 border-[#2c1a10] shadow-lg flex-shrink-0 -rotate-2">
+                              <img src={currentRoute.image} alt="Route View" className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1">
-                              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-600 mb-2">My Gear</p>
-                              <h3 className="text-3xl font-black uppercase italic tracking-tighter text-zinc-800 leading-none mb-2">{currentRoute.bike} Ride</h3>
+                              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-600 mb-2">Current Route</p>
+                              <h3 className="text-2xl font-black uppercase italic tracking-tighter text-zinc-800 leading-none mb-1">{currentRoute.name}</h3>
                               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">{currentRoute.terrain} Path</span>
                             </div>
                           </div>
                         </div>
 
-                        <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
+                        <AffirmationCard affirmation={dailyAffirmation} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
                       </motion.div>
                     )}
 
@@ -179,6 +243,7 @@ export default function Home() {
                     {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
                     {activeView === 'spanish' && <motion.div key="spanish-view" className="w-full"><SpanishSanctuary /></motion.div>}
                     {activeView === 'midnight' && <motion.div key="midnight-view" className="w-full"><MidnightLamp /></motion.div>}
+                    {activeView === 'thread' && <motion.div key="thread-view" className="w-full"><GoldenThread entries={journalEntries} /></motion.div>}
                     {activeView === 'garage' && <motion.div key="garage-view" className="w-full"><Garage settings={settings} onUpdateSettings={(s) => setSettings(p => ({...p, ...s}))} /></motion.div>}
                     {activeView === 'dev' && <motion.div key="dev-view" className="w-full"><DevModeHint /></motion.div>}
                     {activeView === 'pitstop' && <motion.div key="pitstop-view" className="w-full"><PitStop /></motion.div>}

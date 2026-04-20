@@ -64,78 +64,74 @@ export default function AffirmationCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative w-full max-w-2xl bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-10 shadow-2xl border border-white/20 text-zinc-900"
-      style={{ borderLeft: `12px solid ${accentColor}` }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+      className="relative w-full max-w-2xl bg-white/80 backdrop-blur-md rounded-2xl p-8 md:p-12 shadow-xl border border-[#2c1a10]/10 text-zinc-900"
+      style={{ borderTop: `8px solid ${accentColor}` }}
     >
-      {/* Royal Seal if Decree */}
-      {affirmation.isRoyalDecree && (
-        <div className="absolute -top-4 -left-4 bg-amber-400 text-black p-3 rounded-full shadow-2xl border-4 border-white rotate-[-15deg] z-10">
-          <ShieldCheck size={24} />
-        </div>
-      )}
-
       {/* Speech Toggle */}
       <button 
         onClick={speak}
-        className="absolute top-8 right-8 p-4 bg-zinc-100 rounded-2xl text-zinc-600 hover:bg-zinc-200 transition-all active:scale-90 shadow-sm"
+        className="absolute top-6 right-6 p-3 bg-zinc-100/50 rounded-full text-zinc-600 hover:bg-zinc-200 transition-all active:scale-90"
         title="Listen to Selig"
       >
-        {isSpeaking ? <VolumeX size={20} className="animate-pulse" /> : <Volume2 size={20} />}
+        {isSpeaking ? <VolumeX size={18} className="animate-pulse" /> : <Volume2 size={18} />}
       </button>
 
       {/* Proverb Hook */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 mb-3 text-zinc-400 uppercase tracking-[0.3em] text-[10px] font-black">
-          <Quote size={12} />
+      <div className="mb-10 text-center">
+        <div className="flex justify-center items-center gap-2 mb-4 text-zinc-400 uppercase tracking-[0.4em] text-[9px] font-black">
+          <Quote size={10} />
           <span>The Hook</span>
         </div>
-        <p className="text-3xl font-serif italic text-zinc-800 leading-tight tracking-tight">
+        <p className="text-3xl md:text-4xl font-serif italic text-zinc-800 leading-tight tracking-tight handwritten">
           "{affirmation.proverbHook}"
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6 mb-10">
+      <div className="grid md:grid-cols-2 gap-8 mb-10">
         {/* Growth Word */}
-        <div className="p-6 rounded-[2rem] bg-zinc-50 border border-zinc-100 shadow-inner">
-          <div className="flex items-center gap-2 mb-2 text-zinc-400 uppercase tracking-widest text-[9px] font-black">
-            <Lightbulb size={12} />
+        <div className="p-6 rounded-xl bg-zinc-50/50 border border-zinc-200/50 shadow-sm">
+          <div className="flex items-center gap-2 mb-3 text-zinc-400 uppercase tracking-widest text-[9px] font-black">
+            <Lightbulb size={10} />
             <span>Growth Word</span>
           </div>
-          <h3 className="text-2xl font-black text-zinc-900 mb-1 tracking-tighter uppercase italic">{affirmation.growthWord.word}</h3>
-          <p className="text-zinc-500 text-xs leading-relaxed font-medium">
+          <h3 className="text-2xl font-black text-zinc-900 mb-2 tracking-tighter uppercase italic">{affirmation.growthWord.word}</h3>
+          <p className="text-zinc-600 text-sm leading-relaxed font-medium italic">
             {affirmation.growthWord.definition}
           </p>
         </div>
 
         {/* Spanish Phrase */}
-        <div className="px-6 py-6 rounded-[2rem] bg-purple-50 border border-purple-100/50 shadow-inner">
-          <div className="text-purple-700/40 text-[9px] font-black uppercase tracking-widest mb-2">
+        <div className="p-6 rounded-xl bg-purple-50/50 border border-purple-200/50 shadow-sm">
+          <div className="text-purple-700/60 text-[9px] font-black uppercase tracking-widest mb-3">
             <span>Palabra del Día</span>
           </div>
           <p className="text-purple-900 text-xl font-black italic tracking-tighter leading-tight">
             "{affirmation.spanishPhrase.phrase}"
           </p>
-          <p className="text-purple-700/60 text-[10px] font-bold mt-1 uppercase tracking-wider">
-            {affirmation.spanishPhrase.translation}
+          <p className="text-purple-700/60 text-[10px] font-bold mt-2 uppercase tracking-wider">
+            ({affirmation.spanishPhrase.translation})
           </p>
         </div>
       </div>
 
-      {/* Deep Exegesis */}
-      <div className="bg-zinc-50/50 p-8 rounded-[2rem] border border-zinc-100">
+      {/* Deep Road */}
+      <div className="bg-zinc-100/30 p-8 rounded-xl border border-zinc-200/50">
         <div className="flex items-center gap-2 mb-4 text-zinc-400 uppercase tracking-widest text-[9px] font-black">
-          <BookOpen size={12} />
+          <BookOpen size={10} />
           <span>The Deep Road</span>
         </div>
-        <div className="text-zinc-700 text-lg leading-relaxed font-medium mb-6 italic">
+        <div className="text-zinc-800 text-lg leading-relaxed font-medium mb-6 serif-italic">
           {affirmation.deepExegesis}
         </div>
-        <p className="text-right font-black text-zinc-900 uppercase tracking-tighter text-sm italic border-t border-zinc-200 pt-4">
-          — {affirmation.bibleVerse}
-        </p>
+        <div className="flex items-center justify-end gap-3 border-t border-zinc-200/50 pt-4">
+          <span className="h-px w-8 bg-zinc-300"></span>
+          <p className="font-black text-zinc-900 uppercase tracking-tighter text-sm italic">
+            {affirmation.bibleVerse}
+          </p>
+        </div>
       </div>
     </motion.div>
   );
