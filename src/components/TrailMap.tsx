@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mountain, MapPin, Sparkles } from 'lucide-react';
+import { Mountain, MapPin, Sparkles, Navigation } from 'lucide-react';
 import { EbenezerStone } from '@/lib/types';
 
 interface TrailMapProps {
@@ -10,82 +10,96 @@ interface TrailMapProps {
 }
 
 export default function TrailMap({ stones, currentBike }: TrailMapProps) {
-  // Simple layout for the trail
-  const trailPoints = 12; // Length of the visible trail
+  const miles = stones.length * 5;
   
   return (
-    <div className="w-full bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-md overflow-hidden relative shadow-2xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className="w-full bg-white border border-black/5 rounded-[2.5rem] p-10 shadow-2xl relative overflow-hidden">
+      {/* Visual Map Background - Using Ink style for contrast */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')` }} />
+      
+      <div className="flex items-center justify-between mb-12 relative z-10">
         <div>
-          <h3 className="text-xl font-black italic uppercase tracking-tighter text-white">The Topography of Grace</h3>
-          <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Your growth journey with Selig</p>
+          <h3 className="text-3xl font-black italic uppercase tracking-tighter text-zinc-900 leading-none">The Route of Grace</h3>
+          <p className="text-zinc-400 text-[9px] font-black uppercase tracking-[0.4em] mt-2">Visual Growth Journey</p>
         </div>
-        <div className="p-3 bg-white/10 rounded-2xl text-white">
-          <Mountain size={24} />
+        <div className="p-4 bg-zinc-900 rounded-2xl text-white shadow-lg shadow-zinc-900/20 rotate-3">
+          <Navigation size={24} />
         </div>
       </div>
 
-      <div className="relative h-48 w-full flex items-end justify-between px-4">
-        {/* The Winding Path */}
+      <div className="relative h-64 w-full flex items-end justify-between px-6 mb-10">
+        {/* The Winding Trail - High Contrast Ink Path */}
         <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
           <path
-            d="M 0 160 Q 150 100 300 140 T 600 80 T 900 120"
+            d="M 0 200 Q 150 120 300 180 T 600 100 T 900 160"
             fill="none"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth="12"
+            stroke="#2d1b4d"
+            strokeWidth="4"
             strokeLinecap="round"
+            strokeDasharray="8,12"
+            className="opacity-20"
+          />
+          <path
+            d="M 0 200 Q 150 120 300 180 T 600 100 T 900 160"
+            fill="none"
+            stroke="#8b5cf6"
+            strokeWidth="3"
+            strokeLinecap="round"
+            className="opacity-40"
           />
         </svg>
 
-        {/* Ebenezer Stones */}
-        {stones.slice(-10).map((stone, index) => (
+        {/* Ebenezer Stones - High Contrast Pins */}
+        {stones.slice(-8).map((stone, index) => (
           <motion.div
             key={stone.id || index}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: index * 0.1 }}
+            initial={{ scale: 0, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ delay: index * 0.1, type: "spring" }}
             className="relative z-10 flex flex-col items-center group cursor-pointer"
           >
-            {/* The Stone */}
             <div 
-              className={`w-4 h-4 rounded-full border-2 border-white/20 transition-all ${
-                stone.intensity > 0.7 ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.5)]' : 'bg-zinc-600'
-              }`}
+              className={`w-6 h-6 rounded-full border-4 border-white shadow-xl transition-all ${
+                stone.intensity > 0.7 ? 'bg-purple-600' : 'bg-zinc-800'
+              } group-hover:scale-125 group-hover:shadow-purple-500/40`}
             />
             
-            {/* Tooltip */}
-            <div className="absolute bottom-6 opacity-0 group-hover:opacity-100 transition-all bg-white text-black text-[10px] font-bold p-2 rounded-lg whitespace-nowrap shadow-xl">
-              {stone.note}
-              <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white" />
+            <div className="absolute bottom-10 opacity-0 group-hover:opacity-100 transition-all bg-zinc-900 text-white text-[10px] font-black p-3 rounded-2xl whitespace-nowrap shadow-2xl z-50 pointer-events-none">
+              <p className="uppercase tracking-widest">{new Date(stone.date).toLocaleDateString()}</p>
+              <p className="italic text-zinc-400 mt-1">"{stone.note}"</p>
+              <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-zinc-900" />
             </div>
           </motion.div>
         ))}
 
-        {/* Current Bike Position */}
+        {/* Current Position - Her Glowing Icon */}
         <motion.div
-          animate={{
-            y: [0, -10, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+          animate={{ y: [0, -15, 0] }}
+          transition={{ duration: 3, repeat: Infinity }}
           className="relative z-20 flex flex-col items-center"
         >
-          <div className="p-2 bg-white text-black rounded-full shadow-2xl">
-            <Sparkles size={16} />
+          <div className="p-3 bg-purple-600 text-white rounded-full shadow-[0_0_30px_rgba(139,92,246,0.6)] border-4 border-white scale-110">
+            <Sparkles size={20} className="animate-pulse" />
           </div>
-          <span className="text-[8px] font-black uppercase text-white mt-1">You Are Here</span>
+          <span className="text-[10px] font-black uppercase italic text-purple-600 mt-2 tracking-widest">You are here</span>
         </motion.div>
       </div>
 
-      <div className="mt-8 pt-6 border-t border-white/5 flex justify-between items-center text-white/40 text-[10px] font-bold uppercase tracking-widest">
-        <div className="flex gap-4">
-          <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-400" /> Victories</span>
-          <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-zinc-600" /> Honest Struggles</span>
+      <div className="pt-8 border-t border-zinc-100 flex justify-between items-center relative z-10">
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-purple-600 border-2 border-white shadow-sm" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Honesty Stones</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-zinc-800 border-2 border-white shadow-sm" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">The Path</span>
+          </div>
         </div>
-        <span>Total Miles: {stones.length * 5}</span>
+        <div className="flex flex-col items-end">
+          <span className="text-2xl font-black italic tracking-tighter text-zinc-900">{miles}</span>
+          <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Total Miles Gained</span>
+        </div>
       </div>
     </div>
   );

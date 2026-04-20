@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, RefreshCw, Volume2, VolumeX, Bell } from 'lucide-react';
+import { Send, Sparkles, RefreshCw, Volume2, VolumeX, Bell, X } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
 import AffirmationCard from './AffirmationCard';
 
@@ -27,8 +26,8 @@ function ChatMessage({ msg, isSpeaking, onSpeak }: MessageProps) {
     >
       <div className={`relative max-w-[85%] p-5 rounded-[2rem] group shadow-xl ${
         msg.role === 'user' 
-          ? 'bg-white text-black font-medium' 
-          : 'scrapbook-paper text-zinc-800 border border-white/20'
+          ? 'bg-zinc-900 text-white font-medium' 
+          : 'bg-white text-[#2d1b4d] border border-black/5'
       }`}>
         <p className={`text-sm leading-relaxed pr-6 ${msg.role === 'selig' ? 'handwritten text-lg' : ''}`}>
           {msg.content}
@@ -67,7 +66,7 @@ export default function SeligChat() {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         new Notification("Selig's Selah", {
-          body: "¡Hola, Hadassah! I'll reach out to you on the road.",
+          body: "¡Hola, Hadassah! Notifications are active. I'll reach out to you on the road.",
           icon: "/hadassah-bike.png"
         });
       }
@@ -86,7 +85,6 @@ export default function SeligChat() {
       const utterance = new SpeechSynthesisUtterance(text);
       
       const voices = window.speechSynthesis.getVoices();
-      // Force Sweet British Female Voice
       const preferredVoice = voices.find(v => 
         (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
         (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Serena') || v.name.includes('Martha'))
@@ -155,28 +153,28 @@ export default function SeligChat() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col h-[75vh] bg-black/40 backdrop-blur-3xl rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-2xl mx-auto flex flex-col h-[70dvh] bg-white border border-black/5 rounded-[2.5rem] overflow-hidden shadow-2xl relative">
       {/* Chat Header */}
-      <div className="p-8 border-b border-white/5 bg-white/5 flex items-center justify-between">
+      <div className="p-6 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-purple-500/20 rounded-2xl text-purple-400 shadow-lg">
-            <Sparkles size={24} />
+          <div className="p-3 bg-purple-500 rounded-2xl text-white shadow-lg shadow-purple-500/20">
+            <Sparkles size={20} />
           </div>
           <div>
-            <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Talk with Selig</h2>
-            <p className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none mt-1 text-sky-400">PhD Mentorship Active</p>
+            <h2 className="text-lg font-black italic text-zinc-900 uppercase tracking-tighter">Talk with Selig</h2>
+            <p className="text-zinc-400 text-[8px] font-black uppercase tracking-widest leading-none mt-1">Selah Engine v3.1</p>
           </div>
         </div>
         <button 
           onClick={requestNotificationPermission}
-          className="p-3 bg-white/5 rounded-2xl text-white/40 hover:text-white transition-all active:scale-90"
+          className="p-3 bg-white border border-zinc-100 rounded-2xl text-zinc-400 hover:text-purple-600 transition-all active:scale-90"
         >
-          <Bell size={20} />
+          <Bell size={18} />
         </button>
       </div>
 
       {/* Messages area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 no-scrollbar bg-gradient-to-b from-transparent to-purple-900/5">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 no-scrollbar bg-[#fdf6e3]/30">
         {messages.map((msg, i) => (
           <ChatMessage 
             key={i} 
@@ -186,32 +184,28 @@ export default function SeligChat() {
           />
         ))}
         {isLoading && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-3 text-purple-400 text-[10px] font-black uppercase tracking-[0.2em] italic"
-          >
-            <RefreshCw size={14} className="animate-spin" />
+          <div className="flex items-center gap-3 text-purple-600 text-[10px] font-black uppercase tracking-[0.2em] italic ml-2">
+            <RefreshCw size={12} className="animate-spin" />
             Selig is reflecting...
-          </motion.div>
+          </div>
         )}
       </div>
 
-      {/* Input area */}
-      <div className="p-8 bg-black/40 border-t border-white/5 flex gap-4">
+      {/* Input area - Responsive Bottom Sticky */}
+      <div className="p-6 bg-white border-t border-zinc-100 flex gap-3 shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Speak your heart..."
-          className="flex-1 bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-white focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md shadow-inner text-lg"
+          placeholder="Speak freely..."
+          className="flex-1 bg-zinc-50 border border-zinc-100 rounded-2xl px-6 py-4 text-zinc-800 focus:outline-none focus:border-purple-300 transition-all"
         />
         <button
           onClick={handleSend}
           disabled={isLoading || !input.trim()}
-          className="bg-white text-black p-5 rounded-full hover:scale-105 transition-all shadow-xl active:scale-95 disabled:opacity-50 flex-shrink-0"
+          className="bg-zinc-900 text-white p-4 rounded-2xl hover:bg-black transition-all active:scale-95 disabled:opacity-50"
         >
-          <Send size={24} strokeWidth={3} />
+          <Send size={20} strokeWidth={3} />
         </button>
       </div>
     </div>
