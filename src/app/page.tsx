@@ -35,7 +35,7 @@ const INITIAL_AFFIRMATION: Affirmation = {
   proverbHook: "A journey of a thousand miles begins with a single turn of the key.",
   growthWord: { word: "Resilience", definition: "The capacity to recover quickly from difficulties; toughness." },
   spanishPhrase: { phrase: "Eres amada y elegida.", translation: "You are loved and chosen." },
-  deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Like a loyal 'Group Rider', she didn't leave her sister Naomi. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
+  deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
   bibleVerse: "Ruth 1:16"
 };
 
@@ -43,6 +43,7 @@ export default function Home() {
   const [currentRoute, setCurrentRoute] = useState<RouteConfig>(ROUTES[1]); 
   const [isLocked, setIsLocked] = useState(true);
   const [isPINAccepted, setIsPINAccepted] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [activeView, setActiveView] = useState<View>('affirmation');
   const [lockImageIndex, setLockImageIndex] = useState(0);
@@ -102,7 +103,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-black overflow-x-hidden">
-      {/* Dynamic Background Layer */}
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentRoute.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
@@ -118,12 +118,12 @@ export default function Home() {
         )}
 
         {isLocked ? (
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[1px]">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[2px]">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
                 <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
-                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2">Chantal Hadassah</p>
+                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2 text-sky-400">Chantal Hadassah</p>
               </div>
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
@@ -166,8 +166,9 @@ export default function Home() {
 
             <section className="flex-1 flex flex-col items-center p-6 md:p-12 relative min-h-screen bg-black/10">
               <AnimatePresence mode="wait">
-                {rescueMode && <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl bg-blue-500/20 border border-blue-500/30 p-6 rounded-3xl mb-8 flex items-center gap-6"><div className="p-4 bg-sky-500 rounded-2xl text-white"><Zap size={32} /></div><div><h4 className="text-lg font-black italic text-white uppercase tracking-tighter">Search & Rescue</h4><p className="text-sm text-blue-100/70 leading-relaxed font-medium">¡Hola! I went on a ride to find you. Selig is here now.</p></div><button onClick={() => setRescueMode(false)} className="ml-auto text-white/20 hover:text-white"><X /></button></motion.div>}
+                {rescueMode && <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl bg-blue-500/20 border border-blue-500/30 p-6 rounded-3xl mb-8 flex items-center gap-6"><div className="p-4 bg-sky-500 rounded-2xl text-white"><Zap size={32} /></div><div><h4 className="text-lg font-black italic text-white uppercase tracking-tighter">Search & Rescue</h4><p className="text-sm text-blue-100/70 leading-relaxed font-medium">¡Hola! I went on a ride to find you. Selig is here now.</p></div><button onClick={() => setRescueMode(false)} className="ml-auto text-white/20 hover:text-white"><X size={16}/></button></motion.div>}
                 {showDecree && <RoyalDecree message={decreeMessage} onClose={() => setShowDecree(false)} />}
+                
                 {activeView === 'affirmation' && (
                   <motion.div key="affirmation-view" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-2xl flex flex-col gap-10">
                     <div className="flex flex-col gap-4 text-center md:text-left">
@@ -177,26 +178,36 @@ export default function Home() {
                       </div>
                       <h2 className="text-6xl md:text-8xl font-black text-white leading-[0.8] italic tracking-tighter drop-shadow-2xl">{currentRoute.greeting}</h2>
                     </div>
+                    
                     <div className="relative group">
                       <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-sky-400 rounded-[3rem] blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
                       <div className="relative flex items-center gap-6 bg-black/60 backdrop-blur-3xl rounded-[3rem] p-8 border border-white/10 shadow-2xl overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rotate-45 translate-x-16 -translate-y-16" />
+
                         <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] overflow-hidden border-2 border-white/20 shadow-2xl flex-shrink-0">
                           <img src="/hadassah-bike.png" alt="Hadassah" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
                           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-400 mb-2 font-black text-sky-400">Equipped for the journey</p>
                           <h3 className="text-4xl font-black uppercase italic tracking-tighter text-white leading-none mb-3">{currentRoute.bike} Ride</h3>
-                          <div className="flex items-center gap-2 text-white/40"><MapPin size={12} className="text-purple-400" /><span className="text-[10px] font-bold uppercase tracking-[0.2em]">{currentRoute.terrain} Route Active</span></div>
+                          <div className="flex items-center gap-2 text-white/40">
+                            <MapPin size={12} className="text-purple-400" />
+                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{currentRoute.terrain} Route Active</span>
+                          </div>
                         </div>
+                        <div className="hidden md:flex flex-col items-end gap-2 pr-4"><div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white/60"><Zap size={24} /></div><span className="text-[9px] font-black uppercase tracking-widest text-white/20 italic text-sky-400 font-black">Selah Engine v3.0</span></div>
                       </div>
                     </div>
+
                     <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
+                    
                     <div className="lg:hidden mt-10 space-y-6">
                       <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 text-center italic">Change the Route</h3>
                       <MoodSelector currentMoodId={currentRoute.id} onSelectMood={setCurrentRoute} />
                     </div>
                   </motion.div>
                 )}
+
                 {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentRoute.id} settings={settings} /></motion.div>}
                 {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[70vh]"><SeligChat /></motion.div>}
                 {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentRoute.bike} /></motion.div>}
@@ -207,6 +218,7 @@ export default function Home() {
                 {activeView === 'dev' && <motion.div key="dev-view" className="w-full"><DevModeHint /></motion.div>}
                 {activeView === 'pitstop' && <motion.div key="pitstop-view" className="w-full"><PitStop /></motion.div>}
               </AnimatePresence>
+              
               <div className="h-32" />
             </section>
           </div>
