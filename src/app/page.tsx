@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X, LogOut, Code, Sparkles, Heart } from 'lucide-react';
+import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIcon, LogOut, Code, Sparkles, Heart } from 'lucide-react';
 import { ROUTES, RouteConfig, Affirmation, UserSettings, EbenezerStone, View } from '@/lib/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
@@ -99,12 +99,11 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-[#121212] overflow-x-hidden">
-      {/* Tabletop Background Layer */}
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentRoute.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
-            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-30 blur-[4px] grayscale" alt="Background" />
-            <div className="absolute inset-0 bg-black/60" />
+            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-70" alt="Background" />
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px]" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -113,8 +112,7 @@ export default function Home() {
         {isPINAccepted && <LoginSequence onComplete={finishLogin} />}
 
         {isLocked ? (
-          /* Lock Screen */
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[2px]">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[1px]">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
@@ -124,7 +122,7 @@ export default function Home() {
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
                 </div>
                 <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Begin to Journal</button>
               </div>
@@ -134,13 +132,11 @@ export default function Home() {
             </motion.div>
           </motion.div>
         ) : (
-          /* Main Scrapbook View */
           <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-4 md:px-8">
             <CharmBracelet activeView={activeView} onViewChange={setActiveView} accentColor={currentRoute.accentColor} />
 
             <div className="flex-1 mt-8">
               <div className="notebook-container">
-                {/* Spiral Binding Detail */}
                 <div className="spiral-binding">
                   {Array.from({ length: 24 }).map((_, i) => (
                     <div key={i} className="spiral-ring" />
@@ -176,7 +172,7 @@ export default function Home() {
 
                         <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
                         
-                        <div className="mt-12 space-y-8 border-t border-black/5 pt-12">
+                        <div className="mt-12 space-y-8 border-t border-black/5 pt-12 pb-20">
                           <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-300 text-center italic">The Adventure Board</h3>
                           <RouteSelector currentRouteId={currentRoute.id} onSelectRoute={setCurrentRoute} />
                         </div>
@@ -201,8 +197,4 @@ export default function Home() {
       </AnimatePresence>
     </main>
   );
-}
-
-function setIsSidebarOpen(arg0: boolean): void {
-  throw new Error('Function not implemented.');
 }
