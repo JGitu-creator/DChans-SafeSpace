@@ -130,6 +130,13 @@ export interface MajesticDeclaration {
   reference: string;
 }
 
+export interface DesignBadge {
+  id?: number;
+  title: string;
+  date: Date;
+  type: 'architect' | 'designer' | 'engineer';
+}
+
 export const LOGIN_DECLARATIONS: MajesticDeclaration[] = [
   { id: 1, text: "You are a chosen generation, a royal priesthood, a holy nation, His own special people.", reference: "1 Peter 2:9" },
   { id: 2, text: "The King has brought you into His banqueting house, and His banner over you is love.", reference: "Song of Solomon 2:4" },
