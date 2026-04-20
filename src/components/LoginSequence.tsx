@@ -26,7 +26,7 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
   );
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-md p-6 overflow-hidden">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 overflow-hidden">
       <AnimatePresence mode="wait">
         {stage === 'scroll' && (
           <motion.div
@@ -35,39 +35,39 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
             animate={{ height: 'auto', opacity: 1, scaleY: 1 }}
             exit={{ height: 0, opacity: 0, scaleY: 0 }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-lg bg-[#fdf6e3] rounded-sm shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden border-x-[20px] border-[#d4af37] origin-top"
+            className="relative w-full max-w-[95vw] md:max-w-lg bg-[#fdf6e3] rounded-sm shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden border-x-[12px] md:border-x-[20px] border-[#d4af37] origin-top"
             style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/parchment.png")` }}
           >
             {/* Scroll Rolls */}
-            <div className="absolute top-0 bottom-0 left-[-10px] w-6 bg-[#b8860b] shadow-inner" />
-            <div className="absolute top-0 bottom-0 right-[-10px] w-6 bg-[#b8860b] shadow-inner" />
+            <div className="absolute top-0 bottom-0 left-[-8px] md:left-[-10px] w-4 md:w-6 bg-[#b8860b] shadow-inner" />
+            <div className="absolute top-0 bottom-0 right-[-8px] md:right-[-10px] w-4 md:w-6 bg-[#b8860b] shadow-inner" />
 
-            <div className="p-12 flex flex-col items-center text-center gap-10">
+            <div className="p-6 md:p-12 flex flex-col items-center text-center gap-6 md:gap-10">
               <div className="flex flex-col items-center gap-4">
                 <Ichthys />
                 <div className="space-y-1">
-                  <h2 className="text-3xl font-serif font-black text-[#8b4513] uppercase tracking-[0.4em]">
+                  <h2 className="text-2xl md:text-3xl font-serif font-black text-[#8b4513] uppercase tracking-[0.3em] md:tracking-[0.4em]">
                     Royal Decree
                   </h2>
-                  <p className="text-[10px] font-black text-[#d4af37] uppercase tracking-[0.6em]">King Jesus Christ</p>
+                  <p className="text-[9px] md:text-[10px] font-black text-[#d4af37] uppercase tracking-[0.5em] md:tracking-[0.6em]">King Jesus Christ</p>
                 </div>
               </div>
 
-              <div className="space-y-8">
-                <p className="text-3xl font-serif italic text-[#5d2e0a] leading-tight tracking-tight px-4">
+              <div className="space-y-6 md:space-y-8">
+                <p className="text-xl md:text-3xl font-serif italic text-[#5d2e0a] leading-tight tracking-tight px-2 md:px-4">
                   "{declaration.text}"
                 </p>
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-1">
                   <div className="h-px w-12 bg-[#d4af37]/30" />
-                  <p className="text-[10px] font-bold text-[#8b4513]/60 uppercase tracking-widest italic">{declaration.reference}</p>
+                  <p className="text-[9px] md:text-[10px] font-bold text-[#8b4513]/60 uppercase tracking-widest italic">{declaration.reference}</p>
                 </div>
               </div>
 
               <button
                 onClick={() => setStage('name')}
-                className="group relative mt-4 px-14 py-5 bg-[#8b4513] text-white font-black rounded-full hover:bg-[#5d2e0a] transition-all shadow-2xl active:scale-95 overflow-hidden border-2 border-[#d4af37]/20"
+                className="group relative mt-2 md:mt-4 px-8 md:px-14 py-3 md:py-5 bg-[#8b4513] text-white font-black rounded-full hover:bg-[#5d2e0a] transition-all shadow-2xl active:scale-95 overflow-hidden border-2 border-[#d4af37]/20"
               >
-                <span className="relative z-10 uppercase tracking-[0.3em] text-[10px]">I Accept my Identity</span>
+                <span className="relative z-10 uppercase tracking-widest text-[9px] md:text-[10px]">I Accept my Identity</span>
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-amber-400/0 via-amber-400/40 to-amber-400/0"
                   animate={{ x: ['-100%', '100%'] }}

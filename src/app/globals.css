@@ -10,42 +10,66 @@
 :root {
   --background: #121212;
   --foreground: #ffffff;
-  --accent-purple: #6d28d9;
+  --accent-purple: #8b5cf6;
   --accent-sky: #0ea5e9;
-  --chrome: #e2e8f0;
+  --paper: #fdf6e3;
 }
 
 @layer base {
   body {
-    @apply bg-[#121212] text-white overflow-x-hidden;
+    @apply bg-zinc-950 text-white selection:bg-purple-500/30 overflow-x-hidden;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-overflow-scrolling: touch;
   }
 }
 
-/* Scrapbook Textures */
-.scrapbook-paper {
-  background-color: #fdf6e3;
+/* Scrapbook UI Layout */
+.notebook-container {
+  @apply relative mx-auto w-full max-w-4xl min-h-[85vh] bg-[#fdf6e3] shadow-[0_40px_100px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden border border-black/10 transition-all duration-700;
   background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
-  position: relative;
 }
 
-.scrapbook-paper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at center, transparent, rgba(0,0,0,0.05));
-  pointer-events: none;
+.notebook-page {
+  @apply relative w-full h-full p-8 md:p-16 text-zinc-800;
 }
 
-/* Spiral Binding */
+/* Visual Spiral Binding */
 .spiral-binding {
-  background-image: radial-gradient(circle, #333 2px, transparent 3px);
-  background-size: 20px 20px;
-  width: 20px;
+  @apply absolute left-0 top-0 bottom-0 w-10 flex flex-col items-center justify-around py-16 z-50 pointer-events-none;
+  background: linear-gradient(to right, rgba(0,0,0,0.08) 0%, transparent 100%);
 }
 
-/* Custom Minimalist Styling */
+.spiral-ring {
+  @apply w-8 h-4 bg-gradient-to-r from-zinc-800 to-zinc-600 rounded-full shadow-lg border-y border-white/5;
+}
+
+/* Lined Paper Effect */
+.lined-paper {
+  background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+  background-size: 100% 2.8rem;
+  line-height: 2.8rem;
+}
+
+/* Typography */
+.handwritten {
+  font-family: var(--font-hand);
+}
+
+.serif-italic {
+  font-family: var(--font-serif);
+  @apply italic;
+}
+
+/* Luminous Tech Touches */
+.glow-text-purple {
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+}
+
+.glow-box-sky {
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.15);
+}
+
+/* Utils */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -54,25 +78,6 @@
   scrollbar-width: none;
 }
 
-/* Neon Glows */
-.glow-purple {
-  box-shadow: 0 0 20px rgba(109, 40, 217, 0.4);
-}
-
-.glow-sky {
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
-}
-
-/* High-end Typography */
-h1, h2, h3, h4 {
-  @apply tracking-tighter;
-}
-
-.italic-bold {
-  @apply font-black italic tracking-tighter uppercase;
-}
-
-/* Hand-written effect */
-.handwritten {
-  font-family: var(--font-hand);
+.glass-dark {
+  @apply bg-black/60 backdrop-blur-3xl border border-white/10;
 }

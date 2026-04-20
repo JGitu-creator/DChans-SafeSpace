@@ -21,7 +21,8 @@ export interface RouteConfig {
   accentColor: string;
   secondaryColor: string; 
   greeting: string;
-  sticker?: string; 
+  sticker: string; 
+  image: string; // Polaroid image URL
 }
 
 export const ROUTES: RouteConfig[] = [
@@ -34,7 +35,8 @@ export const ROUTES: RouteConfig[] = [
     accentColor: '#8b5cf6', 
     secondaryColor: '#f59e0b', 
     greeting: '¡Hola, Hadassah! Walk with the King today.',
-    sticker: '👑'
+    sticker: '👑',
+    image: 'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=400'
   },
   {
     id: 'bethlehem-trail',
@@ -45,7 +47,8 @@ export const ROUTES: RouteConfig[] = [
     accentColor: '#10b981', 
     secondaryColor: '#0ea5e9', 
     greeting: '¡Bendiciones, mi hermana! He provides in the field.',
-    sticker: '🌾'
+    sticker: '🌾',
+    image: 'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=400'
   },
   {
     id: 'midnight-galaxy',
@@ -56,7 +59,8 @@ export const ROUTES: RouteConfig[] = [
     accentColor: '#c084fc', 
     secondaryColor: '#38bdf8', 
     greeting: '¡Buenas noches, Hadassah! His Word is your light.',
-    sticker: '✨'
+    sticker: '✨',
+    image: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=400'
   },
   {
     id: 'chrome-canyon',
@@ -67,7 +71,8 @@ export const ROUTES: RouteConfig[] = [
     accentColor: '#38bdf8', 
     secondaryColor: '#e2e8f0', 
     greeting: '¡Hola! Courage is your gear on this open road.',
-    sticker: '🏍️'
+    sticker: '🏍️',
+    image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=400'
   }
 ];
 
@@ -124,17 +129,17 @@ export interface Settings extends UserSettings {
   language: 'en' | 'es' | 'mixed';
 }
 
-export interface MajesticDeclaration {
-  id: number;
-  text: string;
-  reference: string;
-}
-
 export interface DesignBadge {
   id?: number;
   title: string;
   date: Date;
   type: 'architect' | 'designer' | 'engineer';
+}
+
+export interface MajesticDeclaration {
+  id: number;
+  text: string;
+  reference: string;
 }
 
 export const LOGIN_DECLARATIONS: MajesticDeclaration[] = [
