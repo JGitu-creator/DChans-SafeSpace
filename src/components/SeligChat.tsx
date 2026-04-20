@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, RefreshCw, Volume2, VolumeX, Bell } from 'lucide-react';
+import { Send, Sparkles, RefreshCw, Volume2, VolumeX, Bell } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
 import AffirmationCard from './AffirmationCard';
 
@@ -25,26 +25,28 @@ function ChatMessage({ msg, isSpeaking, onSpeak }: MessageProps) {
       animate={{ opacity: 1, x: 0 }}
       className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
     >
-      <div className={`relative max-w-[85%] p-4 rounded-2xl group ${
+      <div className={`relative max-w-[85%] p-5 rounded-[2rem] group shadow-xl ${
         msg.role === 'user' 
           ? 'bg-white text-black font-medium' 
-          : 'bg-white/10 text-white border border-white/10'
+          : 'scrapbook-paper text-zinc-800 border border-white/20'
       }`}>
-        <p className="text-sm leading-relaxed pr-6">{msg.content}</p>
+        <p className={`text-sm leading-relaxed pr-6 ${msg.role === 'selig' ? 'handwritten text-lg' : ''}`}>
+          {msg.content}
+        </p>
         
         {msg.role === 'selig' && (
           <button 
             onClick={() => onSpeak(msg.content)}
-            className="absolute top-2 right-2 text-white/20 hover:text-white transition-colors p-1"
+            className="absolute top-3 right-3 text-zinc-400 hover:text-purple-600 transition-colors p-1"
           >
-            {isSpeaking ? <VolumeX size={14} className="animate-pulse" /> : <Volume2 size={14} />}
+            {isSpeaking ? <VolumeX size={16} className="animate-pulse" /> : <Volume2 size={16} />}
           </button>
         )}
       </div>
       
       {msg.affirmation && (
-        <div className="mt-4 w-full">
-          <AffirmationCard affirmation={msg.affirmation} accentColor="#ffffff" />
+        <div className="mt-6 w-full max-w-sm">
+          <AffirmationCard affirmation={msg.affirmation} accentColor="#8b5cf6" />
         </div>
       )}
     </motion.div>
@@ -65,8 +67,8 @@ export default function SeligChat() {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         new Notification("Selig's Selah", {
-          body: "¡Hola, Hadassah! Notifications are active. I'll reach out to you on the road.",
-          icon: "/next.svg"
+          body: "¡Hola, Hadassah! I'll reach out to you on the road.",
+          icon: "/hadassah-bike.png"
         });
       }
     }
@@ -82,8 +84,18 @@ export default function SeligChat() {
       
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
+      
+      const voices = window.speechSynthesis.getVoices();
+      // Force Sweet British Female Voice
+      const preferredVoice = voices.find(v => 
+        (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
+        (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Serena') || v.name.includes('Martha'))
+      );
+      
+      if (preferredVoice) utterance.voice = preferredVoice;
       utterance.pitch = 1.1;
-      utterance.rate = 0.9;
+      utterance.rate = 0.85;
+      
       utterance.onend = () => setCurrentlySpeaking(null);
       setCurrentlySpeaking(text);
       window.speechSynthesis.speak(utterance);
@@ -91,6 +103,7 @@ export default function SeligChat() {
   };
 
   useEffect(() => {
+    window.speechSynthesis.getVoices();
     return () => {
       if (typeof window !== 'undefined') window.speechSynthesis.cancel();
     };
@@ -128,11 +141,11 @@ export default function SeligChat() {
       if (data.proverbHook) {
         setMessages(prev => [...prev, { 
           role: 'selig', 
-          content: "Let's look at the Word for this...", 
+          content: "Let me take that to the Word for you, Hadassah...", 
           affirmation: data 
         }]);
       } else {
-        setMessages(prev => [...prev, { role: 'selig', content: data.text || "I'm with you, Hadassah." }]);
+        setMessages(prev => [...prev, { role: 'selig', content: data.text || "I'm with you, sister." }]);
       }
     } catch (error) {
       setMessages(prev => [...prev, { role: 'selig', content: "I'm taking a moment to pray, mi hermana. Let's try again in a bit." }]);
@@ -142,29 +155,28 @@ export default function SeligChat() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col h-[70vh] bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
+    <div className="w-full max-w-2xl mx-auto flex flex-col h-[75vh] bg-black/40 backdrop-blur-3xl rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl">
       {/* Chat Header */}
-      <div className="p-6 border-b border-white/10 bg-white/5 flex items-center justify-between">
+      <div className="p-8 border-b border-white/5 bg-white/5 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-white/10 rounded-full">
-            <Sparkles className="text-white" size={24} />
+          <div className="p-3 bg-purple-500/20 rounded-2xl text-purple-400 shadow-lg">
+            <Sparkles size={24} />
           </div>
           <div>
-            <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Chat with Selig</h2>
-            <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Your Best Friend</p>
+            <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Talk with Selig</h2>
+            <p className="text-white/40 text-[9px] font-black uppercase tracking-widest leading-none mt-1 text-sky-400">PhD Mentorship Active</p>
           </div>
         </div>
         <button 
           onClick={requestNotificationPermission}
-          className="p-3 bg-white/5 rounded-2xl text-white/40 hover:text-white hover:bg-white/10 transition-all"
-          title="Enable Notifications"
+          className="p-3 bg-white/5 rounded-2xl text-white/40 hover:text-white transition-all active:scale-90"
         >
           <Bell size={20} />
         </button>
       </div>
 
       {/* Messages area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 no-scrollbar bg-gradient-to-b from-transparent to-purple-900/5">
         {messages.map((msg, i) => (
           <ChatMessage 
             key={i} 
@@ -174,28 +186,32 @@ export default function SeligChat() {
           />
         ))}
         {isLoading && (
-          <div className="flex items-center gap-2 text-white/40 text-xs italic font-bold uppercase tracking-widest">
-            <RefreshCw size={12} className="animate-spin" />
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-3 text-purple-400 text-[10px] font-black uppercase tracking-[0.2em] italic"
+          >
+            <RefreshCw size={14} className="animate-spin" />
             Selig is reflecting...
-          </div>
+          </motion.div>
         )}
       </div>
 
       {/* Input area */}
-      <div className="p-6 bg-white/5 border-t border-white/10 flex gap-3">
+      <div className="p-8 bg-black/40 border-t border-white/5 flex gap-4">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          placeholder="Speak freely with Selig..."
-          className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-1 focus:ring-white/30"
+          placeholder="Speak your heart..."
+          className="flex-1 bg-white/5 border border-white/10 rounded-[2rem] px-8 py-5 text-white focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md shadow-inner text-lg"
         />
         <button
           onClick={handleSend}
-          disabled={isLoading}
-          className="bg-white text-black p-4 rounded-2xl hover:bg-zinc-200 transition-all active:scale-95 disabled:opacity-50"
+          disabled={isLoading || !input.trim()}
+          className="bg-white text-black p-5 rounded-full hover:scale-105 transition-all shadow-xl active:scale-95 disabled:opacity-50 flex-shrink-0"
         >
-          <Send size={20} />
+          <Send size={24} strokeWidth={3} />
         </button>
       </div>
     </div>
