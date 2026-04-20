@@ -262,11 +262,10 @@ export default function Home() {
                       className="mb-6 flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-3xl p-4 border border-white/20 text-white"
                     >
                       <div className="relative w-20 h-20 bg-white/20 rounded-2xl overflow-hidden border border-white/30">
-                        <Image 
+                        <img 
                           src="/hadassah-bike.png" 
                           alt="Hadassah on her bike" 
-                          fill 
-                          className="object-cover"
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
