@@ -7,6 +7,7 @@ export interface UserSettings {
   voiceRate: number;
   voicePitch: number;
   preferredBike: MotorbikeType;
+  lastOpened?: Date;
 }
 
 export interface ThemeConfig {
@@ -79,4 +80,32 @@ export interface Affirmation {
   };
   deepExegesis: string;
   bibleVerse: string;
+  isRoyalDecree?: boolean;
+}
+
+export interface EbenezerStone {
+  id?: number;
+  date: Date;
+  note: string;
+  intensity: number; // 0-1
+}
+
+export interface GratitudeGrain {
+  id?: number;
+  date: Date;
+  text: string;
+}
+
+export interface SpanishWord {
+  id?: number;
+  phrase: string;
+  translation: string;
+  context: string;
+}
+
+export interface DesignBadge {
+  id?: number;
+  title: string;
+  date: Date;
+  type: 'architect' | 'designer' | 'engineer';
 }

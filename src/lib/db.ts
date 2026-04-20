@@ -1,31 +1,23 @@
 import Dexie, { Table } from 'dexie';
-
-export interface JournalEntry {
-  id?: number;
-  date: Date;
-  moodId: string;
-  struggle: string;
-  affirmation: string; // The affirmation she received that day
-  thoughts: string;
-}
-
-export interface Settings {
-  id?: number;
-  userName: string;
-  passcode: string;
-  language: 'en' | 'es' | 'mixed';
-  preferredBike: string;
-}
+import { JournalEntry, Settings, EbenezerStone, GratitudeGrain, SpanishWord, DesignBadge } from './types';
 
 export class SelahRideDB extends Dexie {
   journalEntries!: Table<JournalEntry>;
   settings!: Table<Settings>;
+  ebenezerStones!: Table<EbenezerStone>;
+  gratitudeGrains!: Table<GratitudeGrain>;
+  spanishWords!: Table<SpanishWord>;
+  designBadges!: Table<DesignBadge>;
 
   constructor() {
     super('SelahRideDB');
-    this.version(1).stores({
+    this.version(2).stores({
       journalEntries: '++id, date, moodId',
-      settings: '++id'
+      settings: '++id',
+      ebenezerStones: '++id, date',
+      gratitudeGrains: '++id, date',
+      spanishWords: '++id, phrase',
+      designBadges: '++id, title'
     });
   }
 }
