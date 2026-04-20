@@ -11,7 +11,7 @@ interface GarageProps {
 }
 
 export default function Garage({ settings, onUpdateSettings }: GarageProps) {
-  const BIBLE_VERSIONS: BibleVersion[] = ['ESV', 'NIV', 'KJV', 'RV1960'];
+  const BIBLE_VERSIONS: BibleVersion[] = ['ESV', 'NIV', 'KJV', 'MSG'];
   const BIKES: MotorbikeType[] = ['naked', 'cafe', 'harley', 'speed', 'futuristic', 'adventure'];
   const [designInput, setDesignInput] = useState('');
   const [activeTab, setActiveTab] = useState<'tune' | 'gear' | 'canvas'>('tune');
