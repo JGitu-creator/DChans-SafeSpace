@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Heart, MapPin, Sparkles, MessageSquare, Book, Zap, Settings, Code, ShoppingBasket, Compass } from 'lucide-react';
-import { View } from '@/app/page';
+import { View } from '@/lib/types';
 
 interface CharmProps {
   id: View;
