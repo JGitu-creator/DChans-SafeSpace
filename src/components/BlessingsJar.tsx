@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Trash2, Sparkles, ScrollText, X, Archive } from 'lucide-react';
+import { Plus, Trash2, Sparkles, ScrollText, X, Archive, ShoppingBasket } from 'lucide-react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
 
