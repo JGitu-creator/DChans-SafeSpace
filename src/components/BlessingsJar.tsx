@@ -2,14 +2,24 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
-import { Plus, Trash2, Sparkles, ScrollText, X, Archive, ShoppingBasket } from 'lucide-react';
+import { Plus, Trash2, Sparkles, ScrollText, X, Archive, ShoppingBasket, Heart, Star, Bike, Flower, Sun, Cross } from 'lucide-react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+
+const ORIGAMI_SHAPES = [
+  { icon: Heart, color: 'text-pink-400' },
+  { icon: Star, color: 'text-amber-400' },
+  { icon: Bike, color: 'text-sky-400' },
+  { icon: Flower, color: 'text-purple-400' },
+  { icon: Sun, color: 'text-yellow-400' },
+  { icon: Cross, color: 'text-zinc-400' }
+];
 
 export default function BlessingsJar() {
   const [newBlessing, setNewGrain] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showJarContents, setShowJarContents] = useState(false);
+  const [currentShapeIndex, setCurrentShapeIndex] = useState(0);
   
   const blessings = useLiveQuery(() => db.gratitudeGrains.orderBy('date').reverse().toArray()) || [];
   
@@ -19,6 +29,14 @@ export default function BlessingsJar() {
 
   const addBlessing = async () => {
     if (!newBlessing.trim()) return;
+    
+    // Pick a new random shape that isn't the same as the last one
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * ORIGAMI_SHAPES.length);
+    } while (nextIndex === currentShapeIndex);
+    
+    setCurrentShapeIndex(nextIndex);
     setIsAdding(true);
 
     setTimeout(async () => {
@@ -33,25 +51,27 @@ export default function BlessingsJar() {
   };
 
   const foldVariants: Variants = {
-    initial: { scaleY: 1, rotateX: 0, opacity: 0, y: -50 },
+    initial: { scale: 1.5, rotateY: 0, opacity: 0, y: -100 },
     folding: { 
-      scaleY: [1, 0.2, 0.1], 
-      rotateX: [0, 90, 180], 
+      scale: [1.5, 0.8, 0.4], 
+      rotateY: [0, 180, 360], 
       opacity: 1,
-      y: [0, 50, 200],
-      transition: { duration: 0.8, ease: "easeInOut" } as any
+      y: [0, 100, 250],
+      transition: { duration: 0.8, ease: "circIn" } as any
     }
   };
 
   const unfoldVariants: Variants = {
-    initial: { scaleY: 0.1, rotateX: 180, opacity: 0 },
+    initial: { scale: 0.1, rotateY: 180, opacity: 0 },
     unfold: { 
-      scaleY: 1, 
-      rotateX: 0, 
+      scale: 1, 
+      rotateY: 0, 
       opacity: 1,
       transition: { duration: 0.6, ease: "easeOut" } as any
     }
   };
+
+  const CurrentShapeIcon = ORIGAMI_SHAPES[currentShapeIndex].icon;
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col gap-10 text-zinc-900 pb-20 px-4 relative">
@@ -59,27 +79,35 @@ export default function BlessingsJar() {
         <div className="inline-block p-4 bg-purple-500/10 rounded-[2rem] mb-4 border border-purple-500/20 shadow-2xl">
           <Sparkles size={40} className="text-purple-600" />
         </div>
-        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-[#2d1b4d] leading-none">DChan's Blessings Jar</h2>
-        <p className="text-zinc-400 text-[10px] font-black uppercase tracking-[0.4em] mt-2 leading-none">Glean your daily harvest</p>
+        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-[#2d1b4d] leading-none text-sky-400">DChan's Blessings Jar</h2>
+        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest leading-loose">
+          Glean 10 blessings today. <br/>
+          <span className="text-purple-600 italic">"The King has brought me into His jar of love."</span>
+        </p>
       </div>
 
       <div className="relative flex justify-center py-10 scale-110 z-10">
-        {/* The Visual Jar - Refined for High Contrast */}
+        {/* The Visual Jar */}
         <div className="relative w-56 h-72 border-4 border-black/5 rounded-[4rem] bg-white/40 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden transition-all duration-700">
           <div className="absolute top-0 inset-x-0 h-10 bg-gradient-to-b from-zinc-800 to-zinc-900 border-b-2 border-white/10 shadow-xl z-20" />
           
           <div className="absolute top-10 left-6 w-3 h-48 bg-white/20 rounded-full blur-md" />
           <div className="absolute top-10 right-6 w-1 h-32 bg-white/10 rounded-full blur-[2px]" />
 
-          <div className="absolute inset-0 flex flex-wrap-reverse content-start justify-center gap-1 p-8 overflow-hidden">
-            {blessings.slice(0, 40).map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1, rotate: Math.random() * 90 - 45 }}
-                className="w-5 h-8 bg-[#fdf6e3] shadow-lg rounded-sm border-t-4 border-purple-400 flex-shrink-0"
-              />
-            ))}
+          <div className="absolute inset-0 flex flex-wrap-reverse content-start justify-center gap-2 p-8 overflow-hidden">
+            {blessings.slice(0, 30).map((_, i) => {
+              const Shape = ORIGAMI_SHAPES[i % ORIGAMI_SHAPES.length].icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1, rotate: Math.random() * 90 - 45 }}
+                  className={`w-6 h-6 flex items-center justify-center bg-white shadow-sm rounded-lg border border-zinc-100 ${ORIGAMI_SHAPES[i % ORIGAMI_SHAPES.length].color}`}
+                >
+                  <Shape size={12} strokeWidth={3} />
+                </motion.div>
+              );
+            })}
           </div>
 
           <div className="absolute bottom-10 inset-x-0 flex flex-col items-center z-30">
@@ -91,17 +119,22 @@ export default function BlessingsJar() {
             >
               {todayCount}<span className="text-xl text-zinc-400 ml-1">/10</span>
             </motion.span>
-            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-purple-600 mt-1">Today's Grains</span>
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-purple-600 mt-1">Today's Harvest</span>
           </div>
 
+          {/* Animated Falling Origami Shape */}
           <AnimatePresence>
             {isAdding && (
               <motion.div
                 variants={foldVariants}
                 initial="initial"
                 animate="folding"
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-20 bg-white shadow-2xl rounded-sm z-50 border-t-8 border-sky-400 origin-top"
-              />
+                className="absolute top-0 left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
+              >
+                <div className={`p-4 bg-white shadow-2xl rounded-2xl border-2 border-sky-400 ${ORIGAMI_SHAPES[currentShapeIndex].color}`}>
+                  <CurrentShapeIcon size={32} strokeWidth={4} />
+                </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
@@ -111,12 +144,12 @@ export default function BlessingsJar() {
         {!showJarContents ? (
           <motion.div key="input-view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-8 z-10">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-sky-400 rounded-[2.5rem] blur opacity-20 transition duration-1000" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-sky-400 rounded-[2.5rem] blur opacity-20 group-hover:opacity-40 transition duration-1000" />
               <div className="relative bg-white border border-black/5 rounded-[2.5rem] p-8 shadow-2xl flex flex-col gap-6">
                 <textarea
                   value={newBlessing}
                   onChange={(e) => setNewGrain(e.target.value)}
-                  placeholder="What happened today?..."
+                  placeholder="Glean a blessing..."
                   className="w-full bg-transparent text-2xl font-black italic placeholder:text-zinc-200 focus:outline-none min-h-[120px] resize-none leading-tight tracking-tighter text-[#2d1b4d]"
                   onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && addBlessing()}
                 />
@@ -152,7 +185,7 @@ export default function BlessingsJar() {
             <div className="max-w-4xl mx-auto pb-20">
               <div className="flex items-center justify-between mb-16 sticky top-0 z-50 bg-black/80 backdrop-blur-md p-4 rounded-3xl border border-white/5">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-purple-600 rounded-2xl text-white shadow-lg shadow-purple-500/20">
+                  <div className="p-3 bg-purple-500 rounded-2xl text-white shadow-lg shadow-purple-500/20">
                     <Archive size={24} />
                   </div>
                   <div>
