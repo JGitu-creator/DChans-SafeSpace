@@ -2,9 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, RefreshCw, Volume2, VolumeX } from 'lucide-react';
+import { Send, User, Sparkles, RefreshCw, Volume2, VolumeX, Bell } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
 import AffirmationCard from './AffirmationCard';
+
+interface Message {
+  role: 'user' | 'selig';
+  content: string;
+  affirmation?: Affirmation;
+}
 
 interface MessageProps {
   msg: Message;
@@ -53,6 +59,18 @@ export default function SeligChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentlySpeaking, setCurrentlySpeaking] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const requestNotificationPermission = async () => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        new Notification("Selig's Selah", {
+          body: "¡Hola, Hadassah! Notifications are active. I'll reach out to you on the road.",
+          icon: "/next.svg"
+        });
+      }
+    }
+  };
 
   const speak = (text: string) => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -107,7 +125,6 @@ export default function SeligChat() {
 
       const data = await response.json();
       
-      // If Selig returned an affirmation object, show it
       if (data.proverbHook) {
         setMessages(prev => [...prev, { 
           role: 'selig', 
@@ -127,34 +144,37 @@ export default function SeligChat() {
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col h-[70vh] bg-black/20 backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden shadow-2xl">
       {/* Chat Header */}
-      <div className="p-6 border-b border-white/10 bg-white/5 flex items-center gap-4">
-        <div className="p-3 bg-white/10 rounded-full">
-          <Sparkles className="text-white" size={24} />
+      <div className="p-6 border-b border-white/10 bg-white/5 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-white/10 rounded-full">
+            <Sparkles className="text-white" size={24} />
+          </div>
+          <div>
+            <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Chat with Selig</h2>
+            <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Your Best Friend</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Chat with Selig</h2>
-          <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Your Best Friend</p>
-        interface Message {
-          role: 'user' | 'selig';
-          content: string;
-          affirmation?: Affirmation;
-        }
+        <button 
+          onClick={requestNotificationPermission}
+          className="p-3 bg-white/5 rounded-2xl text-white/40 hover:text-white hover:bg-white/10 transition-all"
+          title="Enable Notifications"
+        >
+          <Bell size={20} />
+        </button>
+      </div>
 
-        export default function SeligChat() {
-        ...
-              {/* Messages area */}
-              <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
-                {messages.map((msg, i) => (
-                  <ChatMessage 
-                    key={i} 
-                    msg={msg} 
-                    isSpeaking={currentlySpeaking === msg.content} 
-                    onSpeak={speak} 
-                  />
-                ))}
-                {isLoading && (
-        ...
-          <div className="flex items-center gap-2 text-white/40 text-xs italic">
+      {/* Messages area */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+        {messages.map((msg, i) => (
+          <ChatMessage 
+            key={i} 
+            msg={msg} 
+            isSpeaking={currentlySpeaking === msg.content} 
+            onSpeak={speak} 
+          />
+        ))}
+        {isLoading && (
+          <div className="flex items-center gap-2 text-white/40 text-xs italic font-bold uppercase tracking-widest">
             <RefreshCw size={12} className="animate-spin" />
             Selig is reflecting...
           </div>
