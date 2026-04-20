@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lamp, Moon, Sun, Wind, Heart, Sparkles, Volume2, Bird } from 'lucide-react';
+import { Lamp, Moon, Sun, Wind, Heart, Volume2, Bird } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export default function MidnightLamp() {
@@ -36,17 +36,23 @@ export default function MidnightLamp() {
           const output = e.outputBuffer.getChannelData(0);
           for (let i = 0; i < bufferSize; i++) {
             if (soundType === 'breeze') {
-              output[i] = (Math.random() * 2 - 1) * 0.05; // Soft volume
+              // Soft white noise with low-pass for "Sea Breeze"
+              output[i] = (Math.random() * 2 - 1) * 0.04;
+            } else if (mode === 'morning') {
+              // Morning Birds - delicate FM synthesis
+              const t = ctx.currentTime + (i / ctx.sampleRate);
+              output[i] = Math.sin(t * 2200 + Math.sin(t * 15) * 10) * 0.01;
             } else {
-              // Simple birdsong-like oscillator (very basic synth)
-              output[i] = (Math.sin(i * 0.05) * 0.02);
+              // Peace Mode - deep meditative drone
+              const t = ctx.currentTime + (i / ctx.sampleRate);
+              output[i] = (Math.sin(t * 110) + Math.sin(t * 165)) * 0.02;
             }
           }
         };
 
         const filter = ctx.createBiquadFilter();
         filter.type = soundType === 'breeze' ? 'lowpass' : 'bandpass';
-        filter.frequency.value = soundType === 'breeze' ? 400 : 2500;
+        filter.frequency.value = soundType === 'breeze' ? 300 : mode === 'morning' ? 2000 : 150;
 
         noiseNode.connect(filter);
         filter.connect(ctx.destination);
@@ -75,7 +81,7 @@ export default function MidnightLamp() {
       if (preferredVoice) utterance.voice = preferredVoice;
 
       utterance.pitch = mode === 'morning' ? 1.1 : 0.9;
-      utterance.rate = mode === 'morning' ? 0.85 : 0.7; // Very slow and soothing
+      utterance.rate = mode === 'morning' ? 0.85 : 0.7;
       
       utterance.onstart = () => {
         setIsPlaying(true);
@@ -99,7 +105,6 @@ export default function MidnightLamp() {
 
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-[70vh] p-4 md:p-8 text-zinc-800 pb-32 relative">
-      {/* Visual Breathing Circle for Peace Mode */}
       <AnimatePresence>
         {activeSound !== 'none' && (
           <motion.div
@@ -118,7 +123,7 @@ export default function MidnightLamp() {
 
       <div className="flex justify-center gap-2 mb-12 bg-zinc-200/50 p-1.5 rounded-2xl relative z-10 w-full max-w-[200px]">
         <button
-          onClick={() => setMode('morning')}
+          onClick={() => { setMode('morning'); setActiveSound('none'); if(audioCtxRef.current) audioCtxRef.current.close(); }}
           className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${
             mode === 'morning' ? 'bg-white text-amber-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'
           }`}
@@ -127,7 +132,7 @@ export default function MidnightLamp() {
           <span className="text-[9px] font-black uppercase tracking-widest">Day</span>
         </button>
         <button
-          onClick={() => setMode('night')}
+          onClick={() => { setMode('night'); setActiveSound('none'); if(audioCtxRef.current) audioCtxRef.current.close(); }}
           className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${
             mode === 'night' ? 'bg-white text-purple-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'
           }`}
@@ -188,7 +193,7 @@ export default function MidnightLamp() {
             }`}
           >
             <Wind size={24} className={activeSound === 'breeze' ? 'animate-pulse' : ''} />
-            <span className="text-[8px] font-black uppercase tracking-widest italic">Soft Breeze</span>
+            <span className="text-[8px] font-black uppercase tracking-widest italic">Sea Breeze</span>
           </button>
           
           <button 
@@ -202,6 +207,22 @@ export default function MidnightLamp() {
           </button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {(mode === 'night' && activeSound === 'nature') && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mt-12 p-8 bg-purple-50/50 rounded-2xl border-2 border-purple-100 text-center shadow-xl z-20 backdrop-blur-sm"
+          >
+            <p className="text-purple-900 text-[10px] font-black uppercase tracking-widest mb-4">Selah Breathing Guide</p>
+            <p className="text-purple-800 text-base font-bold leading-loose italic serif-italic">
+              &quot;Breathe in His Grace... <br/> Hold for a moment... <br/> Breathe out your cares.&quot;
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
