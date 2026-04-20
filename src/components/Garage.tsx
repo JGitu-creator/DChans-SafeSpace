@@ -204,7 +204,7 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
         <p>"Thus far the Lord has helped us."</p>
         <div className="flex items-center gap-2 p-3 bg-white/5 rounded-2xl border border-white/5">
           <Zap size={12} className="text-amber-400" />
-          <span>Selah Engine v2.0 Live</span>
+          <span>Selah Engine v3.1 Live</span>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     systemPrompt += `\n\nCRITICAL: Use the ${bibleVersion} Bible version for all verses and exegesis style.`;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash", 
+      model: "gemini-3.1-flash", // Upgraded to the highest 2026 version
       systemInstruction: systemPrompt,
     });
 

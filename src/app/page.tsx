@@ -195,7 +195,7 @@ export default function Home() {
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{currentRoute.terrain} Route Active</span>
                           </div>
                         </div>
-                        <div className="hidden md:flex flex-col items-end gap-2 pr-4"><div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white/60"><Zap size={24} /></div><span className="text-[9px] font-black uppercase tracking-widest text-white/20 italic text-sky-400 font-black">Selah Engine v3.0</span></div>
+                        <div className="hidden md:flex flex-col items-end gap-2 pr-4"><div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white/60"><Zap size={24} /></div><span className="text-[9px] font-black uppercase tracking-widest text-white/20 italic text-sky-400 font-black">Selah Engine v3.1</span></div>
                       </div>
                     </div>
 
