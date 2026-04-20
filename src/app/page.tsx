@@ -35,7 +35,7 @@ const INITIAL_AFFIRMATION: Affirmation = {
   proverbHook: "A journey of a thousand miles begins with a single turn of the key.",
   growthWord: { word: "Resilience", definition: "The capacity to recover quickly from difficulties; toughness." },
   spanishPhrase: { phrase: "Eres amada y elegida.", translation: "You are loved and chosen." },
-  deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Like a loyal 'Group Rider', she didn't leave her sister Naomi. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
+  deepExegesis: "In the story of Ruth, she faced a crossroads. She chose the road to Bethlehem. Today, Hadassah, your loyalty to your true self and your Father is your greatest 'gear'.",
   bibleVerse: "Ruth 1:16"
 };
 
@@ -43,7 +43,6 @@ export default function Home() {
   const [currentRoute, setCurrentRoute] = useState<RouteConfig>(ROUTES[1]); 
   const [isLocked, setIsLocked] = useState(true);
   const [isPINAccepted, setIsPINAccepted] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [activeView, setActiveView] = useState<View>('affirmation');
   const [lockImageIndex, setLockImageIndex] = useState(0);
@@ -98,12 +97,12 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-[#121212] overflow-x-hidden">
+    <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-[#121212] overflow-x-hidden selection:bg-purple-500/30">
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentRoute.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
-            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-70" alt="Background" />
-            <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px]" />
+            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-30 blur-[4px] grayscale" alt="Background" />
+            <div className="absolute inset-0 bg-black/60" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -117,12 +116,12 @@ export default function Home() {
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
                 <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
-                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2">Chantal Hadassah</p>
+                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2 text-sky-400">Chantal Hadassah</p>
               </div>
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
                 </div>
                 <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Begin to Journal</button>
               </div>
@@ -146,7 +145,7 @@ export default function Home() {
                 <div className="notebook-page">
                   <AnimatePresence mode="wait">
                     {activeView === 'affirmation' && (
-                      <motion.div key="affirmation-view" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-10">
+                      <motion.div key="affirmation-view" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10">
                         <div className="flex flex-col gap-4">
                           <div className="flex items-center gap-4">
                             <span className="text-4xl filter drop-shadow-md">{currentRoute.sticker}</span>
@@ -171,16 +170,11 @@ export default function Home() {
                         </div>
 
                         <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
-                        
-                        <div className="mt-12 space-y-8 border-t border-black/5 pt-12 pb-20">
-                          <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-300 text-center italic">The Adventure Board</h3>
-                          <RouteSelector currentRouteId={currentRoute.id} onSelectRoute={setCurrentRoute} />
-                        </div>
                       </motion.div>
                     )}
 
                     {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentRoute.id} settings={settings} /></motion.div>}
-                    {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[60vh]"><SeligChat /></motion.div>}
+                    {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[70vh]"><SeligChat /></motion.div>}
                     {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentRoute.bike} /></motion.div>}
                     {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
                     {activeView === 'spanish' && <motion.div key="spanish-view" className="w-full"><SpanishSanctuary /></motion.div>}

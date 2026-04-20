@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, Book, Volume2, Bike, Save, Shield, HardHat, Footprints, Code, Palette, Zap, Hammer, Swords, CheckCircle2 } from 'lucide-react';
 import { BibleVersion, MotorbikeType, UserSettings } from '@/lib/types';
 import { useState, useEffect } from 'react';

@@ -13,7 +13,7 @@
   --accent-purple: #8b5cf6;
   --accent-sky: #0ea5e9;
   --paper: #fdf6e3;
-  --ink: #2d1b4d; /* Deep Purple Ink for readability */
+  --ink: #2d1b4d; /* Deep Purple Ink for high readability */
 }
 
 @layer base {
@@ -26,7 +26,7 @@
 
 /* Scrapbook UI Layout - Fixed for high contrast */
 .notebook-container {
-  @apply relative mx-auto w-full max-w-4xl min-h-[85vh] bg-[#fdf6e3] shadow-[0_40px_100px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden border border-black/10 transition-all duration-700;
+  @apply relative mx-auto w-full max-w-4xl min-h-[90dvh] bg-[#fdf6e3] shadow-[0_40px_100px_rgba(0,0,0,0.8)] rounded-[2.5rem] overflow-hidden border border-black/10 transition-all duration-700;
   background-image: url("https://www.transparenttextures.com/patterns/pinstriped-suit.png");
 }
 
@@ -82,14 +82,14 @@
 }
 
 .glass-dark {
-  @apply bg-black/80 backdrop-blur-xl border border-white/20; /* Darker glass for text readability */
+  @apply bg-black/80 backdrop-blur-3xl border border-white/20; 
 }
 
-/* Input Highlighting */
+/* Input Highlighting - Fix for 'white on white' */
 input, textarea {
-  @apply text-inherit placeholder:text-zinc-400;
+  @apply text-inherit placeholder:text-zinc-500 border border-zinc-200 bg-white/50 backdrop-blur-sm rounded-xl px-4 py-2;
 }
 
 .notebook-page input, .notebook-page textarea {
-  @apply text-[#2d1b4d] placeholder:text-[#2d1b4d]/30;
+  @apply text-[#2d1b4d] placeholder:text-[#2d1b4d]/30 border-[#2d1b4d]/10 bg-white/20;
 }
