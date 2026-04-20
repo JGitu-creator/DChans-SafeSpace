@@ -58,32 +58,34 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 text-white min-h-screen">
-      <div className="flex flex-col gap-2 mb-12 border-l-4 border-white/20 pl-6 py-2">
-        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white/90">
+    <div className="w-full max-w-4xl mx-auto p-4 md:p-6 text-[#2d1b4d] min-h-screen">
+      {/* Diary Header */}
+      <div className="flex flex-col gap-2 mb-12 border-l-4 border-purple-500/20 pl-6 py-2">
+        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-purple-900">
           Chantal's Road Log
         </h2>
-        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">
+        <p className="text-zinc-500 text-xs font-bold uppercase tracking-widest">
           Personal Journal & Calendar
         </p>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-12 backdrop-blur-md">
+      {/* Calendar Strip */}
+      <div className="bg-white p-6 mb-12 rounded-[2rem] shadow-xl border border-black/5">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2 text-white/60 font-bold uppercase text-[10px] tracking-widest">
+          <div className="flex items-center gap-2 text-zinc-400 font-bold uppercase text-[10px] tracking-widest">
             <CalendarIcon size={14} />
             <span>Selah Calendar</span>
           </div>
-          <span className="text-xs font-bold text-white/20 uppercase">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+          <span className="text-xs font-bold text-zinc-300 uppercase">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
         </div>
         <div className="grid grid-cols-7 gap-2">
           {Array.from({ length: 7 }).map((_, i) => (
             <div key={i} className="flex flex-col items-center gap-2">
-              <span className="text-[8px] font-black text-white/20 uppercase tracking-tighter">
+              <span className="text-[8px] font-black text-zinc-400 uppercase tracking-tighter">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][i]}
               </span>
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold border transition-all ${
-                i === new Date().getDay() ? 'bg-white text-black border-white' : 'bg-white/5 border-white/5 text-white/40'
+                i === new Date().getDay() ? 'bg-purple-600 text-white border-purple-600 shadow-lg shadow-purple-500/20' : 'bg-zinc-50 border-zinc-100 text-zinc-400'
               }`}>
                 {new Date().getDate() - new Date().getDay() + i}
               </div>
@@ -94,14 +96,14 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
 
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-3">
-          <div className="p-3 bg-white/10 rounded-2xl">
-            <PenTool size={20} className="text-white" />
+          <div className="p-3 bg-purple-500/10 rounded-2xl">
+            <PenTool size={20} className="text-purple-600" />
           </div>
-          <h3 className="text-xl font-bold italic text-white/80 uppercase tracking-tighter">New Entry</h3>
+          <h3 className="text-xl font-bold italic text-purple-900 uppercase tracking-tighter">New Entry</h3>
         </div>
         <button 
           onClick={() => setIsAdding(!isAdding)}
-          className="bg-white text-black p-4 rounded-2xl hover:scale-105 transition-all shadow-2xl active:scale-95"
+          className="bg-zinc-900 text-white p-4 rounded-2xl hover:scale-105 transition-all shadow-2xl active:scale-95"
         >
           {isAdding ? <Plus className="rotate-45" /> : <Plus />}
         </button>
@@ -115,7 +117,7 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
             exit={{ opacity: 0, y: -20 }}
             className="mb-12 overflow-hidden"
           >
-            <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/20 shadow-2xl text-zinc-900 relative">
+            <div className="bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-8 border border-purple-100 shadow-2xl text-[#2d1b4d] relative">
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-[2.5rem]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')` }} />
               
               <div className="flex items-center gap-2 mb-6 text-zinc-400 uppercase tracking-widest text-[10px] font-black">
@@ -160,7 +162,7 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
               </span>
             </div>
             <AffirmationCard affirmation={lastAffirmation} accentColor="#10b981" />
-            <button onClick={() => setLastAffirmation(null)} className="mt-6 text-white/30 text-xs font-bold hover:text-white transition-colors block mx-auto uppercase tracking-widest border-b border-white/10 pb-1">
+            <button onClick={() => setLastAffirmation(null)} className="mt-6 text-zinc-400 text-xs font-bold hover:text-purple-600 transition-colors block mx-auto uppercase tracking-widest border-b border-zinc-100 pb-1">
               Dismiss and continue
             </button>
           </motion.div>
@@ -173,37 +175,45 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
             key={entry.id}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white/5 border border-white/5 backdrop-blur-sm rounded-[2rem] p-8 hover:bg-white/10 transition-all group relative overflow-hidden"
+            className="bg-white border border-black/5 rounded-[2.5rem] p-8 hover:shadow-xl transition-all group relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-all">
-              <button onClick={() => entry.id && db.journalEntries.delete(entry.id)} className="text-white/20 hover:text-red-400 p-2">
+              <button onClick={() => entry.id && db.journalEntries.delete(entry.id)} className="text-zinc-300 hover:text-red-500 p-2">
                 <Trash2 size={18} />
               </button>
             </div>
             
             <div className="flex items-center gap-4 mb-6">
-              <div className="bg-white/10 px-4 py-2 rounded-full text-white/60 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+              <div className="bg-zinc-50 px-4 py-2 rounded-full text-zinc-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
                 <CalendarIcon size={12} />
                 <span>{entry.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
               </div>
-              <span className="bg-white/5 px-3 py-1 rounded-full text-white/20 text-[8px] font-bold uppercase italic tracking-tighter">
+              <span className="text-purple-600/40 text-[8px] font-black uppercase italic tracking-tighter">
                 {entry.moodId.replace('-', ' ')}
               </span>
             </div>
             
-            <h4 className="text-2xl font-black text-white/90 italic tracking-tight leading-tight mb-4 pr-12">
+            <h4 className="text-2xl font-black text-zinc-800 italic tracking-tight leading-tight mb-4 pr-12">
               "{entry.struggle}"
             </h4>
             
             {entry.thoughts && (
-              <div className="pt-4 border-t border-white/5">
-                <p className="text-white/40 text-sm italic font-medium leading-relaxed">
+              <div className="pt-4 border-t border-zinc-50">
+                <p className="text-zinc-500 text-sm italic font-medium leading-relaxed">
                   {entry.thoughts}
                 </p>
               </div>
             )}
           </motion.div>
         ))}
+        {entries?.length === 0 && !isAdding && (
+          <div className="text-center py-32 border-2 border-dashed border-zinc-200 rounded-[3rem]">
+            <div className="text-zinc-200 mb-4 flex justify-center"><PenTool size={48} /></div>
+            <p className="text-zinc-300 text-sm font-bold uppercase italic tracking-widest">
+              The road is open, Chantal. Start your log when you're ready.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
