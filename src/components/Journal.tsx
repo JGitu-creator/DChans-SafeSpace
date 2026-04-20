@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, JournalEntry } from '@/lib/db';
+import { db } from '@/lib/db';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, Plus, Trash2, Calendar as CalendarIcon, RefreshCw, BookOpen, PenTool } from 'lucide-react';
-import { Affirmation } from '@/lib/types';
+import { Affirmation, JournalEntry } from '@/lib/types';
 import AffirmationCard from '@/components/AffirmationCard';
 
 export default function Journal({ currentMoodId }: { currentMoodId: string }) {

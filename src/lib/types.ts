@@ -103,6 +103,22 @@ export interface SpanishWord {
   context: string;
 }
 
+export interface JournalEntry {
+  id?: number;
+  date: Date;
+  moodId: string;
+  struggle: string;
+  affirmation: string;
+  thoughts: string;
+}
+
+export interface Settings extends UserSettings {
+  id?: number;
+  userName: string;
+  passcode: string;
+  language: 'en' | 'es' | 'mixed';
+}
+
 export interface DesignBadge {
   id?: number;
   title: string;
