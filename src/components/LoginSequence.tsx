@@ -153,7 +153,7 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40 group-hover:text-purple-400 transition-all ml-[0.8em]">
-                      Enter Sanctuary
+                      Begin to Journal
                     </span>
                     <Sparkles size={16} className="text-purple-400 group-hover:animate-pulse" />
                   </div>
