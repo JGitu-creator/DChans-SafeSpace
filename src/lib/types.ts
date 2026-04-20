@@ -1,6 +1,6 @@
 export type MotorbikeType = 'naked' | 'cafe' | 'harley' | 'speed' | 'futuristic' | 'adventure';
 export type TerrainType = 'mountain' | 'forest' | 'desert' | 'sunset' | 'valley' | 'galaxy' | 'ocean';
-export type BibleVersion = 'ESV' | 'NIV' | 'KJV' | 'RV1960';
+export type BibleVersion = 'ESV' | 'NIV' | 'KJV' | 'MSG';
 
 export interface UserSettings {
   bibleVersion: BibleVersion;
@@ -27,7 +27,7 @@ export const MOODS: ThemeConfig[] = [
     description: 'When the path is steep and you need courage.',
     bike: 'adventure',
     terrain: 'mountain',
-    accentColor: '#ef4444', 
+    accentColor: '#8b5cf6', // Purple-500
     greeting: '¡Hola, Hadassah! For such a time as this.'
   },
   {
@@ -36,7 +36,7 @@ export const MOODS: ThemeConfig[] = [
     description: 'A quiet ride to restore your soul.',
     bike: 'cafe',
     terrain: 'valley',
-    accentColor: '#10b981', 
+    accentColor: '#0ea5e9', // Sky Blue-500
     greeting: '¡Bendiciones, querida! Rest in His peace.'
   },
   {
@@ -45,7 +45,7 @@ export const MOODS: ThemeConfig[] = [
     description: 'Deep reflection under the stars.',
     bike: 'harley',
     terrain: 'forest',
-    accentColor: '#6366f1', 
+    accentColor: '#c084fc', // Light Purple
     greeting: '¡Buenas noches, Hadassah! His faithfulness is your shield.'
   },
   {
@@ -54,7 +54,7 @@ export const MOODS: ThemeConfig[] = [
     description: 'Fast, bold, and forward-looking.',
     bike: 'speed',
     terrain: 'desert',
-    accentColor: '#f59e0b', 
+    accentColor: '#38bdf8', // Sky Blue
     greeting: '¡Hola, mi hermana! The King is with you on the open road.'
   },
   {
@@ -63,7 +63,7 @@ export const MOODS: ThemeConfig[] = [
     description: 'A futuristic ride through digital grace.',
     bike: 'futuristic',
     terrain: 'galaxy',
-    accentColor: '#ec4899', 
+    accentColor: '#d946ef', // Fuchsia/Purple
     greeting: '¡Hola, Hadassah! Your future is bright in His hands.'
   }
 ];
@@ -94,6 +94,7 @@ export interface GratitudeGrain {
   id?: number;
   date: Date;
   text: string;
+  type: 'gratitude' | 'word';
 }
 
 export interface SpanishWord {
@@ -101,6 +102,7 @@ export interface SpanishWord {
   phrase: string;
   translation: string;
   context: string;
+  type: 'Spanish' | 'English';
 }
 
 export interface JournalEntry {

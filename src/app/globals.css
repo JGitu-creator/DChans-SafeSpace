@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+  --font-serif: "Libre Baskerville", serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent-purple: #8b5cf6;
+  --accent-sky: #0ea5e9;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-black text-white;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Minimalist Styling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism Refinement */
+.glass {
+  @apply bg-black/40 backdrop-blur-xl border border-white/10;
+}
+
+/* High-end Typography */
+h1, h2, h3, h4 {
+  @apply tracking-tighter;
+}
+
+.italic-bold {
+  @apply font-black italic tracking-tighter uppercase;
 }
