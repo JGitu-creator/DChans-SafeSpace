@@ -124,9 +124,15 @@ export interface Settings extends UserSettings {
   language: 'en' | 'es' | 'mixed';
 }
 
-export interface DesignBadge {
-  id?: number;
-  title: string;
-  date: Date;
-  type: 'architect' | 'designer' | 'engineer';
+export interface MajesticDeclaration {
+  id: number;
+  text: string;
+  reference: string;
 }
+
+export const LOGIN_DECLARATIONS: MajesticDeclaration[] = [
+  { id: 1, text: "You are a chosen generation, a royal priesthood, a holy nation, His own special people.", reference: "1 Peter 2:9" },
+  { id: 2, text: "The King has brought you into His banqueting house, and His banner over you is love.", reference: "Song of Solomon 2:4" },
+  { id: 3, text: "You are fearfully and wonderfully made; marvelous are the King's works.", reference: "Psalm 139:14" },
+  { id: 4, text: "The King of kings has called you by name; you are His.", reference: "Isaiah 43:1" }
+];

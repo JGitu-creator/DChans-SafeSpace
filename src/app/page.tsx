@@ -21,6 +21,7 @@ import MidnightLamp from '@/components/MidnightLamp';
 import RoyalDecree from '@/components/RoyalDecree';
 import AudioHug from '@/components/AudioHug';
 import CharmBracelet from '@/components/CharmBracelet';
+import LoginSequence from '@/components/LoginSequence';
 
 const LOCK_SCREEN_BIKES = [
   '/hadassah-bike.png',
@@ -41,6 +42,7 @@ const INITIAL_AFFIRMATION: Affirmation = {
 export default function Home() {
   const [currentRoute, setCurrentRoute] = useState<RouteConfig>(ROUTES[1]); 
   const [isLocked, setIsLocked] = useState(true);
+  const [isPINAccepted, setIsPINAccepted] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [activeView, setActiveView] = useState<View>('affirmation');
   const [lockImageIndex, setLockImageIndex] = useState(0);
@@ -85,39 +87,53 @@ export default function Home() {
   };
 
   const handleUnlock = () => {
-    if (passcode === '1122') setIsLocked(false);
-    else { alert('Wrong code, mi hermana.'); setPasscode(''); }
+    if (passcode === '1122') {
+      setIsPINAccepted(true);
+    } else { 
+      alert('Wrong code, mi hermana.'); 
+      setPasscode(''); 
+    }
+  };
+
+  const finishLogin = () => {
+    setIsLocked(false);
+    setIsPINAccepted(false);
   };
 
   return (
     <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-black overflow-x-hidden">
+      {/* Dynamic Background Layer */}
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentRoute.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
             <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentRoute.terrain]} className="w-full h-full object-cover opacity-70" alt="Background" />
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-[0.5px]" />
+            <div className="absolute inset-0 bg-black/20 backdrop-blur-[0.5px]" />
           </motion.div>
         </AnimatePresence>
       </div>
 
       <AnimatePresence>
+        {isPINAccepted && (
+          <LoginSequence onComplete={finishLogin} />
+        )}
+
         {isLocked ? (
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[2px]">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[1px]">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
-                <h1 className="text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
-                <p className="text-white/60 text-xs font-black uppercase tracking-[0.4em] leading-none text-sky-400">The Highway of Holiness</p>
+                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
+                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2">Chantal Hadassah</p>
               </div>
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-4xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/10" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
                 </div>
-                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Start the Ride</button>
+                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Enter the Sanctuary</button>
               </div>
               <div className="flex items-center gap-2 text-white/20 text-[10px] font-black uppercase tracking-widest">
-                <Lock size={10} /><span>Protected for Chantal Hadassah</span>
+                <Lock size={10} /><span>Personal & Protected</span>
               </div>
             </motion.div>
           </motion.div>
@@ -152,7 +168,6 @@ export default function Home() {
               <AnimatePresence mode="wait">
                 {rescueMode && <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl bg-blue-500/20 border border-blue-500/30 p-6 rounded-3xl mb-8 flex items-center gap-6"><div className="p-4 bg-sky-500 rounded-2xl text-white"><Zap size={32} /></div><div><h4 className="text-lg font-black italic text-white uppercase tracking-tighter">Search & Rescue</h4><p className="text-sm text-blue-100/70 leading-relaxed font-medium">¡Hola! I went on a ride to find you. Selig is here now.</p></div><button onClick={() => setRescueMode(false)} className="ml-auto text-white/20 hover:text-white"><X /></button></motion.div>}
                 {showDecree && <RoyalDecree message={decreeMessage} onClose={() => setShowDecree(false)} />}
-                
                 {activeView === 'affirmation' && (
                   <motion.div key="affirmation-view" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="w-full max-w-2xl flex flex-col gap-10">
                     <div className="flex flex-col gap-4 text-center md:text-left">
@@ -162,35 +177,26 @@ export default function Home() {
                       </div>
                       <h2 className="text-6xl md:text-8xl font-black text-white leading-[0.8] italic tracking-tighter drop-shadow-2xl">{currentRoute.greeting}</h2>
                     </div>
-                    
                     <div className="relative group">
                       <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-sky-400 rounded-[3rem] blur opacity-30 group-hover:opacity-50 transition duration-1000"></div>
                       <div className="relative flex items-center gap-6 bg-black/60 backdrop-blur-3xl rounded-[3rem] p-8 border border-white/10 shadow-2xl overflow-hidden">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rotate-45 translate-x-16 -translate-y-16" />
-
                         <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] overflow-hidden border-2 border-white/20 shadow-2xl flex-shrink-0">
                           <img src="/hadassah-bike.png" alt="Hadassah" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-400 mb-2 font-black">Equipped for the journey</p>
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-400 mb-2 font-black text-sky-400">Equipped for the journey</p>
                           <h3 className="text-4xl font-black uppercase italic tracking-tighter text-white leading-none mb-3">{currentRoute.bike} Ride</h3>
-                          <div className="flex items-center gap-2 text-white/40">
-                            <MapPin size={12} className="text-purple-400" />
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{currentRoute.terrain} Route Active</span>
-                          </div>
+                          <div className="flex items-center gap-2 text-white/40"><MapPin size={12} className="text-purple-400" /><span className="text-[10px] font-bold uppercase tracking-[0.2em]">{currentRoute.terrain} Route Active</span></div>
                         </div>
                       </div>
                     </div>
-
                     <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
-                    
                     <div className="lg:hidden mt-10 space-y-6">
                       <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 text-center italic">Change the Route</h3>
                       <MoodSelector currentMoodId={currentRoute.id} onSelectMood={setCurrentRoute} />
                     </div>
                   </motion.div>
                 )}
-
                 {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentRoute.id} settings={settings} /></motion.div>}
                 {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[70vh]"><SeligChat /></motion.div>}
                 {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentRoute.bike} /></motion.div>}
@@ -201,7 +207,6 @@ export default function Home() {
                 {activeView === 'dev' && <motion.div key="dev-view" className="w-full"><DevModeHint /></motion.div>}
                 {activeView === 'pitstop' && <motion.div key="pitstop-view" className="w-full"><PitStop /></motion.div>}
               </AnimatePresence>
-              
               <div className="h-32" />
             </section>
           </div>
