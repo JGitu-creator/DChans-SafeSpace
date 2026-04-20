@@ -3,15 +3,25 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X, LogOut, Code, Sparkles } from 'lucide-react';
-import { MOODS, ThemeConfig, Affirmation } from '@/lib/types';
+import { MOODS, ThemeConfig, Affirmation, UserSettings } from '@/lib/types';
 import MoodSelector from '@/components/MoodSelector';
 import AffirmationCard from '@/components/AffirmationCard';
 import Journal from '@/components/Journal';
 import PitStop from '@/components/PitStop';
 import DevModeHint from '@/components/DevModeHint';
 import SeligChat from '@/components/SeligChat';
+import Garage from '@/components/Garage';
+import Image from 'next/image';
 
 type View = 'affirmation' | 'journal' | 'study' | 'pitstop' | 'garage' | 'dev' | 'chat';
+
+const LOCK_SCREEN_BIKES = [
+  'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=2070', // Harley
+  'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=2070', // Sport
+  'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=2070', // Cafe
+  'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070', // Adventure
+  'https://images.unsplash.com/photo-1449491023939-02c9ab99407d?auto=format&fit=crop&q=80&w=2070', // Futuristic concept
+];
 
 // Mock initial affirmation
 const INITIAL_AFFIRMATION: Affirmation = {
@@ -34,13 +44,31 @@ export default function Home() {
   const [passcode, setPasscode] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState<View>('affirmation');
+  const [lockImageIndex, setLockImageIndex] = useState(0);
+  const [settings, setSettings] = useState<UserSettings>({
+    bibleVersion: 'ESV',
+    voiceRate: 0.9,
+    voicePitch: 1.1,
+    preferredBike: 'adventure',
+  });
 
-  // Background mapping
+  // Rotate lock screen images
+  useEffect(() => {
+    if (isLocked) {
+      const interval = setInterval(() => {
+        setLockImageIndex((prev) => (prev + 1) % LOCK_SCREEN_BIKES.length);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [isLocked]);
+
+  // Background mapping - Higher resolution and clearer
   const backgroundImages: Record<string, string> = {
-    mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070',
+    mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2560',
     valley: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=2560',
-    forest: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bcc0?auto=format&fit=crop&q=80&w=2560', // Starry night sky
-    desert: 'https://images.unsplash.com/photo-1473580044384-7ba9967e16a0?auto=format&fit=crop&q=80&w=2070',
+    forest: 'https://images.unsplash.com/photo-1506318137071-a8e063b4bcc0?auto=format&fit=crop&q=80&w=2560', 
+    desert: 'https://images.unsplash.com/photo-1444491741275-3747c53c99b4?auto=format&fit=crop&q=80&w=2560',
+    galaxy: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2560',
   };
 
   const handleUnlock = () => {
@@ -52,22 +80,28 @@ export default function Home() {
     }
   };
 
+  const updateSettings = (newSettings: Partial<UserSettings>) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+  };
+
   return (
     <main className="relative min-h-screen w-full overflow-hidden font-sans text-zinc-900 bg-zinc-950">
       {/* Dynamic Background */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentMood.terrain}
+            key={isLocked ? `lock-${lockImageIndex}` : currentMood.terrain}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${backgroundImages[currentMood.terrain]})` }}
+            style={{ 
+              backgroundImage: `url(${isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentMood.terrain]})` 
+            }}
           >
             {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -184,6 +218,13 @@ export default function Home() {
                   <Code size={20} />
                   <span>The Engine</span>
                 </button>
+                <button 
+                  onClick={() => { setActiveView('garage'); setIsSidebarOpen(false); }}
+                  className={`flex items-center gap-3 p-4 rounded-xl transition-all ${activeView === 'garage' ? 'bg-white text-black font-bold' : 'bg-white/5 text-white/70 hover:bg-white/10'}`}
+                >
+                  <Settings size={20} />
+                  <span>The Garage</span>
+                </button>
                 <div className="h-px bg-white/10 my-2" />
                 <button 
                   onClick={() => setIsLocked(true)}
@@ -211,15 +252,15 @@ export default function Home() {
                       <h2 className="text-5xl md:text-6xl font-black text-white leading-tight italic tracking-tighter">
                         {currentMood.greeting}
                       </h2>
-                      </motion.div>
+                    </motion.div>
 
-                      {/* Bike Representation */}
-                      <motion.div
+                    {/* Bike Representation */}
+                    <motion.div
                       key={currentMood.bike}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="mb-6 flex items-center gap-4 bg-white/10 backdrop-blur-md rounded-3xl p-4 border border-white/20 text-white"
-                      >
+                    >
                       <div className="relative w-20 h-20 bg-white/20 rounded-2xl overflow-hidden border border-white/30">
                         <Image 
                           src="/hadassah-bike.png" 
@@ -236,12 +277,13 @@ export default function Home() {
                         <Zap size={14} />
                         <span>Selah Speed</span>
                       </div>
-                      </motion.div>
+                    </motion.div>
 
-                      <AffirmationCard 
- 
+                    <AffirmationCard 
                       affirmation={INITIAL_AFFIRMATION} 
                       accentColor={currentMood.accentColor} 
+                      voiceRate={settings.voiceRate}
+                      voicePitch={settings.voicePitch}
                     />
                   </motion.div>
                 )}
@@ -291,6 +333,18 @@ export default function Home() {
                     className="w-full"
                   >
                     <DevModeHint />
+                  </motion.div>
+                )}
+
+                {activeView === 'garage' && (
+                  <motion.div
+                    key="garage-view"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 1.1 }}
+                    className="w-full"
+                  >
+                    <Garage settings={settings} onUpdateSettings={updateSettings} />
                   </motion.div>
                 )}
               </AnimatePresence>

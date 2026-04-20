@@ -2,14 +2,47 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Sparkles, RefreshCw } from 'lucide-react';
+import { Send, User, Sparkles, RefreshCw, Volume2, VolumeX } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
 import AffirmationCard from './AffirmationCard';
 
-interface Message {
-  role: 'user' | 'selig';
-  content: string;
-  affirmation?: Affirmation;
+interface MessageProps {
+  msg: Message;
+  isSpeaking: boolean;
+  onSpeak: (text: string) => void;
+}
+
+function ChatMessage({ msg, isSpeaking, onSpeak }: MessageProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
+    >
+      <div className={`relative max-w-[85%] p-4 rounded-2xl group ${
+        msg.role === 'user' 
+          ? 'bg-white text-black font-medium' 
+          : 'bg-white/10 text-white border border-white/10'
+      }`}>
+        <p className="text-sm leading-relaxed pr-6">{msg.content}</p>
+        
+        {msg.role === 'selig' && (
+          <button 
+            onClick={() => onSpeak(msg.content)}
+            className="absolute top-2 right-2 text-white/20 hover:text-white transition-colors p-1"
+          >
+            {isSpeaking ? <VolumeX size={14} className="animate-pulse" /> : <Volume2 size={14} />}
+          </button>
+        )}
+      </div>
+      
+      {msg.affirmation && (
+        <div className="mt-4 w-full">
+          <AffirmationCard affirmation={msg.affirmation} accentColor="#ffffff" />
+        </div>
+      )}
+    </motion.div>
+  );
 }
 
 export default function SeligChat() {
@@ -18,7 +51,32 @@ export default function SeligChat() {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [currentlySpeaking, setCurrentlySpeaking] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const speak = (text: string) => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      if (currentlySpeaking === text) {
+        window.speechSynthesis.cancel();
+        setCurrentlySpeaking(null);
+        return;
+      }
+      
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.pitch = 1.1;
+      utterance.rate = 0.9;
+      utterance.onend = () => setCurrentlySpeaking(null);
+      setCurrentlySpeaking(text);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== 'undefined') window.speechSynthesis.cancel();
+    };
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -76,34 +134,26 @@ export default function SeligChat() {
         <div>
           <h2 className="text-xl font-black italic text-white uppercase tracking-tighter">Chat with Selig</h2>
           <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Your Best Friend</p>
-        </div>
-      </div>
+        interface Message {
+          role: 'user' | 'selig';
+          content: string;
+          affirmation?: Affirmation;
+        }
 
-      {/* Messages area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
-        {messages.map((msg, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: msg.role === 'user' ? 20 : -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}
-          >
-            <div className={`max-w-[85%] p-4 rounded-2xl ${
-              msg.role === 'user' 
-                ? 'bg-white text-black font-medium' 
-                : 'bg-white/10 text-white border border-white/10'
-            }`}>
-              <p className="text-sm leading-relaxed">{msg.content}</p>
-            </div>
-            
-            {msg.affirmation && (
-              <div className="mt-4 w-full">
-                <AffirmationCard affirmation={msg.affirmation} accentColor="#ffffff" />
-              </div>
-            )}
-          </motion.div>
-        ))}
-        {isLoading && (
+        export default function SeligChat() {
+        ...
+              {/* Messages area */}
+              <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+                {messages.map((msg, i) => (
+                  <ChatMessage 
+                    key={i} 
+                    msg={msg} 
+                    isSpeaking={currentlySpeaking === msg.content} 
+                    onSpeak={speak} 
+                  />
+                ))}
+                {isLoading && (
+        ...
           <div className="flex items-center gap-2 text-white/40 text-xs italic">
             <RefreshCw size={12} className="animate-spin" />
             Selig is reflecting...

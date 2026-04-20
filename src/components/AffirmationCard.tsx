@@ -8,9 +8,11 @@ import { useState, useEffect } from 'react';
 interface AffirmationCardProps {
   affirmation: Affirmation;
   accentColor: string;
+  voiceRate?: number;
+  voicePitch?: number;
 }
 
-export default function AffirmationCard({ affirmation, accentColor }: AffirmationCardProps) {
+export default function AffirmationCard({ affirmation, accentColor, voiceRate = 0.9, voicePitch = 1.1 }: AffirmationCardProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const speak = () => {
@@ -24,13 +26,17 @@ export default function AffirmationCard({ affirmation, accentColor }: Affirmatio
       const text = `${affirmation.proverbHook}. ${affirmation.growthWord.word}. ${affirmation.spanishPhrase.phrase}. ${affirmation.deepExegesis}.`;
       const utterance = new SpeechSynthesisUtterance(text);
       
-      // Try to find a nice 'British' voice if available
       const voices = window.speechSynthesis.getVoices();
-      const britishVoice = voices.find(v => v.lang === 'en-GB' && v.name.includes('Female'));
-      if (britishVoice) utterance.voice = britishVoice;
+      // Try to find a premium/natural sounding female voice
+      const preferredVoice = voices.find(v => 
+        (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
+        (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google'))
+      );
       
-      utterance.pitch = 1.1;
-      utterance.rate = 0.9;
+      if (preferredVoice) utterance.voice = preferredVoice;
+      
+      utterance.pitch = voicePitch;
+      utterance.rate = voiceRate;
       
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => setIsSpeaking(false);
