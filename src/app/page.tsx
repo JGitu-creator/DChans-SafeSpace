@@ -15,7 +15,7 @@ import DevModeHint from '@/components/DevModeHint';
 import SeligChat from '@/components/SeligChat';
 import Garage from '@/components/Garage';
 import TrailMap from '@/components/TrailMap';
-import GratitudeBasket from '@/components/GratitudeBasket';
+import BlessingsJar from '@/components/BlessingsJar';
 import SpanishSanctuary from '@/components/SpanishSanctuary';
 import MidnightLamp from '@/components/MidnightLamp';
 import RoyalDecree from '@/components/RoyalDecree';
@@ -94,7 +94,6 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full font-sans text-zinc-900 bg-black">
-      {/* Fixed Background for Smooth Scrolling */}
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentMood.terrain} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
@@ -111,7 +110,7 @@ export default function Home() {
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
                 <h1 className="text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
-                <p className="text-white/40 text-xs font-black uppercase tracking-[0.4em] leading-none text-purple-400 text-sky-400">The Highway of Holiness</p>
+                <p className="text-white/40 text-xs font-black uppercase tracking-[0.4em] leading-none text-sky-400">The Highway of Holiness</p>
               </div>
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
@@ -127,13 +126,11 @@ export default function Home() {
           </motion.div>
         ) : (
           <div className="relative z-10 flex flex-col md:flex-row min-h-screen">
-            {/* Sticky Mobile Header */}
             <header className="sticky top-0 z-50 md:hidden flex items-center justify-between p-6 bg-black/80 backdrop-blur-xl border-b border-white/5 text-white">
               <h1 className="text-xl font-black italic tracking-tighter uppercase">Selah Ride</h1>
               <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 bg-white/5 rounded-xl active:scale-90">{isSidebarOpen ? <X size={20} /> : <Menu size={20} />}</button>
             </header>
 
-            {/* Navigation Aside */}
             <aside className={`fixed md:sticky top-0 h-screen z-40 w-72 md:w-80 p-8 flex flex-col gap-6 bg-black/95 md:bg-black/20 backdrop-blur-3xl transition-transform duration-500 ease-in-out border-r border-white/5 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
               <div className="hidden md:flex flex-col gap-1 mb-6"><h1 className="text-3xl font-black text-white uppercase tracking-tighter italic leading-none">Selah Ride</h1><div className="h-1 w-12 bg-gradient-to-r from-purple-600 to-sky-400 rounded-full mt-1" /></div>
               <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col gap-8 pr-2">
@@ -144,7 +141,7 @@ export default function Home() {
                   <button onClick={() => { setActiveView('chat'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'chat' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><Sparkles size={16} /><span className="text-sm font-bold uppercase tracking-tight text-emerald-400">Selig Chat</span></button>
                   <button onClick={() => { setActiveView('journal'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'journal' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><MessageSquare size={16} /><span className="text-sm font-bold uppercase tracking-tight">Road Log</span></button>
                   <button onClick={() => { setActiveView('trail'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'trail' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><MapPin size={16} /><span className="text-sm font-bold uppercase tracking-tight">The Trail</span></button>
-                  <button onClick={() => { setActiveView('basket'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'basket' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><Book size={16} /><span className="text-sm font-bold uppercase tracking-tight">Gleaning</span></button>
+                  <button onClick={() => { setActiveView('basket'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'basket' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><Sparkles size={16} /><span className="text-sm font-bold uppercase tracking-tight text-amber-400">Blessings Jar</span></button>
                   <button onClick={() => { setActiveView('pitstop'); setIsSidebarOpen(false); }} className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all ${activeView === 'pitstop' ? 'bg-purple-600 text-white font-bold shadow-xl shadow-purple-900/20' : 'text-white/50 hover:bg-white/5 hover:text-white'}`}><Zap size={16} /><span className="text-sm font-bold uppercase tracking-tight text-sky-400">Pit Stop</span></button>
                 </nav>
               </div>
@@ -154,7 +151,6 @@ export default function Home() {
               </div>
             </aside>
 
-            {/* Content Area - Naturally Scrolling */}
             <section className="flex-1 flex flex-col items-center p-6 md:p-12 relative min-h-screen bg-black/10">
               <AnimatePresence mode="wait">
                 {rescueMode && <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-2xl bg-blue-500/20 border border-blue-500/30 p-6 rounded-3xl mb-8 flex items-center gap-6"><div className="p-4 bg-sky-500 rounded-2xl text-white"><Zap size={32} /></div><div><h4 className="text-lg font-black italic text-white uppercase tracking-tighter">Search & Rescue</h4><p className="text-sm text-blue-100/70 leading-relaxed font-medium">¡Hola! I went on a ride to find you. Selig is here now.</p></div><button onClick={() => setRescueMode(false)} className="ml-auto text-white/20 hover:text-white"><X /></button></motion.div>}
@@ -169,9 +165,9 @@ export default function Home() {
                           <img src="/hadassah-bike.png" alt="Hadassah" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-400 mb-1 text-sky-400">Equipped Gear</p>
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-400 mb-1">Equipped Gear</p>
                           <h3 className="text-3xl font-black uppercase italic tracking-tighter text-white leading-none mb-2">{currentMood.bike} Mode</h3>
-                          <div className="flex items-center gap-2 text-white/40"><MapPin size={12} className="text-sky-400 text-purple-400" /><span className="text-[10px] font-bold uppercase tracking-widest">{currentMood.terrain} Terrain</span></div>
+                          <div className="flex items-center gap-2 text-white/40"><MapPin size={12} className="text-purple-400" /><span className="text-[10px] font-bold uppercase tracking-widest">{currentMood.terrain} Terrain</span></div>
                         </div>
                       </div>
                     </div>
@@ -181,19 +177,27 @@ export default function Home() {
                 {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentMood.id} /></motion.div>}
                 {activeView === 'chat' && <motion.div key="chat-view" className="w-full"><SeligChat /></motion.div>}
                 {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentMood.bike} /></motion.div>}
-                {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><GratitudeBasket /></motion.div>}
+                {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
                 {activeView === 'spanish' && <motion.div key="spanish-view" className="w-full"><SpanishSanctuary /></motion.div>}
                 {activeView === 'midnight' && <motion.div key="midnight-view" className="w-full"><MidnightLamp /></motion.div>}
                 {activeView === 'garage' && <motion.div key="garage-view" className="w-full"><Garage settings={settings} onUpdateSettings={(s) => setSettings(p => ({...p, ...s}))} /></motion.div>}
                 {activeView === 'dev' && <motion.div key="dev-view" className="w-full"><DevModeHint /></motion.div>}
                 {activeView === 'pitstop' && <motion.div key="pitstop-view" className="w-full"><PitStop /></motion.div>}
               </AnimatePresence>
-              {/* Extra Padding for mobile bottom spacing */}
               <div className="h-32 md:hidden" />
             </section>
           </div>
         )}
       </AnimatePresence>
     </main>
+  );
+}
+
+function X() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
   );
 }
