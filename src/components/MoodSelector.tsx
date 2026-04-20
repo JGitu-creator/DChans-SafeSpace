@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Bike, Check, ChevronRight } from 'lucide-react';
-import { MOODS, ThemeConfig } from '@/lib/types';
+import { ROUTES, RouteConfig } from '@/lib/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,7 +12,7 @@ function cn(...inputs: ClassValue[]) {
 
 interface MoodSelectorProps {
   currentMoodId: string;
-  onSelectMood: (mood: ThemeConfig) => void;
+  onSelectMood: (route: RouteConfig) => void;
 }
 
 export default function MoodSelector({ currentMoodId, onSelectMood }: MoodSelectorProps) {
@@ -42,24 +42,24 @@ export default function MoodSelector({ currentMoodId, onSelectMood }: MoodSelect
       </div>
       
       <div className="grid grid-cols-1 gap-4">
-        {MOODS.map((mood) => (
+        {ROUTES.map((route) => (
           <motion.button
-            key={mood.id}
+            key={route.id}
             whileHover={{ y: -4, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onSelectMood(mood)}
+            onClick={() => onSelectMood(route)}
             className={cn(
               "group relative h-48 w-full rounded-3xl overflow-hidden border-2 transition-all duration-500 shadow-2xl",
-              currentMoodId === mood.id 
+              currentMoodId === route.id 
                 ? "border-white shadow-white/10 ring-4 ring-white/10" 
                 : "border-white/10 grayscale hover:grayscale-0"
             )}
           >
             {/* Background (Terrain) */}
             <img 
-              src={terrainImages[mood.terrain]} 
+              src={terrainImages[route.terrain]} 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              alt={mood.terrain}
+              alt={route.terrain}
             />
             
             {/* Dark Gradient Overlay */}
@@ -68,9 +68,9 @@ export default function MoodSelector({ currentMoodId, onSelectMood }: MoodSelect
             {/* Bike Preview Inset */}
             <div className="absolute top-4 right-4 w-24 h-24 rounded-2xl border border-white/20 overflow-hidden shadow-2xl bg-black/40 backdrop-blur-md">
               <img 
-                src={bikeImages[mood.bike]} 
+                src={bikeImages[route.bike]} 
                 className="w-full h-full object-cover p-1 rounded-2xl" 
-                alt={mood.bike}
+                alt={route.bike}
               />
             </div>
 
@@ -78,22 +78,22 @@ export default function MoodSelector({ currentMoodId, onSelectMood }: MoodSelect
             <div className="absolute bottom-6 left-6 text-left">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-black uppercase tracking-widest text-white/60">
-                  {mood.bike} ride
+                  {route.bike} ride
                 </span>
-                {currentMoodId === mood.id && (
+                {currentMoodId === route.id && (
                   <span className="bg-white text-black p-1 rounded-full"><Check size={8} /></span>
                 )}
               </div>
               <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase leading-none">
-                {mood.name}
+                {route.name}
               </h3>
               <p className="text-white/60 text-[10px] font-bold mt-1 uppercase tracking-wider line-clamp-1">
-                {mood.description}
+                {route.description}
               </p>
             </div>
 
             {/* Selection Glow */}
-            {currentMoodId === mood.id && (
+            {currentMoodId === route.id && (
               <motion.div 
                 layoutId="active-ride-glow"
                 className="absolute inset-0 border-white/20 bg-white/5 pointer-events-none shadow-[inset_0_0_40px_rgba(255,255,255,0.2)]"
