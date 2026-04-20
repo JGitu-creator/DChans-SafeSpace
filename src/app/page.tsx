@@ -97,27 +97,27 @@ export default function Home() {
       <div className="fixed inset-0 z-0">
         <AnimatePresence mode="wait">
           <motion.div key={isLocked ? `lock-${lockImageIndex}` : currentMood.terrain} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 2 }} className="absolute inset-0">
-            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentMood.terrain]} className="w-full h-full object-cover opacity-50" alt="Background" />
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px]" />
+            <img src={isLocked ? LOCK_SCREEN_BIKES[lockImageIndex] : backgroundImages[currentMood.terrain]} className="w-full h-full object-cover opacity-70" alt="Background" />
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-[0.5px]" />
           </motion.div>
         </AnimatePresence>
       </div>
 
       <AnimatePresence>
         {isLocked ? (
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-md">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white backdrop-blur-[2px]">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
                 <h1 className="text-6xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
-                <p className="text-white/40 text-xs font-black uppercase tracking-[0.4em] leading-none text-sky-400">The Highway of Holiness</p>
+                <p className="text-white/60 text-xs font-black uppercase tracking-[0.4em] leading-none text-sky-400">The Highway of Holiness</p>
               </div>
               <div className="w-full flex flex-col gap-4">
                 <div className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="Enter Code" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-xl text-white" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="PIN" className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[1em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
                 </div>
-                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Unlock the Road</button>
+                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-widest text-xs hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Start the Ride</button>
               </div>
               <div className="flex items-center gap-2 text-white/20 text-[10px] font-black uppercase tracking-widest">
                 <Lock size={10} /><span>Protected for Chantal Hadassah</span>
@@ -165,17 +165,18 @@ export default function Home() {
                           <img src="/hadassah-bike.png" alt="Hadassah" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-400 mb-1">Equipped Gear</p>
+                          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-400 mb-1 text-sky-400">Equipped Gear</p>
                           <h3 className="text-3xl font-black uppercase italic tracking-tighter text-white leading-none mb-2">{currentMood.bike} Mode</h3>
                           <div className="flex items-center gap-2 text-white/40"><MapPin size={12} className="text-purple-400" /><span className="text-[10px] font-bold uppercase tracking-widest">{currentMood.terrain} Terrain</span></div>
                         </div>
+                        <div className="hidden md:flex flex-col items-end gap-2 pr-4"><div className="p-3 bg-white/5 rounded-2xl border border-white/10 text-white/60"><Zap size={24} /></div><span className="text-[9px] font-black uppercase tracking-widest text-white/20 italic text-sky-400 font-black">Selah Engine v3.0</span></div>
                       </div>
                     </div>
                     <AffirmationCard affirmation={INITIAL_AFFIRMATION} accentColor={currentMood.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
                   </motion.div>
                 )}
-                {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentMood.id} /></motion.div>}
-                {activeView === 'chat' && <motion.div key="chat-view" className="w-full"><SeligChat /></motion.div>}
+                {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentMood.id} settings={settings} /></motion.div>}
+                {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full"><SeligChat /></motion.div>}
                 {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentMood.bike} /></motion.div>}
                 {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
                 {activeView === 'spanish' && <motion.div key="spanish-view" className="w-full"><SpanishSanctuary /></motion.div>}

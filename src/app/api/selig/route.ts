@@ -7,14 +7,18 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(req: Request) {
   try {
-    const { struggle, message, history } = await req.json();
+    const { struggle, message, history, settings } = await req.json();
+    const bibleVersion = settings?.bibleVersion || 'ESV';
 
     // Read System Prompt from docs
     const systemPromptPath = path.join(process.cwd(), 'docs', 'system-instructions.md');
-    const systemPrompt = fs.readFileSync(systemPromptPath, 'utf8');
+    let systemPrompt = fs.readFileSync(systemPromptPath, 'utf8');
+
+    // Inject Bible Version instruction
+    systemPrompt += `\n\nCRITICAL: Use the ${bibleVersion} Bible version for all verses and exegesis style.`;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash", // Using the latest high-performance model
+      model: "gemini-2.0-flash", 
       systemInstruction: systemPrompt,
     });
 

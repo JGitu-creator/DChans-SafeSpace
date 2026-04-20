@@ -8,7 +8,7 @@ import { Save, Plus, Trash2, Calendar as CalendarIcon, RefreshCw, BookOpen, PenT
 import { Affirmation, JournalEntry } from '@/lib/types';
 import AffirmationCard from '@/components/AffirmationCard';
 
-export default function Journal({ currentMoodId }: { currentMoodId: string }) {
+export default function Journal({ currentMoodId, settings }: { currentMoodId: string, settings?: any }) {
   const [isAdding, setIsAdding] = useState(false);
   const [newEntry, setNewEntry] = useState({ struggle: '', thoughts: '' });
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,10 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
       const response = await fetch('/api/selig', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ struggle: newEntry.struggle })
+        body: JSON.stringify({ 
+          struggle: newEntry.struggle,
+          settings: settings 
+        })
       });
       
       const affirmation = await response.json();
@@ -38,7 +41,6 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
         thoughts: newEntry.thoughts
       });
 
-      // Add an Ebenezer stone for this entry
       await db.ebenezerStones.add({
         date: new Date(),
         note: `Honesty: ${newEntry.struggle.substring(0, 20)}...`,
@@ -57,7 +59,6 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 text-white min-h-screen">
-      {/* Diary Header */}
       <div className="flex flex-col gap-2 mb-12 border-l-4 border-white/20 pl-6 py-2">
         <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white/90">
           Chantal's Road Log
@@ -67,7 +68,6 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
         </p>
       </div>
 
-      {/* Calendar Strip (Simplified) */}
       <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-12 backdrop-blur-md">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-white/60 font-bold uppercase text-[10px] tracking-widest">
@@ -116,7 +116,6 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
             className="mb-12 overflow-hidden"
           >
             <div className="bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 border border-white/20 shadow-2xl text-zinc-900 relative">
-              {/* Paper Texture Overlay */}
               <div className="absolute inset-0 opacity-[0.03] pointer-events-none rounded-[2.5rem]" style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/pinstriped-suit.png')` }} />
               
               <div className="flex items-center gap-2 mb-6 text-zinc-400 uppercase tracking-widest text-[10px] font-black">
@@ -168,7 +167,7 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
         )}
       </AnimatePresence>
 
-      <div className="grid gap-6">
+      <div className="grid gap-6 pb-20">
         {entries?.map((entry) => (
           <motion.div
             key={entry.id}
@@ -205,14 +204,6 @@ export default function Journal({ currentMoodId }: { currentMoodId: string }) {
             )}
           </motion.div>
         ))}
-        {entries?.length === 0 && !isAdding && (
-          <div className="text-center py-32 border-2 border-dashed border-white/5 rounded-[3rem]">
-            <div className="text-white/10 mb-4 flex justify-center"><PenTool size={48} /></div>
-            <p className="text-white/20 text-sm font-bold uppercase italic tracking-widest">
-              The road is open, Chantal. Start your log when you're ready.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
