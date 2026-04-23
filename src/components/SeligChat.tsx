@@ -53,12 +53,21 @@ function ChatMessage({ msg, isSpeaking, onSpeak }: MessageProps) {
   );
 }
 
+const LOADING_PHRASES = [
+  "Selig is taking your words to the Father...",
+  "Finding a verse for your journey...",
+  "Selig is listening to the Spirit for you...",
+  "Preparing a royal word, Hadassah...",
+  "Searching the fields of Boaz for you..."
+];
+
 export default function SeligChat() {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'selig', content: "¡Hola, Hadassah! Selig is here with you. How is the road today, mi hermana?" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingPhrase, setLoadingPhrase] = useState(LOADING_PHRASES[0]);
   const [currentlySpeaking, setCurrentlySpeaking] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -88,9 +97,18 @@ export default function SeligChat() {
       const voices = window.speechSynthesis.getVoices();
       // Force Sweet British Female Voice with retries
       const getFemaleVoice = () => {
+        // High-priority specific sweet voices
+        const priorityVoices = voices.filter(v => 
+          (v.name.includes('Serena') || v.name.includes('Google UK English Female') || v.name.includes('Martha') || v.name.includes('Moira'))
+        );
+        
+        if (priorityVoices.length > 0) return priorityVoices[0];
+
+        // Fallback: any voice that is English and doesn't explicitly say "Male"
         return voices.find(v => 
           (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
-          (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Serena'))
+          !v.name.toLowerCase().includes('male') &&
+          (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Soft') || v.name.includes('Google'))
         );
       };
       
@@ -111,6 +129,15 @@ export default function SeligChat() {
       if (typeof window !== 'undefined') window.speechSynthesis.cancel();
     };
   }, []);
+
+  useEffect(() => {
+    if (isLoading) {
+      const interval = setInterval(() => {
+        setLoadingPhrase(LOADING_PHRASES[Math.floor(Math.random() * LOADING_PHRASES.length)]);
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -192,7 +219,7 @@ export default function SeligChat() {
         {isLoading && (
           <div className="flex items-center gap-3 text-purple-600 text-[10px] font-black uppercase tracking-[0.2em] italic ml-2">
             <RefreshCw size={14} className="animate-spin" />
-            Selig is reflecting...
+            {loadingPhrase}
           </div>
         )}
       </div>

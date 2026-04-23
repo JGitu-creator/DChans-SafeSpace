@@ -88,7 +88,7 @@ export interface Affirmation {
   };
   deepExegesis: string;
   bibleVerse: string;
-  isRoyalDecree?: boolean;
+  isRoyalAffirmation?: boolean;
 }
 
 export interface EbenezerStone {

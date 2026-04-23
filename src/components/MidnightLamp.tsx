@@ -63,15 +63,15 @@ export default function MidnightLamp() {
     }
   };
 
-  const startDecree = () => {
+  const startAffirmation = () => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       
       const morningMsg = "Good morning, Daughter of the King! The sun has risen, and so has your Father's mercy. Today is a fresh canvas, and you are His masterpiece. Ride with strength, Hadassah, for He goes before you. ¡Buen día, mi querida!";
       const nightMsg = "Daughter of the King, the road is quiet now. Your Father is watching over you while you rest. Cast all your cares on Him, for He cares for you. May your sleep be sweet and your dreams be full of His grace. ¡Buenas noches, Hadassah!";
       
-      const decree = mode === 'morning' ? morningMsg : nightMsg;
-      const utterance = new SpeechSynthesisUtterance(decree);
+      const affirmation = mode === 'morning' ? morningMsg : nightMsg;
+      const utterance = new SpeechSynthesisUtterance(affirmation);
       
       const voices = window.speechSynthesis.getVoices();
       const preferredVoice = voices.find(v => 
@@ -157,7 +157,7 @@ export default function MidnightLamp() {
         }`} />
         
         <button
-          onClick={startDecree}
+          onClick={startAffirmation}
           className="relative z-10 p-12 md:p-16 rounded-full bg-white shadow-2xl border border-zinc-100 transition-all active:scale-95 group"
         >
           <Lamp size={80} className={`transition-all duration-1000 ${
@@ -180,8 +180,8 @@ export default function MidnightLamp() {
 
         <p className="text-zinc-600 text-base max-w-xs mx-auto leading-relaxed font-medium italic">
           {isPlaying 
-            ? `Selig is whispering a ${mode === 'morning' ? 'morning' : 'sleep'} decree...` 
-            : `Tap the lamp to receive a ${mode === 'morning' ? 'Morning' : 'Sleep'} Decree.`
+            ? `Selig is whispering a ${mode === 'morning' ? 'morning' : 'sleep'} affirmation...` 
+            : `Tap the lamp to receive a ${mode === 'morning' ? 'Morning' : 'Sleep'} Affirmation.`
           }
         </p>
         

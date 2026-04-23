@@ -116,8 +116,7 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
                       Notification.requestPermission().then(permission => {
                         if (permission === 'granted') {
                           new Notification("¡Bendiciones, Hadassah!", {
-                            body: "Selig will now send you daily royal decrees.",
-                            icon: "/favicon.ico"
+                            body: "Selig will now send you daily royal affirmations and prayers.",                            icon: "/favicon.ico"
                           });
                         }
                       });

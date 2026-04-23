@@ -47,7 +47,7 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
                 <Ichthys />
                 <div className="space-y-1">
                   <h2 className="text-2xl md:text-3xl font-serif font-black text-[#8b4513] uppercase tracking-[0.3em] md:tracking-[0.4em]">
-                    Royal Decree
+                    Royal Affirmation & Prayer
                   </h2>
                   <p className="text-[9px] md:text-[10px] font-black text-[#d4af37] uppercase tracking-[0.5em] md:tracking-[0.6em]">King Jesus Christ</p>
                 </div>

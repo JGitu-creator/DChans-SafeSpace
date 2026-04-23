@@ -18,7 +18,7 @@ import TrailMap from '@/components/TrailMap';
 import BlessingsJar from '@/components/BlessingsJar';
 import SpanishSanctuary from '@/components/SpanishSanctuary';
 import MidnightLamp from '@/components/MidnightLamp';
-import RoyalDecree from '@/components/RoyalDecree';
+import RoyalAffirmation from '@/components/RoyalAffirmation';
 import AudioHug from '@/components/AudioHug';
 import CharmBracelet from '@/components/CharmBracelet';
 import LoginSequence from '@/components/LoginSequence';
@@ -103,8 +103,8 @@ export default function Home() {
   const [passcode, setPasscode] = useState('');
   const [activeView, setActiveView] = useState<View>('affirmation');
   const [lockImageIndex, setLockImageIndex] = useState(0);
-  const [showDecree, setShowDecree] = useState(false);
-  const [decreeMessage, setDecreeMessage] = useState('');
+  const [showAffirmation, setShowAffirmation] = useState(false);
+  const [affirmationMessage, setAffirmationMessage] = useState('');
   const [rescueMode, setRescueMode] = useState(false);
   
   const [settings, setSettings] = useState<UserSettings>({
@@ -116,6 +116,7 @@ export default function Home() {
 
   const stones = useLiveQuery(() => db.ebenezerStones.toArray()) || [];
   const journalEntries = useLiveQuery(() => db.journalEntries.toArray()) || [];
+  const gratitudeGrains = useLiveQuery(() => db.gratitudeGrains.toArray()) || [];
   const dailyAffirmation = getDailyAffirmation(currentRoute.id);
 
   useEffect(() => {
@@ -137,8 +138,8 @@ export default function Home() {
       if (hoursSince > 48) setRescueMode(true);
       setSettings(prev => ({ ...prev, lastOpened: now }));
       if (Math.random() > 0.8) {
-        setDecreeMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
-        setShowDecree(true);
+        setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
+        setShowAffirmation(true);
       }
     }
   }, [isLocked]);
@@ -154,6 +155,29 @@ export default function Home() {
   const handleUnlock = () => {
     if (passcode === '1122') setIsPINAccepted(true);
     else { alert('Wrong code, mi hermana.'); setPasscode(''); }
+  };
+
+  const transformStruggle = async () => {
+    if (!struggleInput.trim()) return;
+    setIsTransforming(true);
+    try {
+      const response = await fetch('/api/selig', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          struggle: struggleInput,
+          settings 
+        })
+      });
+      const data = await response.json();
+      setAffirmationMessage(data.deepExegesis || "The King is with you in this valley, Hadassah.");
+      setShowAffirmation(true);
+      setStruggleInput('');
+    } catch (e) {
+      alert("Selig is praying for you. Try again in a moment.");
+    } finally {
+      setIsTransforming(false);
+    }
   };
 
   const finishLogin = () => {
@@ -174,6 +198,7 @@ export default function Home() {
 
       <AnimatePresence>
         {isPINAccepted && <LoginSequence onComplete={finishLogin} />}
+        {showAffirmation && <RoyalAffirmation message={affirmationMessage} onClose={() => setShowAffirmation(false)} />}
 
         {isLocked ? (
           <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white">
@@ -210,9 +235,69 @@ export default function Home() {
                   <AnimatePresence mode="wait">
                     {activeView === 'affirmation' && (
                       <motion.div key="affirmation-view" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="flex flex-col gap-10">
+                        {/* Proactive Greeting */}
+                        <div className="flex items-center gap-4">
+                          <div className="relative group">
+                            <div className="absolute -inset-1 bg-gradient-to-tr from-purple-500 to-sky-400 rounded-full blur opacity-20"></div>
+                            <span className="relative text-5xl filter drop-shadow-md cursor-help transition-transform hover:scale-110 block">
+                              {currentRoute.sticker}
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-2xl rounded-tl-none border border-black/5 shadow-sm relative">
+                              <p className="text-zinc-800 text-sm font-medium italic">
+                                {(() => {
+                                  const hour = new Date().getHours();
+                                  if (hour < 11) return "The road is fresh, Hadassah. Your gear is ready.";
+                                  if (hour < 17) return "Take a pit stop, mi hermana. His grace is sufficient.";
+                                  if (hour < 21) return "Ride towards the sunset of His mercy.";
+                                  return "Park the bike in His peace. You are well-guarded.";
+                                })()}
+                              </p>
+                            </div>
+                            <p className="text-zinc-400 text-[8px] font-black uppercase tracking-[0.4em] mt-1 ml-1">Selig's Whisper</p>
+                          </div>
+                        </div>
+
+                        {/* Growth Stats Row */}
+                        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                          <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Ebenezer Stones</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl font-black italic text-zinc-800">{stones.length}</span>
+                              <div className="h-1 flex-1 bg-zinc-200 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.min(stones.length * 10, 100)}%` }}
+                                  className="h-full bg-purple-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Gratitude Grains</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl font-black italic text-zinc-800">{gratitudeGrains.length}</span>
+                              <div className="h-1 flex-1 bg-zinc-200 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${Math.min(gratitudeGrains.length * 5, 100)}%` }}
+                                  className="h-full bg-emerald-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm">
+                            <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Journal Streak</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl font-black italic text-zinc-800">{journalEntries.length > 0 ? Math.min(journalEntries.length, 7) : '0'}</span>
+                              <Sparkles size={14} className="text-amber-500" />
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="flex flex-col gap-4">
                           <div className="flex items-center gap-4">
-                            <span className="text-4xl filter drop-shadow-md">{currentRoute.sticker}</span>
                             <div>
                               <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">{currentRoute.name}</p>
                               <h2 className="text-4xl md:text-5xl font-black text-zinc-900 leading-tight italic tracking-tighter handwritten">{currentRoute.greeting}</h2>
@@ -220,6 +305,32 @@ export default function Home() {
                           </div>
                         </div>
                         
+                        {/* Struggle Transformer */}
+                        <div className="relative group">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/20 to-sky-400/20 rounded-2xl blur opacity-30"></div>
+                          <div className="relative bg-white/40 backdrop-blur-md p-6 rounded-2xl border border-black/5 shadow-inner">
+                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-600 mb-4 flex items-center gap-2">
+                              <Zap size={10} /> Struggle Transformer
+                            </p>
+                            <div className="flex gap-3">
+                              <input 
+                                value={struggleInput}
+                                onChange={(e) => setStruggleInput(e.target.value)}
+                                placeholder="What's heavy on the road today?"
+                                className="flex-1 bg-white/60 border border-black/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-purple-400 italic font-medium"
+                                onKeyDown={(e) => e.key === 'Enter' && transformStruggle()}
+                              />
+                              <button 
+                                onClick={transformStruggle}
+                                disabled={isTransforming || !struggleInput.trim()}
+                                className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all active:scale-95 disabled:opacity-50"
+                              >
+                                {isTransforming ? <RefreshCw size={14} className="animate-spin" /> : 'Transform'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="relative p-8 rounded-xl shadow-inner border border-black/5 bg-white/40 backdrop-blur-sm">
                           <div className="flex items-center gap-6">
                             <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden border-2 border-[#2c1a10] shadow-lg flex-shrink-0 -rotate-2">

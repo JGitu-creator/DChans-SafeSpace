@@ -7,7 +7,7 @@ import Sudoku from './Sudoku';
 
 const RIDDLES = [
   {
-    question: "I was not a queen by birth, but I saved my people from a decree of death. Who am I?",
+    question: "I was not a queen by birth, but I saved my people from a sentence of death. Who am I?",
     answer: "esther",
     hint: "Think of the scroll read during Purim."
   },
@@ -24,7 +24,7 @@ const RIDDLES = [
 ];
 
 export default function PitStop() {
-  const [activeTab, setActiveTab] = useState<'riddles' | 'sudoku'>('riddles');
+  const [activeTab, setActiveTab] = useState<'riddles' | 'sudoku' | 'cube'>('riddles');
   const [currentRiddle, setCurrentRiddle] = useState(0);
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle');
@@ -72,10 +72,18 @@ export default function PitStop() {
         >
           Sudoku
         </button>
+        <button 
+          onClick={() => setActiveTab('cube')}
+          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+            activeTab === 'cube' ? 'bg-white text-zinc-900 shadow-md' : 'text-zinc-500 hover:text-zinc-800'
+          }`}
+        >
+          Selah Cube
+        </button>
       </div>
 
       <AnimatePresence mode="wait">
-        {activeTab === 'riddles' ? (
+        {activeTab === 'riddles' && (
           <motion.div
             key="riddles"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -150,7 +158,9 @@ export default function PitStop() {
               )}
             </AnimatePresence>
           </motion.div>
-        ) : (
+        )}
+
+        {activeTab === 'sudoku' && (
           <motion.div
             key="sudoku"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -161,6 +171,23 @@ export default function PitStop() {
             <Sudoku />
           </motion.div>
         )}
+
+        {activeTab === 'cube' && (
+          <motion.div
+            key="cube"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="w-full"
+          >
+            <SelahCube />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+}
       </AnimatePresence>
     </div>
   );

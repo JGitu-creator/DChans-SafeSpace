@@ -3,12 +3,12 @@
 import { motion } from 'framer-motion';
 import { Scroll, Star, Crown } from 'lucide-react';
 
-interface RoyalDecreeProps {
+interface RoyalAffirmationProps {
   message: string;
   onClose: () => void;
 }
 
-export default function RoyalDecree({ message, onClose }: RoyalDecreeProps) {
+export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -34,8 +34,8 @@ export default function RoyalDecree({ message, onClose }: RoyalDecreeProps) {
         </div>
         
         <div className="flex flex-col items-center text-center gap-4 md:gap-8">
-          <h2 className="text-xl md:text-3xl font-serif font-black text-[#8b4513] uppercase tracking-[0.2em] border-b-2 border-[#d4af37] pb-1 md:pb-2">
-            Royal Decree
+          <h2 className="text-xl md:text-2xl font-serif font-black text-[#8b4513] uppercase tracking-[0.1em] border-b-2 border-[#d4af37] pb-1 md:pb-2">
+            Royal Affirmation & Prayer
           </h2>
           
           <div className="space-y-4 md:space-y-6">

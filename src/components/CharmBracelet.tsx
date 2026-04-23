@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Sparkles, MessageSquare, Book, Zap, Settings, Code, ShoppingBasket, Compass, Activity } from 'lucide-react';
+import { Heart, MapPin, Sparkles, MessageSquare, Book, Zap, Settings, Code, ShoppingBasket, Compass, Activity, Wind } from 'lucide-react';
 import { View } from '@/lib/types';
 
 interface CharmProps {
@@ -22,27 +22,27 @@ function Charm({ id, icon: Icon, label, isActive, onClick, color }: CharmProps) 
       className="flex flex-col items-center gap-1 group relative"
     >
       {/* String leading to the charm */}
-      <div className="w-0.5 h-8 bg-zinc-600 group-hover:bg-zinc-400 transition-colors" />
+      <div className={`w-0.5 h-6 transition-colors ${isActive ? 'bg-white' : 'bg-zinc-700'}`} />
       
       {/* The Charm itself */}
       <div className={`
-        p-3 rounded-full border-2 shadow-2xl transition-all duration-500
+        p-2.5 rounded-full border shadow-lg transition-all duration-500
         ${isActive 
-          ? 'bg-white border-white scale-110' 
-          : 'bg-black/40 border-white/10 text-white/40 hover:border-white/40 hover:text-white'
+          ? 'bg-white border-white scale-110 shadow-white/20' 
+          : 'bg-zinc-900/40 border-white/5 text-zinc-500 hover:border-white/20 hover:text-white'
         }
       `}
       style={{ 
-        boxShadow: isActive ? `0 0 20px ${color}` : 'none',
+        boxShadow: isActive ? `0 0 15px ${color}40` : 'none',
         color: isActive ? color : undefined
       }}>
-        <Icon size={20} strokeWidth={isActive ? 3 : 2} />
+        <Icon size={18} strokeWidth={isActive ? 3 : 2.5} />
       </div>
       
       {/* Label */}
       <span className={`
-        text-[8px] font-black uppercase tracking-widest transition-opacity duration-300
-        ${isActive ? 'opacity-100 text-white' : 'opacity-0 group-hover:opacity-100 text-white/40'}
+        text-[7px] font-black uppercase tracking-[0.2em] transition-opacity duration-300 mt-1
+        ${isActive ? 'opacity-100 text-white' : 'opacity-0 group-hover:opacity-100 text-zinc-500'}
       `}>
         {label}
       </span>
@@ -57,29 +57,52 @@ interface CharmBraceletProps {
 }
 
 export default function CharmBracelet({ activeView, onViewChange, accentColor }: CharmBraceletProps) {
-  const charms: { id: View; icon: any; label: string }[] = [
-    { id: 'affirmation', icon: Compass, label: 'The Path' },
-    { id: 'chat', icon: Sparkles, label: 'Selig' },
-    { id: 'journal', icon: MessageSquare, label: 'Diary' },
-    { id: 'trail', icon: MapPin, label: 'Trail' },
-    { id: 'thread', icon: Activity, label: 'Thread' },
-    { id: 'basket', icon: ShoppingBasket, label: 'Grains' },
-    { id: 'pitstop', icon: Zap, label: 'Pit Stop' },
-    { id: 'midnight', icon: Heart, label: 'Lamp' },
-    { id: 'garage', icon: Settings, label: 'Garage' },
+  const groups = [
+    {
+      name: 'Reflect',
+      charms: [
+        { id: 'affirmation' as View, icon: Compass, label: 'Path' },
+        { id: 'journal' as View, icon: MessageSquare, label: 'Diary' },
+        { id: 'thread' as View, icon: Activity, label: 'Thread' },
+      ]
+    },
+    {
+      name: 'Connect',
+      charms: [
+        { id: 'chat' as View, icon: Sparkles, label: 'Selig' },
+        { id: 'basket' as View, icon: ShoppingBasket, label: 'Grains' },
+        { id: 'trail' as View, icon: MapPin, label: 'Trail' },
+      ]
+    },
+    {
+      name: 'Rest',
+      charms: [
+        { id: 'pitstop' as View, icon: Zap, label: 'Break' },
+        { id: 'midnight' as View, icon: Heart, label: 'Lamp' },
+        { id: 'garage' as View, icon: Settings, label: 'Gear' },
+      ]
+    }
   ];
 
   return (
-    <div className="w-full px-4 overflow-x-auto no-scrollbar py-4 border-b border-white/5 bg-black/40 backdrop-blur-md">
-      <div className="flex justify-around items-start min-w-[500px] px-8">
-        {charms.map((charm) => (
-          <Charm
-            key={charm.id}
-            {...charm}
-            isActive={activeView === charm.id}
-            onClick={onViewChange}
-            color={accentColor}
-          />
+    <div className="w-full sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5 shadow-2xl overflow-x-auto no-scrollbar">
+      <div className="flex justify-between items-start min-w-[450px] px-8 py-2 max-w-4xl mx-auto">
+        {groups.map((group) => (
+          <div key={group.name} className="flex flex-col items-center gap-1">
+            <div className="flex gap-4">
+              {group.charms.map((charm) => (
+                <Charm
+                  key={charm.id}
+                  {...charm}
+                  isActive={activeView === charm.id}
+                  onClick={onViewChange}
+                  color={accentColor}
+                />
+              ))}
+            </div>
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent mt-2" />
+            <span className="text-[6px] font-black uppercase tracking-[0.5em] text-zinc-600 py-1">{group.name}</span>
+          </div>
         ))}
       </div>
     </div>

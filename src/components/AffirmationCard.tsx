@@ -31,14 +31,23 @@ export default function AffirmationCard({
       const text = `${affirmation.proverbHook}. Today's growth word is ${affirmation.growthWord.word}. ${affirmation.spanishPhrase.phrase}. ${affirmation.deepExegesis}.`;
       const utterance = new SpeechSynthesisUtterance(text);
       
-      const voices = window.speechSynthesis.getVoices();
+      const getFemaleVoice = () => {
+        // High-priority specific sweet voices
+        const priorityVoices = voices.filter(v => 
+          (v.name.includes('Serena') || v.name.includes('Google UK English Female') || v.name.includes('Martha') || v.name.includes('Moira'))
+        );
+        
+        if (priorityVoices.length > 0) return priorityVoices[0];
+
+        // Fallback: any voice that is English and doesn't explicitly say "Male"
+        return voices.find(v => 
+          (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
+          !v.name.toLowerCase().includes('male') &&
+          (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Soft') || v.name.includes('Google'))
+        );
+      };
       
-      // Look for a sweet, soft British Female voice
-      const preferredVoice = voices.find(v => 
-        (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
-        (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Serena') || v.name.includes('Martha'))
-      );
-      
+      const preferredVoice = getFemaleVoice();
       if (preferredVoice) utterance.voice = preferredVoice;
       
       utterance.pitch = voicePitch;
