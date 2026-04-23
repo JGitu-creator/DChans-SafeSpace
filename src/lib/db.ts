@@ -1,7 +1,7 @@
 import Dexie, { Table } from 'dexie';
 import { JournalEntry, Settings, EbenezerStone, GratitudeGrain, SpanishWord, DesignBadge } from './types';
 
-export class SelahRideDB extends Dexie {
+export class DChansSafespaceDB extends Dexie {
   journalEntries!: Table<JournalEntry>;
   settings!: Table<Settings>;
   ebenezerStones!: Table<EbenezerStone>;
@@ -10,7 +10,7 @@ export class SelahRideDB extends Dexie {
   designBadges!: Table<DesignBadge>;
 
   constructor() {
-    super('SelahRideDB');
+    super('DChansSafespaceDB');
     this.version(2).stores({
       journalEntries: '++id, date, moodId',
       settings: '++id',
@@ -22,4 +22,4 @@ export class SelahRideDB extends Dexie {
   }
 }
 
-export const db = new SelahRideDB();
+export const db = new DChansSafespaceDB();

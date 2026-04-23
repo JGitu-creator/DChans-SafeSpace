@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Heart, MapPin, Sparkles, MessageSquare, Book, Zap, Settings, Code, ShoppingBasket, Compass, Activity, Wind } from 'lucide-react';
+import { Heart, MapPin, Sparkles, MessageSquare, Book, Zap, Settings, Code, ShoppingBasket, Compass, Activity, Wind, Brain } from 'lucide-react';
 import { View } from '@/lib/types';
 
 interface CharmProps {
@@ -78,6 +78,7 @@ export default function CharmBracelet({ activeView, onViewChange, accentColor }:
       name: 'Rest',
       charms: [
         { id: 'pitstop' as View, icon: Zap, label: 'Break' },
+        { id: 'games' as View, icon: Brain, label: 'Games' },
         { id: 'midnight' as View, icon: Heart, label: 'Lamp' },
         { id: 'garage' as View, icon: Settings, label: 'Gear' },
       ]

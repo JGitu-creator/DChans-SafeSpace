@@ -18,9 +18,8 @@ const satisfy = Satisfy({
   weight: "400",
   subsets: ["latin"],
 });
-
 export const metadata: Metadata = {
-  title: "Selah Ride",
+  title: "DChan's Safespace",
   description: "Chantal Hadassah's Biblical Best Friend App",
   manifest: "/manifest.json",
 };

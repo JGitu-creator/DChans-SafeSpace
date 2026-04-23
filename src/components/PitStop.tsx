@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, CheckCircle2, AlertCircle, Puzzle } from 'lucide-react';
 import Sudoku from './Sudoku';
+import DChansCube from './DChansCube';
 
 const RIDDLES = [
   {
@@ -78,7 +79,7 @@ export default function PitStop() {
             activeTab === 'cube' ? 'bg-white text-zinc-900 shadow-md' : 'text-zinc-500 hover:text-zinc-800'
           }`}
         >
-          Selah Cube
+          DChan's Cube
         </button>
       </div>
 
@@ -180,7 +181,7 @@ export default function PitStop() {
             exit={{ opacity: 0, scale: 0.9 }}
             className="w-full"
           >
-            <SelahCube />
+            <DChansCube />
           </motion.div>
         )}
       </AnimatePresence>

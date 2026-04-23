@@ -6,7 +6,7 @@ import { RotateCcw, Trophy, Sparkles, ChevronUp, ChevronDown, ChevronLeft, Chevr
 
 type Color = 'bg-rose-500' | 'bg-sky-500' | 'bg-amber-500' | 'bg-emerald-500';
 
-export default function SelahCube() {
+export default function DChansCube() {
   const initialGrid: Color[][] = [
     ['bg-rose-500', 'bg-rose-500', 'bg-sky-500', 'bg-sky-500'],
     ['bg-rose-500', 'bg-rose-500', 'bg-sky-500', 'bg-sky-500'],
@@ -117,7 +117,7 @@ export default function SelahCube() {
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2 text-rose-400">
           <Sparkles size={16} />
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">Selah Cube</h2>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">DChan's Cube</h2>
         </div>
         <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">Align your path, Hadassah</p>
       </div>

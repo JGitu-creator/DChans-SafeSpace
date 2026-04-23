@@ -11,7 +11,7 @@ export default function DevModeHint() {
         <div className="inline-block p-5 bg-sky-500/10 rounded-[2.5rem] mb-6 border border-sky-500/20 shadow-[0_0_30px_rgba(14,165,233,0.2)]">
           <Cpu size={48} className="text-sky-400 animate-pulse" />
         </div>
-        <h2 className="text-5xl font-black uppercase tracking-tighter italic text-white drop-shadow-2xl">The Selah Engine</h2>
+        <h2 className="text-5xl font-black uppercase tracking-tighter italic text-white drop-shadow-2xl">The DChan Engine</h2>
         <p className="text-sky-400/60 text-[10px] font-black uppercase tracking-[0.6em] mt-4">Blueprint & Wiring Diagram</p>
       </div>
 

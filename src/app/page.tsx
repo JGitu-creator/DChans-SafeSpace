@@ -23,6 +23,7 @@ import AudioHug from '@/components/AudioHug';
 import CharmBracelet from '@/components/CharmBracelet';
 import LoginSequence from '@/components/LoginSequence';
 import GoldenThread from '@/components/GoldenThread';
+import BiblicalGames from '@/components/BiblicalGames';
 
 const LOCK_SCREEN_BIKES = [
   '/hadassah-bike.png',
@@ -205,7 +206,7 @@ export default function Home() {
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
-                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">Selah Ride</h1>
+                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">DChan's Safespace</h1>
                 <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2 text-sky-400">Chantal Hadassah</p>
               </div>
               <div className="w-full flex flex-col gap-4">
@@ -354,6 +355,7 @@ export default function Home() {
                     {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
                     {activeView === 'spanish' && <motion.div key="spanish-view" className="w-full"><SpanishSanctuary /></motion.div>}
                     {activeView === 'midnight' && <motion.div key="midnight-view" className="w-full"><MidnightLamp /></motion.div>}
+                    {activeView === 'games' && <motion.div key="games-view" className="w-full"><BiblicalGames /></motion.div>}
                     {activeView === 'thread' && <motion.div key="thread-view" className="w-full"><GoldenThread entries={journalEntries} /></motion.div>}
                     {activeView === 'garage' && <motion.div key="garage-view" className="w-full"><Garage settings={settings} onUpdateSettings={(s) => setSettings(p => ({...p, ...s}))} /></motion.div>}
                     {activeView === 'dev' && <motion.div key="dev-view" className="w-full"><DevModeHint /></motion.div>}

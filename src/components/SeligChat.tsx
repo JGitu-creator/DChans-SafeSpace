@@ -75,7 +75,7 @@ export default function SeligChat() {
     if (typeof window !== 'undefined' && 'Notification' in window) {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        new Notification("Selig's Selah", {
+        new Notification("Selig's Whisper", {
           body: "¡Hola, Hadassah! Notifications are active. I'll reach out to you on the road.",
           icon: "/hadassah-bike.png"
         });
