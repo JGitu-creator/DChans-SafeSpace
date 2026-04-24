@@ -79,7 +79,7 @@ export default function PitStop() {
             activeTab === 'cube' ? 'bg-white text-zinc-900 shadow-md' : 'text-zinc-500 hover:text-zinc-800'
           }`}
         >
-          DChan's Cube
+          DChan&apos;s Cube
         </button>
       </div>
 
@@ -184,11 +184,6 @@ export default function PitStop() {
             <DChansCube />
           </motion.div>
         )}
-      </AnimatePresence>
-    </div>
-  );
-}
-}
       </AnimatePresence>
     </div>
   );

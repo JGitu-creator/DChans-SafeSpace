@@ -86,10 +86,10 @@ export default function BlessingsJar() {
         <div className="inline-block p-5 bg-purple-500/10 rounded-[2.5rem] mb-2 border-2 border-purple-500/20 shadow-2xl">
           <Sparkles size={44} className="text-purple-600" />
         </div>
-        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-[#2d1b4d] leading-none">DChan's Blessings Jar</h2>
+        <h2 className="text-4xl font-black uppercase italic tracking-tighter text-[#2d1b4d] leading-none">DChan&apos;s Blessings Jar</h2>
         <p className="text-zinc-500 text-xs font-black uppercase tracking-[0.4em] leading-relaxed">
           Glean 10 blessings today. <br/>
-          <span className="text-purple-700 italic">"Grateful on the open road."</span>
+          <span className="text-purple-700 italic">&quot;Grateful on the open road.&quot;</span>
         </p>
       </div>
 
@@ -107,7 +107,7 @@ export default function BlessingsJar() {
                 <motion.div
                   key={i}
                   initial={{ scale: 0.5, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1, rotate: Math.random() * 90 - 45 }}
+                  animate={{ scale: 1, opacity: 1, rotate: (i * 137.5) % 90 - 45 }}
                   className={`w-7 h-7 flex items-center justify-center bg-white shadow-md rounded-xl border border-zinc-100 ${ORIGAMI_SHAPES[i % ORIGAMI_SHAPES.length].color}`}
                 >
                   <Shape size={14} strokeWidth={3} />
@@ -125,7 +125,7 @@ export default function BlessingsJar() {
             >
               {todayCount}<span className="text-xl text-zinc-400 ml-1">/10</span>
             </motion.span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-600 mt-1">Today's Harvest</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-600 mt-1">Today&apos;s Harvest</span>
           </div>
 
           {/* Animated Falling Origami Shape */}
@@ -198,7 +198,8 @@ export default function BlessingsJar() {
                   </div>
                   <div>
                     <h3 className="text-3xl font-black italic uppercase tracking-tighter text-purple-950">Blessings Archive</h3>
-                    <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest leading-none mt-1 italic">The King's Provision</p>
+                    <p className="text-zinc-500 text-[10px] font-black uppercase tracking-widest leading-none mt-1 italic">The King&apos;s Provision</p>
+
                   </div>
                 </div>
                 <button 
@@ -240,7 +241,7 @@ export default function BlessingsJar() {
 
                     {/* Deep Ink Text Color */}
                     <p className="text-3xl font-hand text-[#2d1b4d] leading-snug pr-6 tracking-tight">
-                      "{b.text}"
+                      &quot;{b.text}&quot;
                     </p>
                     
                     <div className="absolute bottom-8 right-12 text-purple-500 opacity-[0.03] group-hover:opacity-10 transition-opacity">

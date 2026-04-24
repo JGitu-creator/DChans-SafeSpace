@@ -85,7 +85,8 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2 text-zinc-400 font-bold uppercase text-[9px] tracking-[0.3em]">
             <CalendarIcon size={12} />
-            <span>DChan's Calendar</span>          </div>
+            <span>DChan&apos;s Calendar</span>
+          </div>
           <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">{new Date().toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
         </div>
         <div className="grid grid-cols-7 gap-2">

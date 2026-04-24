@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Geist", sans-serif;
-  --font-mono: "Geist Mono", monospace;
-  --font-serif: "Libre Baskerville", serif;
-  --font-hand: "Satisfy", cursive;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Libre Baskerville", "Times New Roman", serif;
+  --font-hand: "Satisfy", "Brush Script MT", "Cursive", cursive;
 }
 
 :root {

@@ -28,7 +28,8 @@ export default function AffirmationCard({
         return;
       }
 
-      const text = `${affirmation.proverbHook}. Today's growth word is ${affirmation.growthWord.word}. ${affirmation.spanishPhrase.phrase}. ${affirmation.deepExegesis}.`;
+      const voices = window.speechSynthesis.getVoices();
+      const text = `${affirmation.proverbHook}. Today&apos;s growth word is ${affirmation.growthWord.word}. ${affirmation.spanishPhrase.phrase}. ${affirmation.deepExegesis}.`;
       const utterance = new SpeechSynthesisUtterance(text);
       
       const getFemaleVoice = () => {
@@ -95,7 +96,7 @@ export default function AffirmationCard({
           <span>The Hook</span>
         </div>
         <p className="text-3xl md:text-4xl font-serif italic text-zinc-800 leading-tight tracking-tight handwritten">
-          "{affirmation.proverbHook}"
+          &quot;{affirmation.proverbHook}&quot;
         </p>
       </div>
 
@@ -118,7 +119,7 @@ export default function AffirmationCard({
             <span>Palabra del Día</span>
           </div>
           <p className="text-purple-900 text-xl font-black italic tracking-tighter leading-tight">
-            "{affirmation.spanishPhrase.phrase}"
+            &quot;{affirmation.spanishPhrase.phrase}&quot;
           </p>
           <p className="text-purple-700/60 text-[10px] font-bold mt-2 uppercase tracking-wider">
             ({affirmation.spanishPhrase.translation})

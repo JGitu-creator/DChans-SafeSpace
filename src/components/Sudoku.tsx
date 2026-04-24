@@ -116,7 +116,6 @@ export default function Sudoku() {
   const [size, setSize] = useState<SudokuSize>(4);
   const [puzzleIndex, setPuzzleIndex] = useState(0);
   const [grid, setGrid] = useState<number[][]>([]);
-  const [isComplete, setIsComplete] = useState(false);
   const [errorCell, setErrorCell] = useState<{r: number, c: number} | null>(null);
 
   const currentPuzzle = useMemo(() => {
@@ -124,9 +123,18 @@ export default function Sudoku() {
     return puzzles[puzzleIndex % puzzles.length];
   }, [size, puzzleIndex]);
 
+  const isComplete = useMemo(() => {
+    if (grid.length === 0) return false;
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        if (grid[i][j] !== currentPuzzle.solution[i][j]) return false;
+      }
+    }
+    return true;
+  }, [grid, size, currentPuzzle.solution]);
+
   useEffect(() => {
     setGrid(currentPuzzle.initial.map(row => [...row]));
-    setIsComplete(false);
     setErrorCell(null);
   }, [currentPuzzle]);
 
@@ -149,22 +157,8 @@ export default function Sudoku() {
     }
   };
 
-  useEffect(() => {
-    const checkComplete = () => {
-      if (grid.length === 0) return false;
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) {
-          if (grid[i][j] !== currentPuzzle.solution[i][j]) return false;
-        }
-      }
-      return true;
-    };
-    if (checkComplete()) setIsComplete(true);
-  }, [grid, size, currentPuzzle]);
-
   const reset = () => {
     setGrid(currentPuzzle.initial.map(row => [...row]));
-    setIsComplete(false);
     setErrorCell(null);
   };
 
@@ -182,7 +176,7 @@ export default function Sudoku() {
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2 text-sky-400">
           <Sparkles size={16} />
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">DChan's Sudoku</h2>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">DChan&apos;s Sudoku</h2>
         </div>
         <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">Focus your mind, Hadassah</p>
       </div>

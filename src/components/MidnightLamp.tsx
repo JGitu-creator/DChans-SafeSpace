@@ -216,7 +216,7 @@ export default function MidnightLamp() {
             exit={{ opacity: 0 }}
             className="mt-12 p-8 bg-purple-50/50 rounded-2xl border-2 border-purple-100 text-center shadow-xl z-20 backdrop-blur-sm"
           >
-            <p className="text-purple-900 text-[10px] font-black uppercase tracking-widest mb-4">DChan's Breathing Guide</p>
+            <p className="text-purple-900 text-[10px] font-black uppercase tracking-widest mb-4">DChan&apos;s Breathing Guide</p>
             <p className="text-purple-800 text-base font-bold leading-loose italic serif-italic">
               &quot;Breathe in His Grace... <br/> Hold for a moment... <br/> Breathe out your cares.&quot;
             </p>

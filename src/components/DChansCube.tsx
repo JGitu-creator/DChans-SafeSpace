@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, Trophy, Sparkles, ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -16,7 +16,29 @@ export default function DChansCube() {
 
   const [grid, setGrid] = useState<Color[][]>(initialGrid);
   const [moves, setMoves] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+
+  const isComplete = useMemo(() => {
+    if (moves === 0) return false;
+
+    // Check if each quadrant is a single color
+    const q1 = grid[0][0];
+    const q2 = grid[0][2];
+    const q3 = grid[2][0];
+    const q4 = grid[2][2];
+
+    const checkQuad = (rStart: number, cStart: number, color: Color) => {
+      for (let i = rStart; i < rStart + 2; i++) {
+        for (let j = cStart; j < cStart + 2; j++) {
+          if (grid[i][j] !== color) return false;
+        }
+      }
+      return true;
+    };
+
+    return checkQuad(0, 0, q1) && checkQuad(0, 2, q2) && 
+           checkQuad(2, 0, q3) && checkQuad(2, 2, q4) &&
+           q1 !== q2 && q1 !== q3 && q2 !== q4; // Ensure colors are distinct
+  }, [grid, moves]);
 
   const shiftRow = (rowIndex: number, direction: 'left' | 'right') => {
     if (isComplete) return;
@@ -51,33 +73,8 @@ export default function DChansCube() {
     setMoves(m => m + 1);
   };
 
-  useEffect(() => {
-    const checkComplete = () => {
-      // Check if each quadrant is a single color
-      const q1 = grid[0][0];
-      const q2 = grid[0][2];
-      const q3 = grid[2][0];
-      const q4 = grid[2][2];
-
-      const checkQuad = (rStart: number, cStart: number, color: Color) => {
-        for (let i = rStart; i < rStart + 2; i++) {
-          for (let j = cStart; j < cStart + 2; j++) {
-            if (grid[i][j] !== color) return false;
-          }
-        }
-        return true;
-      };
-
-      return checkQuad(0, 0, q1) && checkQuad(0, 2, q2) && 
-             checkQuad(2, 0, q3) && checkQuad(2, 2, q4) &&
-             q1 !== q2 && q1 !== q3 && q2 !== q4; // Ensure colors are distinct
-    };
-
-    if (moves > 0 && checkComplete()) setIsComplete(true);
-  }, [grid, moves]);
-
   const scramble = () => {
-    let newGrid = initialGrid.map(row => [...row]);
+    const newGrid = initialGrid.map(row => [...row]);
     // Randomly shift rows and columns
     for (let i = 0; i < 15; i++) {
       const isRow = Math.random() > 0.5;
@@ -109,7 +106,6 @@ export default function DChansCube() {
     }
     setGrid(newGrid);
     setMoves(0);
-    setIsComplete(false);
   };
 
   return (
@@ -117,7 +113,7 @@ export default function DChansCube() {
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2 text-rose-400">
           <Sparkles size={16} />
-          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">DChan's Cube</h2>
+          <h2 className="text-2xl font-black italic uppercase tracking-tighter text-white">DChan&apos;s Cube</h2>
         </div>
         <p className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500">Align your path, Hadassah</p>
       </div>

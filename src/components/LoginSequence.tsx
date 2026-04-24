@@ -9,20 +9,17 @@ interface LoginSequenceProps {
   onComplete: () => void;
 }
 
+const Ichthys = () => (
+  <svg width="60" height="30" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" className="text-amber-700/60">
+    <path d="M 0 25 Q 40 -15 80 25 Q 40 65 0 25 Z" />
+    <path d="M 75 20 L 95 5 M 75 30 L 95 45" />
+  </svg>
+);
+
 export default function LoginSequence({ onComplete }: LoginSequenceProps) {
   const [stage, setStage] = useState<'scroll' | 'name'>('scroll');
-  const [declaration, setDeclaration] = useState<MajesticDeclaration>(LOGIN_DECLARATIONS[0]);
-
-  useEffect(() => {
-    const random = LOGIN_DECLARATIONS[Math.floor(Math.random() * LOGIN_DECLARATIONS.length)];
-    setDeclaration(random);
-  }, []);
-
-  const Ichthys = () => (
-    <svg width="60" height="30" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" className="text-amber-700/60">
-      <path d="M 0 25 Q 40 -15 80 25 Q 40 65 0 25 Z" />
-      <path d="M 75 20 L 95 5 M 75 30 L 95 45" />
-    </svg>
+  const [declaration] = useState<MajesticDeclaration>(() => 
+    LOGIN_DECLARATIONS[Math.floor(Math.random() * LOGIN_DECLARATIONS.length)]
   );
 
   return (
@@ -55,7 +52,7 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
 
               <div className="space-y-6 md:space-y-8">
                 <p className="text-xl md:text-3xl font-serif italic text-[#5d2e0a] leading-tight tracking-tight px-2 md:px-4">
-                  "{declaration.text}"
+                  &quot;{declaration.text}&quot;
                 </p>
                 <div className="flex flex-col items-center gap-1">
                   <div className="h-px w-12 bg-[#d4af37]/30" />

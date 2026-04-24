@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIcon, LogOut, Code, Sparkles, Heart } from 'lucide-react';
+import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIcon, LogOut, Code, Sparkles, Heart, RefreshCw } from 'lucide-react';
 import { ROUTES, RouteConfig, Affirmation, UserSettings, EbenezerStone, View } from '@/lib/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
@@ -98,7 +98,6 @@ const NATURE_PAINTINGS: Record<string, string> = {
 };
 
 export default function Home() {
-  const [currentRoute, setCurrentRoute] = useState<RouteConfig>(ROUTES[1]); 
   const [isLocked, setIsLocked] = useState(true);
   const [isPINAccepted, setIsPINAccepted] = useState(false);
   const [passcode, setPasscode] = useState('');
@@ -106,7 +105,8 @@ export default function Home() {
   const [lockImageIndex, setLockImageIndex] = useState(0);
   const [showAffirmation, setShowAffirmation] = useState(false);
   const [affirmationMessage, setAffirmationMessage] = useState('');
-  const [rescueMode, setRescueMode] = useState(false);
+  const [struggleInput, setStruggleInput] = useState('');
+  const [isTransforming, setIsTransforming] = useState(false);
   
   const [settings, setSettings] = useState<UserSettings>({
     bibleVersion: 'ESV',
@@ -115,21 +115,20 @@ export default function Home() {
     preferredBike: 'adventure',
   });
 
+  const currentRoute = useMemo(() => {
+    return ROUTES.find(r => r.bike === settings.preferredBike) || ROUTES[1];
+  }, [settings.preferredBike]);
+
   const stones = useLiveQuery(() => db.ebenezerStones.toArray()) || [];
   const journalEntries = useLiveQuery(() => db.journalEntries.toArray()) || [];
   const gratitudeGrains = useLiveQuery(() => db.gratitudeGrains.toArray()) || [];
   const dailyAffirmation = getDailyAffirmation(currentRoute.id);
+  const [rescueMode, setRescueMode] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => setLockImageIndex((prev) => (prev + 1) % LOCK_SCREEN_BIKES.length), 7000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    // Synchronize current route with preferred bike from settings
-    const route = ROUTES.find(r => r.bike === settings.preferredBike) || ROUTES[1];
-    setCurrentRoute(route);
-  }, [settings.preferredBike]);
 
   useEffect(() => {
     if (!isLocked) {
@@ -206,7 +205,7 @@ export default function Home() {
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
               <div className="flex flex-col gap-2">
-                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">DChan's Safespace</h1>
+                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">DChan&apos;s Safespace</h1>
                 <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2 text-sky-400">Chantal Hadassah</p>
               </div>
               <div className="w-full flex flex-col gap-4">
@@ -256,7 +255,7 @@ export default function Home() {
                                 })()}
                               </p>
                             </div>
-                            <p className="text-zinc-400 text-[8px] font-black uppercase tracking-[0.4em] mt-1 ml-1">Selig's Whisper</p>
+                            <p className="text-zinc-400 text-[8px] font-black uppercase tracking-[0.4em] mt-1 ml-1">Selig&apos;s Whisper</p>
                           </div>
                         </div>
 
