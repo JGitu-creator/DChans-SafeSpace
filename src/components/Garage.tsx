@@ -108,7 +108,7 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                   <Sparkles className="text-amber-500" />
-                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Royal Decrees</h3>
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Royal Affirmations & Prayer</h3>
                 </div>
                 <button 
                   onClick={() => {

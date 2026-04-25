@@ -124,8 +124,9 @@ export default function Sudoku() {
   }, [size, puzzleIndex]);
 
   const isComplete = useMemo(() => {
-    if (grid.length === 0) return false;
+    if (!grid || grid.length !== size) return false;
     for (let i = 0; i < size; i++) {
+      if (!grid[i] || grid[i].length !== size) return false;
       for (let j = 0; j < size; j++) {
         if (grid[i][j] !== currentPuzzle.solution[i][j]) return false;
       }
@@ -134,11 +135,14 @@ export default function Sudoku() {
   }, [grid, size, currentPuzzle.solution]);
 
   useEffect(() => {
-    setGrid(currentPuzzle.initial.map(row => [...row]));
-    setErrorCell(null);
+    if (currentPuzzle && currentPuzzle.initial) {
+      setGrid(currentPuzzle.initial.map(row => [...row]));
+      setErrorCell(null);
+    }
   }, [currentPuzzle]);
 
   const handleCellChange = (row: number, col: number, value: string) => {
+    if (!grid || !grid[row]) return;
     const num = parseInt(value);
     if (value !== '' && (isNaN(num) || num < 1 || num > size)) return;
     

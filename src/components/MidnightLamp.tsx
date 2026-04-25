@@ -12,9 +12,11 @@ export default function MidnightLamp() {
   
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  const toggleSound = (soundType: 'breeze' | 'nature') => {
+  const toggleSound = async (soundType: 'breeze' | 'nature') => {
     if (activeSound === soundType) {
-      if (audioCtxRef.current) audioCtxRef.current.close();
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        await audioCtxRef.current.close();
+      }
       audioCtxRef.current = null;
       setActiveSound('none');
       return;
@@ -22,14 +24,20 @@ export default function MidnightLamp() {
 
     if (typeof window !== 'undefined') {
       try {
-        if (audioCtxRef.current) audioCtxRef.current.close();
-        const AudioContext = (window as any).AudioContext || (window as any).webkitAudioContext;
-        audioCtxRef.current = new AudioContext();
+        if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+          await audioCtxRef.current.close();
+        }
+        const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
+        const ctx = new AudioContextClass();
+        audioCtxRef.current = ctx;
         
-        const ctx = audioCtxRef.current;
-        if (!ctx) return;
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
+        }
 
         const bufferSize = 4096;
+        // ScriptProcessor is deprecated but still widely supported for simple noise. 
+        // We add a check for the context state to prevent errors.
         const noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
         
         noiseNode.onaudioprocess = (e) => {
@@ -99,7 +107,9 @@ export default function MidnightLamp() {
   useEffect(() => {
     window.speechSynthesis.getVoices();
     return () => {
-      if (audioCtxRef.current) audioCtxRef.current.close();
+      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+        audioCtxRef.current.close().catch(e => console.error("Cleanup error", e));
+      }
     };
   }, []);
 

@@ -133,16 +133,26 @@ export default function Home() {
   useEffect(() => {
     if (!isLocked) {
       const now = new Date();
-      const last = settings.lastOpened ? new Date(settings.lastOpened) : now;
-      const hoursSince = (now.getTime() - last.getTime()) / (1000 * 60 * 60);
-      if (hoursSince > 48) setRescueMode(true);
-      setSettings(prev => ({ ...prev, lastOpened: now }));
+      setSettings(prev => {
+        const last = prev.lastOpened ? new Date(prev.lastOpened) : now;
+        const hoursSince = (now.getTime() - last.getTime()) / (1000 * 60 * 60);
+        
+        // We handle side effects like rescueMode outside or via a check
+        if (hoursSince > 48 && !rescueMode) {
+          // Note: This is still technically a setState in effect, 
+          // but by checking !rescueMode we prevent any potential loops.
+          setRescueMode(true);
+        }
+
+        return { ...prev, lastOpened: now.toISOString() };
+      });
+
       if (Math.random() > 0.8) {
         setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
         setShowAffirmation(true);
       }
     }
-  }, [isLocked]);
+  }, [isLocked, rescueMode]);
 
   const backgroundImages: Record<string, string> = {
     mountain: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2560',

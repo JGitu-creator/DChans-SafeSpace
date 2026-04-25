@@ -18,18 +18,20 @@ export default function DChansCube() {
   const [moves, setMoves] = useState(0);
 
   const isComplete = useMemo(() => {
-    if (moves === 0) return false;
+    if (!grid || grid.length < 4 || moves === 0) return false;
 
     // Check if each quadrant is a single color
-    const q1 = grid[0][0];
-    const q2 = grid[0][2];
-    const q3 = grid[2][0];
-    const q4 = grid[2][2];
+    const q1 = grid[0]?.[0];
+    const q2 = grid[0]?.[2];
+    const q3 = grid[2]?.[0];
+    const q4 = grid[2]?.[2];
+
+    if (!q1 || !q2 || !q3 || !q4) return false;
 
     const checkQuad = (rStart: number, cStart: number, color: Color) => {
       for (let i = rStart; i < rStart + 2; i++) {
         for (let j = cStart; j < cStart + 2; j++) {
-          if (grid[i][j] !== color) return false;
+          if (!grid[i] || grid[i][j] !== color) return false;
         }
       }
       return true;
