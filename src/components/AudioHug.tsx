@@ -22,11 +22,12 @@ export default function AudioHug() {
       
       const voices = window.speechSynthesis.getVoices();
       
-      // Strict selection for a soft, sweet British Female voice
+      // Strict selection for a soft, sweet British Female voice - Sync with Lamp
       const preferredVoice = voices.find(v => 
-        (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
-        (v.name.includes('Female') || v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Serena') || v.name.includes('Martha'))
-      );
+        (v.name.includes('Google UK English Female') || v.name.includes('Natural') || v.name.includes('Soft')) && 
+        v.lang.startsWith('en')
+      ) || voices.find(v => v.lang.startsWith('en-GB') && v.name.includes('Female'))
+        || voices.find(v => v.lang.startsWith('en-US') && v.name.includes('Female'));
       
       if (preferredVoice) utterance.voice = preferredVoice;
       

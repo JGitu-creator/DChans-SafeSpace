@@ -47,9 +47,11 @@ export default function MidnightLamp() {
               // Soft white noise with low-pass for "Sea Breeze"
               output[i] = (Math.random() * 2 - 1) * 0.04;
             } else if (mode === 'morning') {
-              // Morning Birds - delicate FM synthesis
+              // Morning Birds - delicate FM synthesis - more audible
               const t = ctx.currentTime + (i / ctx.sampleRate);
-              output[i] = Math.sin(t * 2200 + Math.sin(t * 15) * 10) * 0.01;
+              const chirp = Math.sin(t * 1800 + Math.sin(t * 22) * 15);
+              const envelope = Math.pow(Math.sin(t * 3.5), 8); // Rythmic chirping
+              output[i] = chirp * envelope * 0.015;
             } else {
               // Peace Mode - deep meditative drone
               const t = ctx.currentTime + (i / ctx.sampleRate);
@@ -82,10 +84,13 @@ export default function MidnightLamp() {
       const utterance = new SpeechSynthesisUtterance(affirmation);
       
       const voices = window.speechSynthesis.getVoices();
+      // Favors the soft, natural female voice the user loves
       const preferredVoice = voices.find(v => 
-        (v.lang.startsWith('en-GB') || v.lang.startsWith('en-US')) && 
-        (v.name.includes('Female') || v.name.includes('Natural'))
-      );
+        (v.name.includes('Google UK English Female') || v.name.includes('Natural') || v.name.includes('Soft')) && 
+        v.lang.startsWith('en')
+      ) || voices.find(v => v.lang.startsWith('en-GB') && v.name.includes('Female'))
+        || voices.find(v => v.lang.startsWith('en-US') && v.name.includes('Female'));
+
       if (preferredVoice) utterance.voice = preferredVoice;
 
       utterance.pitch = mode === 'morning' ? 1.1 : 0.9;

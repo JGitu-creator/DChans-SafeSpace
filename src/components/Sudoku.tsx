@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, Trophy, Sparkles, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
 
-type SudokuSize = 4 | 6 | 9;
+type SudokuSize = 4 | 6;
 
 interface Puzzle {
   initial: number[][];
@@ -45,72 +45,24 @@ const PUZZLES: Record<SudokuSize, Puzzle[]> = {
   6: [
     {
       initial: [
-        [0, 0, 3, 0, 1, 0],
-        [5, 6, 0, 3, 2, 0],
-        [0, 5, 0, 2, 0, 3],
-        [2, 0, 4, 0, 5, 0],
-        [0, 2, 6, 0, 3, 1],
-        [0, 3, 0, 1, 0, 0]
+        [1, 0, 0, 4, 0, 0],
+        [0, 0, 2, 0, 0, 3],
+        [0, 1, 0, 0, 2, 0],
+        [0, 2, 0, 0, 5, 0],
+        [3, 0, 0, 5, 0, 0],
+        [0, 0, 4, 0, 0, 6]
       ],
       solution: [
-        [4, 2, 3, 6, 1, 5],
-        [5, 6, 1, 3, 2, 4],
-        [6, 5, 2, 2, 4, 3], // Note: 6x6 has 2x3 or 3x2 blocks. Standard is 2x3.
-        [2, 1, 4, 6, 5, 3],
-        [1, 2, 6, 5, 3, 1],
-        [3, 3, 5, 1, 4, 2]
-      ]
-    }
-  ],
-  9: [
-    {
-      initial: [
-        [5, 3, 0, 0, 7, 0, 0, 0, 0],
-        [6, 0, 0, 1, 9, 5, 0, 0, 0],
-        [0, 9, 8, 0, 0, 0, 0, 6, 0],
-        [8, 0, 0, 0, 6, 0, 0, 0, 3],
-        [4, 0, 0, 8, 0, 3, 0, 0, 1],
-        [7, 0, 0, 0, 2, 0, 0, 0, 6],
-        [0, 6, 0, 0, 0, 0, 2, 8, 0],
-        [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 7, 9]
-      ],
-      solution: [
-        [5, 3, 4, 6, 7, 8, 9, 1, 2],
-        [6, 7, 2, 1, 9, 5, 3, 4, 8],
-        [1, 9, 8, 3, 4, 2, 5, 6, 7],
-        [8, 5, 9, 7, 6, 1, 4, 2, 3],
-        [4, 2, 6, 8, 5, 3, 7, 9, 1],
-        [7, 1, 3, 9, 2, 4, 8, 5, 6],
-        [9, 6, 1, 5, 3, 7, 2, 8, 4],
-        [2, 8, 7, 4, 1, 9, 6, 3, 5],
-        [3, 4, 5, 2, 8, 6, 1, 7, 9]
+        [1, 3, 5, 4, 6, 2],
+        [4, 6, 2, 1, 5, 3],
+        [5, 1, 6, 3, 2, 4],
+        [6, 2, 3, 4, 5, 1],
+        [3, 4, 1, 5, 2, 6],
+        [2, 5, 4, 6, 3, 1]
       ]
     }
   ]
 };
-
-// Fixed 6x6 solution (previous one had errors in my manual check)
-PUZZLES[6] = [
-  {
-    initial: [
-      [1, 0, 0, 4, 0, 0],
-      [0, 0, 2, 0, 0, 3],
-      [0, 1, 0, 0, 2, 0],
-      [0, 2, 0, 0, 5, 0],
-      [3, 0, 0, 5, 0, 0],
-      [0, 0, 4, 0, 0, 6]
-    ],
-    solution: [
-      [1, 3, 5, 4, 6, 2],
-      [4, 6, 2, 1, 5, 3],
-      [5, 1, 6, 3, 2, 4],
-      [6, 2, 3, 4, 5, 1],
-      [3, 4, 1, 5, 2, 6],
-      [2, 5, 4, 6, 3, 1]
-    ]
-  }
-];
 
 export default function Sudoku() {
   const [size, setSize] = useState<SudokuSize>(4);
@@ -119,7 +71,7 @@ export default function Sudoku() {
   const [errorCell, setErrorCell] = useState<{r: number, c: number} | null>(null);
 
   const currentPuzzle = useMemo(() => {
-    const puzzles = PUZZLES[size];
+    const puzzles = PUZZLES[size] || PUZZLES[4];
     return puzzles[puzzleIndex % puzzles.length];
   }, [size, puzzleIndex]);
 
@@ -142,7 +94,7 @@ export default function Sudoku() {
   }, [currentPuzzle]);
 
   const handleCellChange = (row: number, col: number, value: string) => {
-    if (!grid || !grid[row]) return;
+    if (!grid || !grid[row] || !currentPuzzle) return;
     const num = parseInt(value);
     if (value !== '' && (isNaN(num) || num < 1 || num > size)) return;
     
@@ -162,13 +114,14 @@ export default function Sudoku() {
   };
 
   const reset = () => {
-    setGrid(currentPuzzle.initial.map(row => [...row]));
-    setErrorCell(null);
+    if (currentPuzzle) {
+      setGrid(currentPuzzle.initial.map(row => [...row]));
+      setErrorCell(null);
+    }
   };
 
   const nextLevel = () => {
     if (size === 4) setSize(6);
-    else if (size === 6) setSize(9);
     else {
       setSize(4);
       setPuzzleIndex(prev => prev + 1);
@@ -186,7 +139,7 @@ export default function Sudoku() {
       </div>
 
       <div className="flex gap-2 p-1 bg-black/20 rounded-xl border border-white/5">
-        {[4, 6, 9].map((s) => (
+        {[4, 6].map((s) => (
           <button
             key={s}
             onClick={() => setSize(s as SudokuSize)}
@@ -205,16 +158,12 @@ export default function Sudoku() {
              style={{ 
                gridTemplateColumns: `repeat(${size}, minmax(0, 1fr))`,
              }}>
-          {grid.map((row, i) => (
-            row.map((cell, j) => {
-              const isInitial = currentPuzzle.initial[i][j] !== 0;
+          {grid && grid.length === size && grid.map((row, i) => (
+            row && row.length === size && row.map((cell, j) => {
+              const isInitial = currentPuzzle?.initial?.[i]?.[j] !== 0;
               const isError = errorCell?.r === i && errorCell?.c === j;
               
-              // Visual grouping for 9x9 (3x3 blocks)
-              const borderClasses = size === 9 ? `
-                ${j % 3 === 2 && j !== 8 ? 'mr-1 md:mr-2' : ''}
-                ${i % 3 === 2 && i !== 8 ? 'mb-1 md:mb-2' : ''}
-              ` : size === 6 ? `
+              const borderClasses = size === 6 ? `
                 ${j % 3 === 2 && j !== 5 ? 'mr-1 md:mr-2' : ''}
                 ${i % 2 === 1 && i !== 5 ? 'mb-1 md:mb-2' : ''}
               ` : `
