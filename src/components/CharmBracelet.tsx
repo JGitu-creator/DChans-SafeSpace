@@ -87,7 +87,7 @@ export default function CharmBracelet({ activeView, onViewChange, accentColor }:
 
   return (
     <div className="w-full sticky top-0 z-40 bg-black/60 backdrop-blur-xl border-b border-white/5 shadow-2xl overflow-x-auto no-scrollbar">
-      <div className="flex justify-between items-start min-w-[450px] px-8 py-2 max-w-4xl mx-auto">
+      <div className="flex justify-between items-start min-w-[380px] md:min-w-[450px] px-4 md:px-8 py-2 max-w-4xl mx-auto">
         {groups.map((group) => (
           <div key={group.name} className="flex flex-col items-center gap-1">
             <div className="flex gap-4">

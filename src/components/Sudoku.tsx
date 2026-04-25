@@ -176,7 +176,7 @@ export default function Sudoku() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 p-6 md:p-8 bg-zinc-900/40 backdrop-blur-xl rounded-[3rem] border border-white/5 shadow-2xl w-full max-w-2xl mx-auto overflow-hidden">
+    <div className="flex flex-col items-center gap-6 md:gap-8 p-3 md:p-8 bg-zinc-900/40 backdrop-blur-xl rounded-[2rem] md:rounded-[3rem] border border-white/5 shadow-2xl w-full max-w-2xl mx-auto overflow-hidden">
       <div className="text-center space-y-2">
         <div className="flex items-center justify-center gap-2 text-sky-400">
           <Sparkles size={16} />

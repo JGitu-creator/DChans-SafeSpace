@@ -144,7 +144,7 @@ export default function Home() {
           setRescueMode(true);
         }
 
-        return { ...prev, lastOpened: now.toISOString() };
+        return { ...prev, lastOpened: now };
       });
 
       if (Math.random() > 0.8) {
@@ -231,10 +231,10 @@ export default function Home() {
             </motion.div>
           </motion.div>
         ) : (
-          <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-4 md:px-8">
+          <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-0 md:px-8">
             <CharmBracelet activeView={activeView} onViewChange={setActiveView} accentColor={currentRoute.accentColor} />
 
-            <div className="flex-1 mt-8 pb-12">
+            <div className="flex-1 mt-4 md:mt-8 pb-12 px-2 md:px-0">
               <div className="canvas-container canvas-texture">
                 <div className="canvas-surface" style={{ '--canvas-bg': `${currentRoute.accentColor}10` } as React.CSSProperties}>
                   {/* Nature Painting Accent */}

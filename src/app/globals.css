@@ -26,7 +26,7 @@
 
 /* Painter's Canvas UI Layout - Optimized for mobile & scrolling */
 .canvas-container {
-  @apply relative mx-auto w-full max-w-4xl min-h-[90dvh] bg-[#f8f5f0] shadow-[0_40px_100px_rgba(0,0,0,0.5)] rounded-lg overflow-y-auto transition-all duration-700 border-[12px] border-[#2c1a10]; /* Wooden Frame Effect */
+  @apply relative mx-auto w-full max-w-4xl min-h-[90dvh] bg-[#f8f5f0] shadow-[0_40px_100px_rgba(0,0,0,0.5)] rounded-lg overflow-y-auto transition-all duration-700 border-[4px] md:border-[12px] border-[#2c1a10]; /* Thinner border on mobile */
   background-image: 
     linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
@@ -34,7 +34,7 @@
 }
 
 .canvas-surface {
-  @apply relative w-full p-6 md:p-12 text-[#1a1a1a];
+  @apply relative w-full p-4 md:p-12 text-[#1a1a1a]; /* Reduced padding on mobile */
   background-color: var(--canvas-bg, #f8f5f0);
 }
 

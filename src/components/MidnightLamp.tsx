@@ -40,7 +40,7 @@ export default function MidnightLamp() {
         // We add a check for the context state to prevent errors.
         const noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
         
-        noiseNode.onaudioprocess = (e) => {
+        noiseNode.onaudioprocess = (e: any) => {
           const output = e.outputBuffer.getChannelData(0);
           for (let i = 0; i < bufferSize; i++) {
             if (soundType === 'breeze') {
