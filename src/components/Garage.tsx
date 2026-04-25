@@ -47,9 +47,9 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
         <div className="inline-block p-4 bg-purple-500/10 rounded-3xl mb-4 border border-purple-500/20">
           <Palette size={40} className="text-purple-600" />
         </div>
-        <h2 className="text-4xl font-black uppercase italic tracking-tighter handwritten text-purple-900">Artist's Studio</h2>
+        <h2 className="text-4xl font-black uppercase italic tracking-tighter handwritten text-purple-900">Artist&apos;s Studio</h2>
         <p className="text-zinc-400 text-[10px] font-black uppercase tracking-widest mt-2 leading-none">Choose your path and tune your gear</p>
-      </div>
+        </div>
 
       {/* Tabs */}
       <div className="flex justify-center gap-2 mb-10 bg-zinc-200/50 p-1.5 rounded-2xl">
@@ -158,7 +158,7 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
                   <Volume2 className="text-sky-500" />
-                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Selig's Voice</h3>
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter">Selig&apos;s Voice</h3>
                 </div>
               </div>
               <div className="space-y-10">

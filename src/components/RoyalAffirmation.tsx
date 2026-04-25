@@ -40,7 +40,7 @@ export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationP
           
           <div className="space-y-4 md:space-y-6">
             <p className="text-lg md:text-2xl font-serif italic text-[#5d2e0a] leading-relaxed">
-              "{message}"
+              &quot;{message}&quot;
             </p>
             <p className="text-[10px] md:text-sm font-bold text-[#d4af37] uppercase tracking-widest">
               By Order of King Jesus Christ

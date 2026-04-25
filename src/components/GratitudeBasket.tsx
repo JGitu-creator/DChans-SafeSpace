@@ -29,7 +29,7 @@ export default function GratitudeBasket() {
         <div className="inline-block p-4 bg-purple-500/10 rounded-3xl mb-4 border border-purple-500/20">
           <ShoppingBasket size={40} className="text-purple-400" />
         </div>
-        <h2 className="text-3xl font-black uppercase tracking-tighter italic">Boaz's Field</h2>
+        <h2 className="text-3xl font-black uppercase tracking-tighter italic">Boaz&apos;s Field</h2>
         <p className="text-white/40 text-xs font-bold uppercase tracking-widest mt-2">Glean your daily blessings & words</p>
       </div>
 
@@ -77,7 +77,7 @@ export default function GratitudeBasket() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-2 h-2 bg-purple-400 rounded-full shadow-[0_0_10px_rgba(167,139,250,0.8)]" />
-                    <p className="text-sm text-white/80 font-medium italic">"{grain.text}"</p>
+                    <p className="text-sm text-white/80 font-medium italic">&quot;{grain.text}&quot;</p>
                   </div>
                   <button onClick={() => grain.id && db.gratitudeGrains.delete(grain.id)} className="text-white/10 hover:text-red-400 transition-colors p-2 opacity-0 group-hover:opacity-100">
                     <Trash2 size={16} />
@@ -99,7 +99,7 @@ export default function GratitudeBasket() {
                     {word.type}
                   </span>
                 </div>
-                <h4 className="text-xl font-black italic text-white mb-1">"{word.phrase}"</h4>
+                <h4 className="text-xl font-black italic text-white mb-1">&quot;{word.phrase}&quot;</h4>
                 <p className="text-purple-400 text-xs font-bold uppercase tracking-widest">{word.translation}</p>
               </div>
             ))}

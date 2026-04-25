@@ -61,13 +61,13 @@ export default function DevModeHint() {
             <h3 className="font-black italic uppercase tracking-widest">Structure</h3>
           </div>
           <p className="text-sm text-white/50 leading-relaxed mb-8 font-medium pr-10">
-            Building your sanctuary is like building a bike—one perfect component at a time. This card is a 'Leg' of the machine.
+            Building your sanctuary is like building a bike—one perfect component at a time. This card is a &apos;Leg&apos; of the machine.
           </p>
           <div className="bg-sky-500/5 p-4 rounded-2xl border border-sky-500/10">
             <code className="text-[10px] text-sky-300 leading-loose">
               &lt;AffirmationCard <br/>
-              &nbsp;&nbsp;voice="SoftBritishFemale" <br/>
-              &nbsp;&nbsp;mood="Majestic" <br/>
+              &nbsp;&nbsp;voice=&quot;SoftBritishFemale&quot; <br/>
+              &nbsp;&nbsp;mood=&quot;Majestic&quot; <br/>
               /&gt;
             </code>
           </div>
@@ -91,7 +91,7 @@ export default function DevModeHint() {
           <div className="space-y-4">
             <h3 className="text-3xl font-black italic uppercase tracking-tighter">The Full Blueprint</h3>
             <p className="text-white/40 text-sm max-w-sm mx-auto leading-relaxed italic">
-              "God is the ultimate Designer, and you are His masterpiece. Every line of code, like every breath, has a purpose."
+              &quot;God is the ultimate Designer, and you are His masterpiece. Every line of code, like every breath, has a purpose.&quot;
             </p>
           </div>
 

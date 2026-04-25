@@ -84,7 +84,7 @@ export default function SpanishSanctuary() {
             </div>
             
             <h3 className="text-xl font-black text-zinc-800 mb-1 tracking-tight italic serif-italic relative z-10">
-              "{word.phrase}"
+              &quot;{word.phrase}&quot;
             </h3>
             <p className={`font-black text-[10px] mb-4 uppercase tracking-[0.2em] relative z-10 ${
                 i % 3 === 0 ? 'text-emerald-700' : 
