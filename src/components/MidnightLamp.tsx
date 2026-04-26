@@ -13,10 +13,10 @@ export default function MidnightLamp() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const SOUNDS = {
-    breeze: 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3', // Soft wind/ocean
+    breeze: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_982936715f.mp3?filename=soft-waves-ocean-7112.mp3', // Gentle rhythmic waves
     nature: mode === 'morning' 
-      ? 'https://assets.mixkit.co/active_storage/sfx/135/135-preview.mp3' // Birds chirping
-      : 'https://assets.mixkit.co/active_storage/sfx/123/123-preview.mp3' // Crickets/Night
+      ? 'https://cdn.pixabay.com/download/audio/2021/11/25/audio_91b32e02d9.mp3?filename=forest-with-birds-chirping-nature-sounds-8164.mp3' // Calm morning forest
+      : 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=night-ambience-17064.mp3' // Soft crickets & night
   };
 
   const toggleSound = (soundType: 'breeze' | 'nature') => {
@@ -37,7 +37,7 @@ export default function MidnightLamp() {
     const url = soundType === 'breeze' ? SOUNDS.breeze : SOUNDS.nature;
     const audio = new Audio(url);
     audio.loop = true;
-    audio.volume = 0.4;
+    audio.volume = 0.25; // Lower default volume for comfort
     audio.play().catch(e => console.error("Sound play blocked by browser. Interaction required."));
     
     audioRef.current = audio;

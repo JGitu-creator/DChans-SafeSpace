@@ -116,7 +116,10 @@ export default function BiblicalGames() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            message: "ACT AS SELIG. Generate 1 unique Bible Trivia question for Hadassah. You MUST return ONLY a JSON object. No other text. Keys: 'question' (string), 'options' (array of 4 strings), 'answer' (string, must exactly match one of the options), 'explanation' (string).",
+            message: `ACT AS SELIG. Generate a truly unique, rare, and surprising Bible Trivia question for Hadassah. 
+            Avoid common questions. Think about deep details in the Word. 
+            Current time seed: ${Date.now()}. 
+            Return ONLY a JSON object with keys: 'question', 'options' (4 unique choices), 'answer' (exact match), 'explanation' (the beautiful context).`,
           })
         });
         const data = await response.json();
