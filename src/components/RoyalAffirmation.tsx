@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Scroll, Star, Crown } from 'lucide-react';
+import { Crown, Star } from 'lucide-react';
 
 interface RoyalAffirmationProps {
   message: string;
@@ -14,51 +14,65 @@ export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationP
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
     >
-      <motion.div
-        initial={{ scale: 0.8, y: 50, rotate: -2 }}
-        animate={{ scale: 1, y: 0, rotate: 0 }}
-        className="relative w-full max-w-[90vw] md:max-w-lg bg-[#fdf6e3] rounded-sm shadow-2xl p-6 md:p-12 overflow-hidden border-x-[8px] md:border-x-[12px] border-[#d4af37]"
-        style={{
-          backgroundImage: `url("https://www.transparenttextures.com/patterns/parchment.png")`,
-          boxShadow: '0 0 50px rgba(212, 175, 55, 0.3), 0 20px 40px rgba(0,0,0,0.4)'
-        }}
-      >
-        {/* Golden Ornaments */}
-        <div className="absolute top-2 left-2 md:top-4 md:left-4 text-[#d4af37]">
-          <Crown size={24} className="md:w-8 md:h-8" />
-        </div>
-        <div className="absolute top-2 right-2 md:top-4 md:right-4 text-[#d4af37]">
-          <Star size={24} className="md:w-8 md:h-8" />
-        </div>
-        
-        <div className="flex flex-col items-center text-center gap-4 md:gap-8">
-          <h2 className="text-xl md:text-2xl font-serif font-black text-[#8b4513] uppercase tracking-[0.1em] border-b-2 border-[#d4af37] pb-1 md:pb-2">
-            Royal Affirmation & Prayer
-          </h2>
-          
-          <div className="space-y-4 md:space-y-6">
-            <p className="text-lg md:text-2xl font-serif italic text-[#5d2e0a] leading-relaxed">
-              &quot;{message}&quot;
-            </p>
-            <p className="text-[10px] md:text-sm font-bold text-[#d4af37] uppercase tracking-widest">
-              By Order of King Jesus Christ
-            </p>
+      <div className="relative w-full max-w-[320px] md:max-w-sm">
+        {/* The Top Scroll Rod */}
+        <motion.div 
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
+          className="absolute top-[-10px] inset-x-0 h-4 bg-[#b8860b] rounded-full z-20 shadow-lg border-y border-[#d4af37]/30"
+        />
+
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="relative bg-[#fdf6e3] shadow-2xl overflow-hidden border-x-[6px] border-[#d4af37]"
+          style={{
+            backgroundImage: `url("https://www.transparenttextures.com/patterns/parchment.png")`,
+            boxShadow: '0 0 40px rgba(212, 175, 55, 0.2), 0 15px 30px rgba(0,0,0,0.3)'
+          }}
+        >
+          <div className="p-6 md:p-8 flex flex-col items-center text-center gap-4">
+            {/* Golden Ornament */}
+            <div className="text-[#d4af37] mb-1">
+              <Crown size={28} />
+            </div>
+            
+            <h2 className="text-sm md:text-base font-serif font-black text-[#8b4513] uppercase tracking-[0.2em] border-b border-[#d4af37]/50 pb-2">
+              Royal Affirmation
+            </h2>
+            
+            <div className="space-y-4">
+              <p className="text-base md:text-lg font-serif italic text-[#5d2e0a] leading-relaxed px-2">
+                &quot;{message}&quot;
+              </p>
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-px w-8 bg-[#d4af37]/30" />
+                <p className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">
+                  Decree of Grace
+                </p>
+                <div className="h-px w-8 bg-[#d4af37]/30" />
+              </div>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="mt-4 px-6 py-2 bg-[#8b4513] text-white text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-[#5d2e0a] transition-all shadow-md active:scale-95"
+            >
+              I Accept
+            </button>
           </div>
+        </motion.div>
 
-          <button
-            onClick={onClose}
-            className="mt-4 md:mt-8 px-6 md:px-10 py-2.5 md:py-3 bg-[#8b4513] text-white font-bold rounded-full hover:bg-[#5d2e0a] transition-colors shadow-lg active:scale-95 text-xs md:text-base"
-          >
-            I Accept my Crown
-          </button>
-        </div>
-
-        {/* Scroll Rolls */}
-        <div className="absolute top-0 bottom-0 left-[-6px] w-4 bg-[#b8860b] shadow-inner" />
-        <div className="absolute top-0 bottom-0 right-[-6px] w-4 bg-[#b8860b] shadow-inner" />
-      </motion.div>
+        {/* The Bottom Scroll Rod */}
+        <motion.div 
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          className="absolute bottom-[-10px] inset-x-0 h-4 bg-[#b8860b] rounded-full z-20 shadow-lg border-y border-[#d4af37]/30"
+        />
+      </div>
     </motion.div>
   );
 }
