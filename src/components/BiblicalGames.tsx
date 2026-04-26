@@ -116,10 +116,10 @@ export default function BiblicalGames() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            message: `ACT AS SELIG. Generate a truly unique, rare, and surprising Bible Trivia question for Hadassah. 
-            Avoid common questions. Think about deep details in the Word. 
-            Current time seed: ${Date.now()}. 
-            Return ONLY a JSON object with keys: 'question', 'options' (4 unique choices), 'answer' (exact match), 'explanation' (the beautiful context).`,
+            message: `ACT AS SELIG. Generate a truly OBSCURE, RARE, and UNIQUE Bible Trivia question for Hadassah. 
+            DO NOT ask about Noah, David, or Esther. Think about minor characters, specific numbers, or hidden details in the prophets or genealogies. 
+            RANDOM SEED: ${Math.random()}. 
+            Return ONLY a JSON object with keys: 'question', 'options' (4 unique choices), 'answer' (exact match), 'explanation' (the fascinating context).`,
           })
         });
         const data = await response.json();
