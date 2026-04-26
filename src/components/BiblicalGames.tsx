@@ -116,12 +116,20 @@ export default function BiblicalGames() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            message: "Generate a brand new, unique Bible Trivia question for Hadassah. Return it as a JSON object with keys: question, options (array), answer, and explanation. Make it a hard one!",
+            message: "ACT AS SELIG. Generate 1 unique Bible Trivia question for Hadassah. You MUST return ONLY a JSON object. No other text. Keys: 'question' (string), 'options' (array of 4 strings), 'answer' (string, must exactly match one of the options), 'explanation' (string).",
           })
         });
         const data = await response.json();
-        setShuffledData([{ ...data, id: `spark-${Date.now()}` }]);
+        
+        // Validation check to ensure data is shaped correctly
+        if (data.question && data.options && data.answer) {
+          setShuffledData([{ ...data, id: `spark-${Date.now()}` }]);
+        } else {
+          // Fallback if AI output is messy
+          setShuffledData([TRIVIA[Math.floor(Math.random() * TRIVIA.length)]]);
+        }
       } catch (e) {
+        console.error("Spark failed:", e);
         setMode(null);
       } finally {
         setIsLoading(false);

@@ -146,7 +146,7 @@ export default function Sudoku() {
                     value={cell === 0 ? '' : cell}
                     onChange={(e) => handleCellChange(i, j, e.target.value)}
                     readOnly={isInitial}
-                    className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-center text-xs md:text-lg font-black rounded-md md:rounded-lg transition-all outline-none border ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-center text-sm md:text-xl font-black rounded-md md:rounded-lg transition-all outline-none border flex items-center justify-center p-0 leading-none ${
                       isInitial 
                         ? 'bg-white text-zinc-900 border-transparent shadow-md' 
                         : isError

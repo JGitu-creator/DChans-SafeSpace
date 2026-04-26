@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lamp, Moon, Sun, Wind, Heart, Volume2, Bird } from 'lucide-react';
+import { Lamp, Moon, Sun, Wind, Heart, Bird, VolumeX, Volume2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export default function MidnightLamp() {
@@ -10,67 +10,38 @@ export default function MidnightLamp() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeSound, setActiveSound] = useState<'none' | 'breeze' | 'nature'>('none');
   
-  const audioCtxRef = useRef<AudioContext | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const toggleSound = async (soundType: 'breeze' | 'nature') => {
+  const SOUNDS = {
+    breeze: 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3', // Soft wind/ocean
+    nature: mode === 'morning' 
+      ? 'https://assets.mixkit.co/active_storage/sfx/135/135-preview.mp3' // Birds chirping
+      : 'https://assets.mixkit.co/active_storage/sfx/123/123-preview.mp3' // Crickets/Night
+  };
+
+  const toggleSound = (soundType: 'breeze' | 'nature') => {
     if (activeSound === soundType) {
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        await audioCtxRef.current.close();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
       }
-      audioCtxRef.current = null;
       setActiveSound('none');
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      try {
-        if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-          await audioCtxRef.current.close();
-        }
-        const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
-        const ctx = new AudioContextClass();
-        audioCtxRef.current = ctx;
-        
-        if (ctx.state === 'suspended') {
-          await ctx.resume();
-        }
-
-        const bufferSize = 4096;
-        // ScriptProcessor is deprecated but still widely supported for simple noise. 
-        // We add a check for the context state to prevent errors.
-        const noiseNode = ctx.createScriptProcessor(bufferSize, 1, 1);
-        
-        noiseNode.onaudioprocess = (e: any) => {
-          const output = e.outputBuffer.getChannelData(0);
-          for (let i = 0; i < bufferSize; i++) {
-            if (soundType === 'breeze') {
-              // Soft white noise with low-pass for "Sea Breeze"
-              output[i] = (Math.random() * 2 - 1) * 0.04;
-            } else if (mode === 'morning') {
-              // Morning Birds - delicate FM synthesis - more audible
-              const t = ctx.currentTime + (i / ctx.sampleRate);
-              const chirp = Math.sin(t * 1800 + Math.sin(t * 22) * 15);
-              const envelope = Math.pow(Math.sin(t * 3.5), 8); // Rythmic chirping
-              output[i] = chirp * envelope * 0.015;
-            } else {
-              // Peace Mode - deep meditative drone
-              const t = ctx.currentTime + (i / ctx.sampleRate);
-              output[i] = (Math.sin(t * 110) + Math.sin(t * 165)) * 0.02;
-            }
-          }
-        };
-
-        const filter = ctx.createBiquadFilter();
-        filter.type = soundType === 'breeze' ? 'lowpass' : 'bandpass';
-        filter.frequency.value = soundType === 'breeze' ? 300 : mode === 'morning' ? 2000 : 150;
-
-        noiseNode.connect(filter);
-        filter.connect(ctx.destination);
-        setActiveSound(soundType);
-      } catch (e) {
-        console.error("Audio not supported");
-      }
+    // Stop existing
+    if (audioRef.current) {
+      audioRef.current.pause();
     }
+
+    const url = soundType === 'breeze' ? SOUNDS.breeze : SOUNDS.nature;
+    const audio = new Audio(url);
+    audio.loop = true;
+    audio.volume = 0.4;
+    audio.play().catch(e => console.error("Sound play blocked by browser. Interaction required."));
+    
+    audioRef.current = audio;
+    setActiveSound(soundType);
   };
 
   const startAffirmation = () => {
@@ -84,7 +55,6 @@ export default function MidnightLamp() {
       const utterance = new SpeechSynthesisUtterance(affirmation);
       
       const voices = window.speechSynthesis.getVoices();
-      // Favors the soft, natural female voice the user loves
       const preferredVoice = voices.find(v => 
         (v.name.includes('Google UK English Female') || v.name.includes('Natural') || v.name.includes('Soft')) && 
         v.lang.startsWith('en')
@@ -112,8 +82,8 @@ export default function MidnightLamp() {
   useEffect(() => {
     window.speechSynthesis.getVoices();
     return () => {
-      if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
-        audioCtxRef.current.close().catch(e => console.error("Cleanup error", e));
+      if (audioRef.current) {
+        audioRef.current.pause();
       }
     };
   }, []);
@@ -138,7 +108,7 @@ export default function MidnightLamp() {
 
       <div className="flex justify-center gap-2 mb-12 bg-zinc-200/50 p-1.5 rounded-2xl relative z-10 w-full max-w-[200px]">
         <button
-          onClick={() => { setMode('morning'); setActiveSound('none'); if(audioCtxRef.current) audioCtxRef.current.close(); }}
+          onClick={() => { setMode('morning'); setActiveSound('none'); if(audioRef.current) audioRef.current.pause(); }}
           className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${
             mode === 'morning' ? 'bg-white text-amber-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'
           }`}
@@ -147,7 +117,7 @@ export default function MidnightLamp() {
           <span className="text-[9px] font-black uppercase tracking-widest">Day</span>
         </button>
         <button
-          onClick={() => { setMode('night'); setActiveSound('none'); if(audioCtxRef.current) audioCtxRef.current.close(); }}
+          onClick={() => { setMode('night'); setActiveSound('none'); if(audioRef.current) audioRef.current.pause(); }}
           className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${
             mode === 'night' ? 'bg-white text-purple-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'
           }`}
@@ -221,6 +191,10 @@ export default function MidnightLamp() {
             <span className="text-[8px] font-black uppercase tracking-widest italic">{mode === 'morning' ? 'Morning Birds' : 'Peace Mode'}</span>
           </button>
         </div>
+        
+        {activeSound !== 'none' && (
+          <p className="text-[7px] text-zinc-400 uppercase tracking-widest animate-pulse">Sound active • Tap icon to stop</p>
+        )}
       </div>
 
       <AnimatePresence>
