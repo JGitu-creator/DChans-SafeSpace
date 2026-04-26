@@ -69,6 +69,7 @@ export default function SeligChat() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingPhrase, setLoadingPhrase] = useState(LOADING_PHRASES[0]);
   const [currentlySpeaking, setCurrentlySpeaking] = useState<string | null>(null);
+  const [autoTalk, setAutoTalk] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const requestNotificationPermission = async () => {
@@ -92,31 +93,44 @@ export default function SeligChat() {
       }
       
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Clean text of markdown or special chars for cleaner speech
+      const cleanText = text.replace(/[*_#]/g, '').replace(/¡/g, 'Hola, ');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       
       const voices = window.speechSynthesis.getVoices();
-      // Force Sweet British Female Voice with retries
+      
+      // More aggressive voice finding
       const getFemaleVoice = () => {
-        return voices.find(v => 
-          (v.name.includes('Google UK English Female') || v.name.includes('Natural') || v.name.includes('Soft')) && 
-          v.lang.startsWith('en')
-        ) || voices.find(v => v.lang.startsWith('en-GB') && v.name.includes('Female'))
-          || voices.find(v => v.lang.startsWith('en-US') && v.name.includes('Female'));
+        const preferred = ['Google UK English Female', 'Microsoft Hazel', 'Samantha', 'Victoria', 'Natural', 'Soft'];
+        for (const name of preferred) {
+          const v = voices.find(v => v.name.includes(name) && v.lang.startsWith('en'));
+          if (v) return v;
+        }
+        return voices.find(v => v.lang.startsWith('en') && (v.name.includes('Female') || v.name.includes('female'))) 
+          || voices.find(v => v.lang.startsWith('en'));
       };
       
       const preferredVoice = getFemaleVoice();
       if (preferredVoice) utterance.voice = preferredVoice;
       utterance.pitch = 1.1;
-      utterance.rate = 0.85;
+      utterance.rate = 0.9;
       
+      utterance.onstart = () => setCurrentlySpeaking(text);
       utterance.onend = () => setCurrentlySpeaking(null);
-      setCurrentlySpeaking(text);
+      utterance.onerror = () => setCurrentlySpeaking(null);
+      
       window.speechSynthesis.speak(utterance);
     }
   };
 
   useEffect(() => {
+    // Initial voice load
     window.speechSynthesis.getVoices();
+    if (autoTalk && messages[messages.length - 1].role === 'selig') {
+       // Small delay to ensure voices are loaded
+       setTimeout(() => speak(messages[messages.length - 1].content), 1000);
+    }
     return () => {
       if (typeof window !== 'undefined') window.speechSynthesis.cancel();
     };
@@ -160,15 +174,19 @@ export default function SeligChat() {
 
       const data = await response.json();
       
+      let newMsg: Message;
       if (data.proverbHook) {
-        setMessages(prev => [...prev, { 
+        newMsg = { 
           role: 'selig', 
-          content: "Let me take that to the Word for you, Hadassah...", 
+          content: data.deepExegesis || "Let me take that to the Word for you, Hadassah...", 
           affirmation: data 
-        }]);
+        };
       } else {
-        setMessages(prev => [...prev, { role: 'selig', content: data.text || "I'm with you, sister." }]);
+        newMsg = { role: 'selig', content: data.text || "I'm with you, sister." };
       }
+      
+      setMessages(prev => [...prev, newMsg]);
+      if (autoTalk) speak(newMsg.content);
     } catch (error) {
       setMessages(prev => [...prev, { role: 'selig', content: "I'm taking a moment to pray, mi hermana. Let's try again in a bit." }]);
     } finally {
@@ -186,7 +204,17 @@ export default function SeligChat() {
           </div>
           <div>
             <h2 className="text-xl font-black italic text-zinc-900 uppercase tracking-tighter">Talk with Selig</h2>
-            <p className="text-zinc-400 text-[9px] font-black uppercase tracking-widest leading-none mt-1 text-sky-500">Mentorship active</p>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-zinc-400 text-[9px] font-black uppercase tracking-widest leading-none text-sky-500">Mentorship active</p>
+              <button 
+                onClick={() => setAutoTalk(!autoTalk)}
+                className={`text-[8px] font-bold px-2 py-0.5 rounded-full border transition-all ${
+                  autoTalk ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' : 'bg-zinc-100 text-zinc-400 border-zinc-200'
+                }`}
+              >
+                {autoTalk ? 'Audio ON' : 'Audio OFF'}
+              </button>
+            </div>
           </div>
         </div>
         <button 

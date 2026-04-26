@@ -38,11 +38,20 @@ export async function POST(req: Request) {
     const result = await chatSession.sendMessage(prompt);
     const text = result.response.text();
     
-    // Clean JSON from response (remove markdown blocks if any)
-    const jsonString = text.replace(/```json|```/g, "").trim();
-    const affirmation = JSON.parse(jsonString);
-
-    return NextResponse.json(affirmation);
+    try {
+      // Try to parse as JSON if it looks like JSON
+      if (text.includes('{') && text.includes('}')) {
+        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+        const affirmation = JSON.parse(jsonString);
+        return NextResponse.json(affirmation);
+      }
+      
+      // If not JSON, return as plain text wrapped in a response object
+      return NextResponse.json({ text });
+    } catch (e) {
+      console.warn("Failed to parse Selig response as JSON, returning raw text:", e);
+      return NextResponse.json({ text });
+    }
   } catch (error) {
     console.error("Selig API Error:", error);
     return NextResponse.json({ error: "Selig is taking a moment to pray. Please try again later." }, { status: 500 });

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, CheckCircle2, AlertCircle, Puzzle } from 'lucide-react';
 import Sudoku from './Sudoku';
-import DChansCube from './DChansCube';
 
 const RIDDLES = [
   {
@@ -25,7 +24,7 @@ const RIDDLES = [
 ];
 
 export default function PitStop() {
-  const [activeTab, setActiveTab] = useState<'riddles' | 'sudoku' | 'cube'>('riddles');
+  const [activeTab, setActiveTab] = useState<'riddles' | 'sudoku'>('riddles');
   const [currentRiddle, setCurrentRiddle] = useState(0);
   const [input, setInput] = useState('');
   const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle');
@@ -72,14 +71,6 @@ export default function PitStop() {
           }`}
         >
           Sudoku
-        </button>
-        <button 
-          onClick={() => setActiveTab('cube')}
-          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-            activeTab === 'cube' ? 'bg-white text-zinc-900 shadow-md' : 'text-zinc-500 hover:text-zinc-800'
-          }`}
-        >
-          DChan&apos;s Cube
         </button>
       </div>
 
@@ -170,18 +161,6 @@ export default function PitStop() {
             className="w-full"
           >
             <Sudoku />
-          </motion.div>
-        )}
-
-        {activeTab === 'cube' && (
-          <motion.div
-            key="cube"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="w-full"
-          >
-            <DChansCube />
           </motion.div>
         )}
       </AnimatePresence>

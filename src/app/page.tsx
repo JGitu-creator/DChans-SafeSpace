@@ -6,6 +6,7 @@ import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIco
 import { ROUTES, RouteConfig, Affirmation, UserSettings, EbenezerStone, View } from '@/lib/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import { useSupabase } from '@/components/SupabaseProvider';
 
 import RouteSelector from '@/components/RouteSelector';
 import AffirmationCard from '@/components/AffirmationCard';
@@ -22,8 +23,8 @@ import RoyalAffirmation from '@/components/RoyalAffirmation';
 import AudioHug from '@/components/AudioHug';
 import CharmBracelet from '@/components/CharmBracelet';
 import LoginSequence from '@/components/LoginSequence';
-import GoldenThread from '@/components/GoldenThread';
 import BiblicalGames from '@/components/BiblicalGames';
+import GoldenThread from '@/components/GoldenThread';
 
 const LOCK_SCREEN_BIKES = [
   '/hadassah-bike.png',
@@ -98,6 +99,7 @@ const NATURE_PAINTINGS: Record<string, string> = {
 };
 
 export default function Home() {
+  const { signIn, isSyncing, isSynced } = useSupabase();
   const [isLocked, setIsLocked] = useState(true);
   const [isPINAccepted, setIsPINAccepted] = useState(false);
   const [passcode, setPasscode] = useState('');
@@ -162,8 +164,9 @@ export default function Home() {
     galaxy: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=80&w=2560',
   };
 
-  const handleUnlock = () => {
-    if (passcode === '1122') setIsPINAccepted(true);
+  const handleUnlock = async () => {
+    const success = await signIn(passcode);
+    if (success) setIsPINAccepted(true);
     else { alert('Wrong code, mi hermana.'); setPasscode(''); }
   };
 
@@ -232,6 +235,24 @@ export default function Home() {
           </motion.div>
         ) : (
           <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-0 md:px-8">
+            <div className="flex justify-between items-center px-4 md:px-0 mb-2">
+               <div className="flex items-center gap-2">
+                 {isSyncing ? (
+                    <div className="flex items-center gap-2 text-sky-400 animate-pulse">
+                      <RefreshCw size={10} className="animate-spin" />
+                      <span className="text-[7px] font-black uppercase tracking-widest">Syncing Cloud</span>
+                    </div>
+                 ) : isSynced ? (
+                    <div className="flex items-center gap-2 text-emerald-400/60">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+                      <span className="text-[7px] font-black uppercase tracking-widest">Cloud Secured</span>
+                    </div>
+                 ) : null}
+               </div>
+               <button onClick={() => setIsLocked(true)} className="text-white/20 hover:text-white transition-colors">
+                  <LogOut size={14} />
+               </button>
+            </div>
             <CharmBracelet activeView={activeView} onViewChange={setActiveView} accentColor={currentRoute.accentColor} />
 
             <div className="flex-1 mt-4 md:mt-8 pb-12 px-2 md:px-0">

@@ -8,16 +8,18 @@ export class DChansSafespaceDB extends Dexie {
   gratitudeGrains!: Table<GratitudeGrain>;
   spanishWords!: Table<SpanishWord>;
   designBadges!: Table<DesignBadge>;
+  gameProgress!: Table<{ id?: number, gameType: string, itemId: string, completedAt: Date }>;
 
   constructor() {
     super('DChansSafespaceDB');
-    this.version(2).stores({
+    this.version(3).stores({
       journalEntries: '++id, date, moodId',
       settings: '++id',
       ebenezerStones: '++id, date',
       gratitudeGrains: '++id, date',
       spanishWords: '++id, phrase',
-      designBadges: '++id, title'
+      designBadges: '++id, title',
+      gameProgress: '++id, gameType, itemId'
     });
   }
 }
