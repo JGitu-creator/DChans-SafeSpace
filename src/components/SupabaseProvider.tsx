@@ -22,9 +22,8 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // For now, we use a hidden "shadow account" linked to the PIN
-  // Later we can move to full email auth
-  const shadowEmail = "hadassah@safespace.internal"; 
+  // Email Lock: Uses the email from environment variables, or a default fallback
+  const userEmail = process.env.NEXT_PUBLIC_USER_EMAIL || "hadassah@safespace.internal"; 
 
   useEffect(() => {
     checkUser();
@@ -53,16 +52,16 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      // Sign in or Sign up the shadow account
+      // Sign in or Sign up the locked account
       const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: shadowEmail,
+        email: userEmail,
         password: `pin-${pin}-protection`
       });
 
       if (authError) {
         // Try sign up if sign in fails (first time)
         const { error: signUpError } = await supabase.auth.signUp({
-          email: shadowEmail,
+          email: userEmail,
           password: `pin-${pin}-protection`
         });
         if (signUpError) throw signUpError;
