@@ -191,8 +191,9 @@ export default function Home() {
   const finishLogin = () => {
     setIsLocked(false);
     setIsPINAccepted(false);
-    // Trigger the compact "perfect" scroll once as the opener
-    setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
+    // Pick a random Biblical verse from the declarations list
+    const randomVerse = LOGIN_DECLARATIONS[Math.floor(Math.random() * LOGIN_DECLARATIONS.length)];
+    setAffirmationMessage(randomVerse.text);
     setShowAffirmation(true);
   };
 
@@ -214,41 +215,76 @@ export default function Home() {
         {isLocked ? (
           <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
-            <motion.div initial={{ y: 20 }} animate={{ y: 0 }} className="flex flex-col items-center gap-12 w-full max-w-sm text-center">
-              <div className="flex flex-col gap-2">
-                <h1 className="text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl">DChan&apos;s Safespace</h1>
-                <p className="text-sky-400 text-[10px] font-black uppercase tracking-[0.6em] mt-2 text-sky-400">Chantal Hadassah</p>
-              </div>
-              <div className="w-full flex flex-col gap-4">
-                <div className="relative group">
-                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-sky-400 rounded-2xl blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-                  <input type="password" value={passcode} onChange={(e) => setPasscode(e.target.value)} placeholder="Enter Sanctuary" className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-2xl tracking-[0.5em] focus:outline-none focus:ring-1 focus:ring-purple-500 backdrop-blur-md text-white placeholder:text-white/40 placeholder:tracking-normal placeholder:text-sm" onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} />
+            
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col items-center gap-12 w-full max-w-lg text-center">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col items-center gap-2">
+                  <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 10 }} className="text-amber-400 mb-2">
+                    <Crown size={48} strokeWidth={1.5} />
+                  </motion.div>
+                  <h1 className="text-6xl md:text-8xl font-black italic tracking-tighter uppercase text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+                    DChan&apos;s
+                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-sky-400">Safespace</span>
+                  </h1>
                 </div>
-                <button onClick={handleUnlock} className="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.3em] text-[10px] hover:bg-zinc-200 transition-all active:scale-95 shadow-2xl">Begin Journaling</button>
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-px w-8 bg-white/20" />
+                  <p className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40">Chantal Hadassah</p>
+                  <div className="h-px w-8 bg-white/20" />
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-white/40 text-[10px] font-black uppercase tracking-widest">
-                <Lock size={10} /><span>Personal & Protected</span>
+
+              <div className="w-full flex flex-col gap-6 max-w-sm">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600/30 to-sky-400/30 rounded-[2rem] blur-xl opacity-50 group-focus-within:opacity-100 transition duration-1000"></div>
+                  <input 
+                    type="password" 
+                    value={passcode} 
+                    onChange={(e) => setPasscode(e.target.value)} 
+                    placeholder="Enter with Peace" 
+                    className="relative w-full bg-black/40 border-2 border-white/5 rounded-[1.5rem] px-8 py-6 text-center text-3xl tracking-[0.6em] focus:outline-none focus:border-purple-500/50 backdrop-blur-2xl text-white placeholder:text-white/20 placeholder:tracking-normal placeholder:text-sm transition-all" 
+                    onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} 
+                  />
+                </div>
+                <button 
+                  onClick={handleUnlock} 
+                  className="group relative w-full bg-white text-black font-black py-6 rounded-[1.5rem] uppercase tracking-[0.4em] text-[11px] hover:scale-[1.02] transition-all active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                >
+                  <span className="relative z-10">Enter Sanctuary</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-100 via-white to-sky-100 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+              </div>
+              
+              <div className="flex flex-col items-center gap-2 text-white/20 text-[9px] font-black uppercase tracking-[0.4em]">
+                <div className="flex items-center gap-2">
+                  <Lock size={10} /><span>Private Road Only</span>
+                </div>
               </div>
             </motion.div>
           </motion.div>
         ) : (
           <div className="relative z-10 flex flex-col min-h-screen pt-4 pb-20 px-0 md:px-8">
-            <div className="flex justify-between items-center px-4 md:px-0 mb-2">
-               <div className="flex items-center gap-2">
+            <div className="flex justify-between items-center px-6 md:px-4 mb-4">
+               <div className="flex items-center gap-3">
                  {isSyncing ? (
-                    <div className="flex items-center gap-2 text-sky-400 animate-pulse">
+                    <div className="flex items-center gap-2 text-sky-400 bg-sky-400/10 px-3 py-1.5 rounded-full border border-sky-400/20">
                       <RefreshCw size={10} className="animate-spin" />
-                      <span className="text-[7px] font-black uppercase tracking-widest">Syncing Cloud</span>
+                      <span className="text-[8px] font-black uppercase tracking-widest">Syncing Cloud</span>
                     </div>
                  ) : isSynced ? (
-                    <div className="flex items-center gap-2 text-emerald-400/60">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
-                      <span className="text-[7px] font-black uppercase tracking-widest">Cloud Secured</span>
+                    <div className="flex items-center gap-2 text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-full border border-emerald-400/20">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[8px] font-black uppercase tracking-widest">Cloud Secured</span>
                     </div>
                  ) : null}
                </div>
-               <button onClick={() => setIsLocked(true)} className="text-white/20 hover:text-white transition-colors">
-                  <LogOut size={14} />
+               
+               <button 
+                onClick={() => setIsLocked(true)} 
+                className="group flex items-center gap-2 bg-white/5 hover:bg-red-500/10 px-4 py-2 rounded-xl border border-white/5 hover:border-red-500/20 transition-all text-white/40 hover:text-red-400"
+               >
+                  <span className="text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Lock & Logout</span>
+                  <LogOut size={16} />
                </button>
             </div>
             <CharmBracelet activeView={activeView} onViewChange={setActiveView} accentColor={currentRoute.accentColor} />
