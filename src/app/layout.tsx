@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Playfair_Display, EB_Garamond, Bodoni_Moda, Pinyon_S
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import { SupabaseProvider } from "@/components/SupabaseProvider";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </SupabaseProvider>
+        <Analytics />
       </body>
     </html>
   );
