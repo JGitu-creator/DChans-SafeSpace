@@ -283,9 +283,59 @@ export default function BiblicalGames() {
                   </span>
                 </div>
 
-                {(mode === 'trivia' || mode === 'selig-spark') && (
+                {mode === 'selig-spark' && (
                   <div className="space-y-8">
-                    <p className="text-2xl font-serif italic text-zinc-800 leading-relaxed">
+                    <div className="relative p-8 bg-[#fdf6e3] rounded-sm border-x-8 border-[#d4af37] shadow-inner" style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/parchment.png")` }}>
+                       <p className="text-xl md:text-2xl font-serif italic text-[#5d2e0a] leading-relaxed text-center">
+                        &quot;{shuffledData[currentIndex]?.question}&quot;
+                      </p>
+                    </div>
+                    
+                    <div className="relative">
+                      <input 
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Solve the mystery..."
+                        className="w-full bg-white/50 border-2 border-amber-200 rounded-2xl px-6 py-4 text-center text-xl font-bold focus:outline-none focus:ring-2 focus:ring-amber-500 text-zinc-800 placeholder:text-zinc-300"
+                        onKeyDown={(e) => e.key === 'Enter' && status === 'idle' && checkAnswer()}
+                      />
+                      {status !== 'idle' && (
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                          {status === 'correct' ? <CheckCircle2 className="text-emerald-500" /> : <AlertCircle className="text-red-500" />}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-center space-y-4">
+                      {showHint ? (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 bg-amber-50 rounded-xl border border-amber-100 text-sm italic text-amber-700">
+                          {shuffledData[currentIndex]?.explanation.split('.')[0]}...
+                        </motion.div>
+                      ) : (
+                        <button 
+                          onClick={() => setShowHint(true)}
+                          className="text-[10px] font-black uppercase tracking-widest text-amber-600/60 hover:text-amber-600 transition-colors flex items-center gap-2 mx-auto"
+                        >
+                          <Sparkles size={12} /> Ask Selig for a Clue
+                        </button>
+                      )}
+                    </div>
+
+                    {status === 'correct' && (
+                      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="p-6 bg-emerald-50 rounded-2xl border border-emerald-100">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600 mb-2">The Revelation</p>
+                        <p className="text-sm font-medium text-emerald-800 leading-relaxed italic">
+                          {shuffledData[currentIndex]?.explanation}
+                        </p>
+                      </motion.div>
+                    )}
+                  </div>
+                )}
+
+                {mode === 'trivia' && (
+                  <div className="space-y-8">
+                    <p className="text-2xl font-serif italic text-zinc-800 leading-relaxed text-center">
                       {shuffledData[currentIndex]?.question}
                     </p>
                     <div className="grid grid-cols-1 gap-3">
@@ -306,7 +356,7 @@ export default function BiblicalGames() {
                       ))}
                     </div>
                     {status !== 'idle' && shuffledData[currentIndex]?.explanation && (
-                      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs italic text-zinc-500 bg-zinc-50 p-4 rounded-xl border border-zinc-100">
+                      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-xs italic text-zinc-500 bg-zinc-50 p-4 rounded-xl border border-zinc-100 text-center">
                         {shuffledData[currentIndex].explanation}
                       </motion.p>
                     )}
