@@ -29,9 +29,9 @@ import GoldenThread from '@/components/GoldenThread';
 const LOCK_SCREEN_BIKES = [
   'https://images.unsplash.com/photo-1558981806-ec527fa84c09?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=2070',
-  'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070',
+  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&q=80&w=2070',
 ];
 
 const getDailyAffirmation = (routeId: string): Affirmation => {
@@ -213,24 +213,24 @@ export default function Home() {
         {showAffirmation && <RoyalAffirmation message={affirmationMessage} onClose={() => setShowAffirmation(false)} />}
 
         {isLocked ? (
-          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-8 text-white overflow-hidden">
+          <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-6 text-white overflow-hidden">
             <div className="absolute top-12 left-8 md:left-12"><AudioHug /></div>
             
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col items-center gap-12 w-full max-w-2xl text-center relative z-10">
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-col items-center gap-4">
-                  <motion.div animate={{ scale: [1, 1.1, 1] }} transition={{ repeat: Infinity, duration: 4 }} className="text-amber-400">
-                    <Crown size={64} strokeWidth={1} className="drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]" />
+            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="flex flex-col items-center gap-6 w-full max-w-2xl text-center relative z-10 -mt-10">
+              <div className="flex flex-col gap-0">
+                <div className="flex flex-col items-center gap-0">
+                  <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="text-amber-400 mb-1">
+                    <Crown size={42} strokeWidth={1.5} className="drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
                   </motion.div>
-                  <h1 className="text-7xl md:text-9xl font-black italic tracking-tighter uppercase leading-[0.8] pb-4">
-                    <span className="block text-white drop-shadow-2xl">DChan&apos;s</span>
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-sky-400 px-4">Safespace</span>
+                  <h1 className="flex flex-col items-center gap-0">
+                    <span className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan&apos;s</span>
+                    <span className="text-6xl md:text-9xl font-normal text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-sky-400 font-great-vibes px-10 py-4 block">Safespace</span>
                   </h1>
                 </div>
-                <p className="text-[12px] font-medium tracking-[1em] text-white/30 uppercase mt-4 font-playfair italic">Chantal Hadassah</p>
+                <p className="text-[10px] font-medium tracking-[0.8em] text-white/30 uppercase -mt-4 font-playfair italic">Chantal Hadassah</p>
               </div>
 
-              <div className="w-full flex flex-col gap-10 max-w-sm">
+              <div className="w-full flex flex-col gap-6 max-w-sm mt-4">
                 <div className="relative group">
                   <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-sky-400 to-amber-400 rounded-2xl blur opacity-30 group-focus-within:opacity-100 transition duration-1000"></div>
                   <input 
@@ -238,28 +238,28 @@ export default function Home() {
                     value={passcode} 
                     onChange={(e) => setPasscode(e.target.value)} 
                     placeholder="ENTER PIN" 
-                    className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-6 text-center text-4xl tracking-[0.8em] focus:outline-none focus:border-white/30 backdrop-blur-md text-white placeholder:text-white/10 placeholder:tracking-widest placeholder:text-[10px] transition-all font-light" 
+                    className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[0.8em] focus:outline-none focus:border-white/30 backdrop-blur-md text-white placeholder:text-white/10 placeholder:tracking-widest placeholder:text-[9px] transition-all font-light" 
                     onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} 
                   />
                 </div>
                 
                 <button 
                   onClick={handleUnlock} 
-                  className="group relative py-6 overflow-hidden transition-all active:scale-95"
+                  className="group relative py-5 overflow-hidden transition-all active:scale-95"
                 >
                   <div className="absolute inset-0 border border-white/20 rounded-full group-hover:border-white/40 transition-colors" />
                   <div className="absolute inset-1 border border-white/10 rounded-full" />
                   
                   <div className="relative flex items-center justify-center gap-4">
-                    <div className="w-8 h-px bg-white/20 group-hover:w-12 transition-all" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white group-hover:text-amber-400 transition-colors">Enter Sanctuary</span>
-                    <div className="w-8 h-px bg-white/20 group-hover:w-12 transition-all" />
+                    <div className="w-6 h-px bg-white/20 group-hover:w-10 transition-all" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-white group-hover:text-amber-400 transition-colors">Enter Sanctuary</span>
+                    <div className="w-6 h-px bg-white/20 group-hover:w-10 transition-all" />
                   </div>
                 </button>
               </div>
               
-              <div className="flex flex-col items-center gap-4 mt-8">
-                 <div className="h-px w-32 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+              <div className="flex flex-col items-center gap-4 mt-2">
+                 <div className="h-px w-20 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                  <p className="text-[7px] font-black uppercase tracking-[0.5em] text-white/20 italic">For Her Heart Alone</p>
               </div>
             </motion.div>

@@ -51,7 +51,7 @@ export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationP
               <div className="flex items-center justify-center gap-2">
                 <div className="h-px w-8 bg-[#d4af37]/30" />
                 <p className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">
-                  Decree of Grace
+                  Royal Word of Peace
                 </p>
                 <div className="h-px w-8 bg-[#d4af37]/30" />
               </div>
