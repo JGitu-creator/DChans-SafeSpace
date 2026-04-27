@@ -426,7 +426,7 @@ export default function Home() {
                       </motion.div>
                     )}
 
-                    {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentMoodId} settings={settings} /></motion.div>}
+                    {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentRoute.id} settings={settings} /></motion.div>}
                     {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[70vh]"><SeligChat /></motion.div>}
                     {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentRoute.bike} /></motion.div>}
                     {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
