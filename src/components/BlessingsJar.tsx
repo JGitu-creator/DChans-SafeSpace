@@ -5,6 +5,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { Plus, Trash2, Sparkles, ScrollText, X, Archive, ShoppingBasket, Heart, Star, Bike, Flower, Sun, Cross } from 'lucide-react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import { useSupabase } from './SupabaseProvider';
 
 const ORIGAMI_SHAPES = [
   { icon: Heart, color: 'text-pink-400' },
@@ -16,6 +17,7 @@ const ORIGAMI_SHAPES = [
 ];
 
 export default function BlessingsJar() {
+  const { syncData } = useSupabase();
   const [newBlessing, setNewGrain] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [showJarContents, setShowJarContents] = useState(false);
@@ -46,6 +48,7 @@ export default function BlessingsJar() {
         text: newBlessing.trim(),
         type: 'gratitude'
       });
+      syncData();
       setNewGrain('');
       setIsAdding(false);
     }, 1200); 
@@ -231,11 +234,15 @@ export default function BlessingsJar() {
                           {new Date(b.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                         </span>
                       </div>
-                      <button 
-                        onClick={() => b.id && db.gratitudeGrains.delete(b.id)}
+                      <button
+                        onClick={async () => {
+                          if (b.id) {
+                            await db.gratitudeGrains.delete(b.id);
+                            syncData();
+                          }
+                        }}
                         className="text-zinc-200 hover:text-red-500 transition-colors p-2"
-                      >
-                        <Trash2 size={20} />
+                      >                        <Trash2 size={20} />
                       </button>
                     </div>
 

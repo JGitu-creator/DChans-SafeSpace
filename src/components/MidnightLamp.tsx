@@ -13,10 +13,10 @@ export default function MidnightLamp() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const SOUNDS = {
-    ocean: 'https://www.soundjay.com/nature/ocean-wave-1.mp3',
+    ocean: 'https://actions.google.com/sounds/v1/water/waves_crashing_on_shore.ogg',
     forest: mode === 'morning' 
-      ? 'https://www.soundjay.com/nature/sounds/canary-chirping-1.mp3' 
-      : 'https://www.soundjay.com/nature/sounds/cricket-chirping-1.mp3'
+      ? 'https://actions.google.com/sounds/v1/ambiences/morning_birds.ogg' 
+      : 'https://actions.google.com/sounds/v1/ambiences/night_crickets.ogg'
   };
 
   useEffect(() => {

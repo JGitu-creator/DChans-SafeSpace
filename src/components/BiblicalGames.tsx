@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { db } from '@/lib/db';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useSupabase } from './SupabaseProvider';
 
 type GameMode = 'trivia' | 'scramble' | 'whoami' | 'selig-spark';
 
@@ -82,6 +83,7 @@ const WHO_AM_I: WhoAmI[] = [
 ];
 
 export default function BiblicalGames() {
+  const { syncData } = useSupabase();
   const [mode, setMode] = useState<GameMode | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -93,6 +95,8 @@ export default function BiblicalGames() {
   const [isLoading, setIsLoading] = useState(false);
 
   const completedIds = useLiveQuery(() => db.gameProgress.toArray())?.map(p => p.itemId) || [];
+  const level = Math.floor(completedIds.length / 5) + 1;
+  const progressToNextLevel = (completedIds.length % 5) / 5 * 100;
 
   const shuffle = (array: any[]) => {
     return [...array].sort(() => Math.random() - 0.5);
@@ -178,6 +182,7 @@ export default function BiblicalGames() {
           itemId: current.id,
           completedAt: new Date()
         });
+        syncData();
       }
     } else {
       setStatus('wrong');
@@ -203,6 +208,21 @@ export default function BiblicalGames() {
         </div>
         <h2 className="text-4xl font-black uppercase tracking-tighter italic text-zinc-800 handwritten">Bible Game Center</h2>
         <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mt-2 text-amber-600">Progressing through the Word, Hadassah</p>
+        
+        {/* Level and Progress Bar */}
+        <div className="mt-8 max-w-xs mx-auto">
+          <div className="flex justify-between items-end mb-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Level {level}</span>
+            <span className="text-[8px] font-bold text-amber-600 uppercase tracking-widest">{completedIds.length} Total Correct</span>
+          </div>
+          <div className="h-2 w-full bg-zinc-100 rounded-full overflow-hidden border border-black/5">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${progressToNextLevel}%` }}
+              className="h-full bg-amber-500"
+            />
+          </div>
+        </div>
       </div>
 
       {!mode ? (
@@ -227,9 +247,10 @@ export default function BiblicalGames() {
           />
           <GameModeCard 
             title="Selig's Spark" 
-            desc="AI-generated unique challenges" 
-            icon={<Stars className="text-amber-500" />} 
-            onClick={() => handleModeSelect('selig-spark')} 
+            desc={level < 2 ? "Unlocks at Level 2" : "AI-generated unique challenges"} 
+            icon={<Stars className={level < 2 ? "text-zinc-300" : "text-amber-500"} />} 
+            onClick={() => level >= 2 && handleModeSelect('selig-spark')} 
+            disabled={level < 2}
           />
         </div>
       ) : (
@@ -441,23 +462,26 @@ export default function BiblicalGames() {
   );
 }
 
-function GameModeCard({ title, desc, icon, onClick }: { title: string, desc: string, icon: React.ReactNode, onClick: () => void }) {
+function GameModeCard({ title, desc, icon, onClick, disabled }: { title: string, desc: string, icon: React.ReactNode, onClick: () => void, disabled?: boolean }) {
   return (
     <button 
       onClick={onClick}
-      className="group bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] border border-black/5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all text-left flex flex-col gap-4 relative overflow-hidden"
+      disabled={disabled}
+      className={`group bg-white/60 backdrop-blur-md p-8 rounded-[2.5rem] border border-black/5 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all text-left flex flex-col gap-4 relative overflow-hidden ${disabled ? 'opacity-50 cursor-not-allowed grayscale' : ''}`}
     >
       <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-zinc-100 to-transparent -mr-8 -mt-8 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700" />
-      <div className="p-3 bg-white rounded-2xl shadow-sm w-fit relative z-10">
+      <div className={`p-3 bg-white rounded-2xl shadow-sm w-fit relative z-10 ${disabled ? 'bg-zinc-50' : ''}`}>
         {icon}
       </div>
       <div className="relative z-10">
         <h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-800">{title}</h3>
         <p className="text-[10px] text-zinc-500 font-medium leading-relaxed mt-1">{desc}</p>
       </div>
-      <div className="mt-4 flex items-center text-zinc-900 font-black uppercase text-[8px] tracking-[0.3em] relative z-10">
-        Play Now <ChevronRight size={10} className="ml-1 group-hover:translate-x-1 transition-transform" />
-      </div>
+      {!disabled && (
+        <div className="mt-4 flex items-center text-zinc-900 font-black uppercase text-[8px] tracking-[0.3em] relative z-10">
+          Play Now <ChevronRight size={10} className="ml-1 group-hover:translate-x-1 transition-transform" />
+        </div>
+      )}
     </button>
   );
 }

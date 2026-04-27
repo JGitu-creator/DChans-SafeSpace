@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, Book, Volume2, Bike, Save, Shield, HardHat, Footprints, Code, Palette, Zap, Hammer, Swords, CheckCircle2, MapPin, Sparkles } from 'lucide-react';
+import { Settings, Book, Volume2, Bike, Save, Shield, HardHat, Footprints, Code, Palette, Zap, Hammer, Swords, CheckCircle2, MapPin, Sparkles, Download, FileText } from 'lucide-react';
+import { db } from '@/lib/db';
 import { BibleVersion, MotorbikeType, UserSettings, ROUTES, RouteConfig } from '@/lib/types';
 import { useState, useEffect } from 'react';
 
@@ -40,6 +41,36 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
     { icon: HardHat, name: 'Helmet', truth: 'Salvation', description: 'Protects your mind.' },
     { icon: Swords, name: 'Sword', truth: 'The Word of God', description: 'Your offensive gear.' },
   ];
+
+  const exportJourney = async () => {
+    const entries = await db.journalEntries.toArray();
+    const stones = await db.ebenezerStones.toArray();
+    const grains = await db.gratitudeGrains.toArray();
+    const words = await db.spanishWords.toArray();
+
+    let content = `CHANTHAL HADASSAH'S ROAD LOG\n`;
+    content += `==========================\n\n`;
+
+    content += `JOURNAL ENTRIES\n---------------\n`;
+    entries.forEach(e => {
+      content += `Date: ${e.date.toLocaleDateString()}\n`;
+      content += `Struggle: ${e.struggle}\n`;
+      content += `Notes: ${e.thoughts}\n`;
+      content += `-------------------\n`;
+    });
+
+    content += `\n\nGRATITUDE GRAINS\n----------------\n`;
+    grains.forEach(g => {
+      content += `- [${g.date.toLocaleDateString()}] ${g.text}\n`;
+    });
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `hadassah-journey-${new Date().toISOString().split('T')[0]}.txt`;
+    link.click();
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 md:p-8 text-zinc-800 pb-32">
@@ -177,6 +208,24 @@ export default function Garage({ settings, onUpdateSettings }: GarageProps) {
                   <input type="range" min="0.5" max="1.5" step="0.1" value={settings.voiceRate} onChange={(e) => onUpdateSettings({ voiceRate: parseFloat(e.target.value) })} className="w-full h-1.5 bg-zinc-100 rounded-full appearance-none cursor-pointer accent-sky-500" />
                 </div>
               </div>
+            </div>
+
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-black/5">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <Download size={20} className="text-purple-600" />
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter text-zinc-800">Export Your Journey</h3>
+                </div>
+              </div>
+              <p className="text-zinc-500 text-xs leading-relaxed italic mb-8">
+                Download a permanent copy of all your journals and gratitude grains to your device as a text file.
+              </p>
+              <button 
+                onClick={exportJourney}
+                className="w-full bg-zinc-900 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] hover:bg-black transition-all flex items-center justify-center gap-3 shadow-lg"
+              >
+                <FileText size={16} /> Save as Text File
+              </button>
             </div>
           </motion.div>
         )}

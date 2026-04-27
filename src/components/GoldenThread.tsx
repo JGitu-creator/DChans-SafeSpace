@@ -19,13 +19,15 @@ export default function GoldenThread({ entries }: GoldenThreadProps) {
         const aff = JSON.parse(e.affirmation);
         return {
           word: aff.growthWord?.word || 'Grace',
-          date: e.date,
-          verse: aff.bibleVerse
+          date: new Date(e.date),
+          verse: aff.bibleVerse || 'Psalm 23:1'
         };
       } catch {
-        return { word: 'Grace', date: e.date, verse: 'Psalm 23' };
+        return { word: 'Grace', date: new Date(e.date), verse: 'Psalm 23:1' };
       }
-    }).slice(0, 5); // Show last 5 major points in the thread
+    })
+    .sort((a, b) => a.date.getTime() - b.date.getTime())
+    .slice(-12); // Show more points in the thread
 
     return themes;
   }, [entries]);
@@ -56,9 +58,9 @@ export default function GoldenThread({ entries }: GoldenThreadProps) {
           <>
             {/* The Golden Thread Visualization */}
             <div className="relative h-64 mb-12">
-              <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+              <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 1000 200">
                 <motion.path
-                  d="M 0 120 Q 250 40 500 180 T 1000 120"
+                  d="M 0 100 C 250 20, 750 180, 1000 100"
                   fill="none"
                   stroke="#f59e0b"
                   strokeWidth="4"
@@ -70,29 +72,35 @@ export default function GoldenThread({ entries }: GoldenThreadProps) {
                 />
               </svg>
               
-              <div className="absolute inset-0 flex items-center justify-around px-4">
-                {threadData.map((node, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.4 }}
-                    className="flex flex-col items-center gap-4 relative"
-                  >
-                    <div className="p-4 bg-amber-500 text-white rounded-2xl shadow-xl shadow-amber-500/40 rotate-3 hover:rotate-0 transition-transform cursor-help group">
-                      <Sparkles size={20} />
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-32 p-2 bg-white text-zinc-900 rounded-lg text-[8px] font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity shadow-2xl pointer-events-none">
-                        {node.verse}
+              <div className="absolute inset-0 flex items-center justify-between px-10">
+                {threadData.map((node, i) => {
+                   const xPos = `${(i / (threadData.length - 1)) * 100}%`;
+                   return (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.2 }}
+                      className="absolute flex flex-col items-center gap-4"
+                      style={{ left: xPos, transform: `translateY(${Math.sin(i) * 40}px)` }}
+                    >
+                      <div className="p-3 bg-amber-500 text-white rounded-xl shadow-xl shadow-amber-500/40 rotate-3 hover:rotate-0 transition-transform cursor-help group relative">
+                        <Sparkles size={16} />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 w-40 p-3 bg-white text-zinc-900 rounded-xl text-[9px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all shadow-2xl pointer-events-none z-50 border border-zinc-100">
+                          <p className="text-amber-600 mb-1">Selig&apos;s Verse</p>
+                          {node.verse}
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-white" />
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-center">
-                      <span className="block text-[10px] font-black uppercase tracking-widest text-amber-400">{node.word}</span>
-                      <span className="block text-[7px] text-amber-200/30 uppercase mt-1 font-bold">
-                        {new Date(node.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
+                      <div className="text-center bg-zinc-900/80 backdrop-blur-sm p-1 rounded-lg">
+                        <span className="block text-[9px] font-black uppercase tracking-widest text-amber-400">{node.word}</span>
+                        <span className="block text-[7px] text-amber-200/50 uppercase mt-1 font-bold">
+                          {node.date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
 

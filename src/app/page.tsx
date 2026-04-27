@@ -25,6 +25,7 @@ import CharmBracelet from '@/components/CharmBracelet';
 import LoginSequence from '@/components/LoginSequence';
 import BiblicalGames from '@/components/BiblicalGames';
 import GoldenThread from '@/components/GoldenThread';
+import SyncStatus from '@/components/SyncStatus';
 
 const LOCK_SCREEN_BIKES = [
   '/hadassah-bike.png',
@@ -83,6 +84,9 @@ export default function Home() {
   const stones = useLiveQuery(() => db.ebenezerStones.toArray()) || [];
   const journalEntries = useLiveQuery(() => db.journalEntries.toArray()) || [];
   const gratitudeGrains = useLiveQuery(() => db.gratitudeGrains.toArray()) || [];
+  const gameProgress = useLiveQuery(() => db.gameProgress.toArray()) || [];
+  
+  const royalLevel = Math.floor(gameProgress.length / 5) + 1;
   const dailyAffirmation = getDailyAffirmation(currentRoute.id);
   const [rescueMode, setRescueMode] = useState(false);
 
@@ -253,8 +257,8 @@ export default function Home() {
                           <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm"><p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Ebenezer Stones</p><div className="flex items-center gap-2"><span className="text-2xl font-black italic text-zinc-800">{stones.length}</span><div className="h-1 flex-1 bg-zinc-200 rounded-full overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(stones.length * 10, 100)}%` }} className="h-full bg-purple-500" /></div></div></div>
                           <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm"><p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Gratitude Grains</p><div className="flex items-center gap-2"><span className="text-2xl font-black italic text-zinc-800">{gratitudeGrains.length}</span><div className="h-1 flex-1 bg-zinc-200 rounded-full overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(gratitudeGrains.length * 5, 100)}%` }} className="h-full bg-emerald-500" /></div></div></div>
                           <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm"><p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Journal Streak</p><div className="flex items-center gap-2"><span className="text-2xl font-black italic text-zinc-800">{journalEntries.length > 0 ? Math.min(journalEntries.length, 7) : '0'}</span><Sparkles size={14} className="text-amber-500" /></div></div>
-                        </div>
-                        <div className="flex flex-col gap-4"><div><p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">{currentRoute.name}</p><h2 className="text-4xl md:text-5xl font-black text-zinc-900 leading-tight italic tracking-tighter handwritten">{currentRoute.greeting}</h2></div></div>
+                          <div className="flex-1 min-w-[140px] bg-white/40 backdrop-blur-sm p-4 rounded-2xl border border-black/5 shadow-sm"><p className="text-[8px] font-black uppercase tracking-widest text-zinc-400 mb-1">Royal Level</p><div className="flex items-center gap-2"><span className="text-2xl font-black italic text-zinc-800">{royalLevel}</span><Crown size={14} className="text-amber-500" /></div></div>
+                          </div>                        <div className="flex flex-col gap-4"><div><p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">{currentRoute.name}</p><h2 className="text-4xl md:text-5xl font-black text-zinc-900 leading-tight italic tracking-tighter handwritten">{currentRoute.greeting}</h2></div></div>
                         <div className="relative group"><div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600/20 to-sky-400/20 rounded-2xl blur opacity-30"></div><div className="relative bg-white/40 backdrop-blur-md p-6 rounded-2xl border border-black/5 shadow-inner"><p className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-600 mb-4 flex items-center gap-2"><Zap size={10} /> Struggle Transformer</p><div className="flex gap-3"><input value={struggleInput} onChange={(e) => setStruggleInput(e.target.value)} placeholder="What's heavy on the road today?" className="flex-1 bg-white/60 border border-black/5 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-purple-400 italic font-medium" onKeyDown={(e) => e.key === 'Enter' && transformStruggle()} /><button onClick={transformStruggle} disabled={isTransforming || !struggleInput.trim()} className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-black transition-all active:scale-95 disabled:opacity-50">{isTransforming ? <RefreshCw size={14} className="animate-spin" /> : 'Transform'}</button></div></div></div>
                         <div className="relative p-8 rounded-xl shadow-inner border border-black/5 bg-white/40 backdrop-blur-sm"><div className="flex items-center gap-6"><div className="relative w-24 h-24 md:w-32 md:h-32 rounded-lg overflow-hidden border-2 border-[#2c1a10] shadow-lg flex-shrink-0 -rotate-2"><img src={currentRoute.image} alt="Route View" className="w-full h-full object-cover" /></div><div className="flex-1"><p className="text-[10px] font-black uppercase tracking-[0.4em] text-purple-600 mb-2">Current Route</p><h3 className="text-2xl font-black uppercase italic tracking-tighter text-zinc-800 leading-none mb-1">{currentRoute.name}</h3><span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">{currentRoute.terrain} Path</span></div></div></div>
                         <AffirmationCard affirmation={dailyAffirmation} accentColor={currentRoute.accentColor} voiceRate={settings.voiceRate} voicePitch={settings.voicePitch} />
@@ -278,6 +282,8 @@ export default function Home() {
           </div>
         )}
       </AnimatePresence>
+      {/* Global Sync Status */}
+      <SyncStatus />
     </main>
   );
 }

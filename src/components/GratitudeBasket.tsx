@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBasket, Sparkles, Plus, Trash2, BookMarked, Quote } from 'lucide-react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
+import { useSupabase } from './SupabaseProvider';
 
 export default function GratitudeBasket() {
+  const { syncData } = useSupabase();
   const [newGrain, setNewGrain] = useState('');
   const [activeTab, setActiveTab] = useState<'gratitude' | 'words'>('gratitude');
   
@@ -20,6 +22,7 @@ export default function GratitudeBasket() {
       text: newGrain.trim(),
       type: 'gratitude'
     });
+    syncData();
     setNewGrain('');
   };
 
@@ -79,7 +82,15 @@ export default function GratitudeBasket() {
                     <div className="w-2 h-2 bg-purple-400 rounded-full shadow-[0_0_10px_rgba(167,139,250,0.8)]" />
                     <p className="text-sm text-white/80 font-medium italic">&quot;{grain.text}&quot;</p>
                   </div>
-                  <button onClick={() => grain.id && db.gratitudeGrains.delete(grain.id)} className="text-white/10 hover:text-red-400 transition-colors p-2 opacity-0 group-hover:opacity-100">
+                  <button 
+                    onClick={async () => {
+                      if (grain.id) {
+                        await db.gratitudeGrains.delete(grain.id);
+                        syncData();
+                      }
+                    }} 
+                    className="text-white/10 hover:text-red-400 transition-colors p-2 opacity-0 group-hover:opacity-100"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </motion.div>

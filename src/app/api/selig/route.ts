@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     systemPrompt += `\n\nCRITICAL: Use the ${bibleVersion} Bible version for all verses and exegesis style.`;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-3.1-flash", // Upgraded to the highest 2026 version
+      model: "gemini-1.5-flash", // Using stable version for reliability
       systemInstruction: systemPrompt,
     });
 
@@ -39,18 +39,23 @@ export async function POST(req: Request) {
     const text = result.response.text();
     
     try {
-      // Try to parse as JSON if it looks like JSON
-      if (text.includes('{') && text.includes('}')) {
-        const jsonString = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
+      // Improved JSON extraction
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const jsonString = jsonMatch[0];
         const affirmation = JSON.parse(jsonString);
         return NextResponse.json(affirmation);
       }
       
-      // If not JSON, return as plain text wrapped in a response object
-      return NextResponse.json({ text });
+      // If no JSON found but there is text, return it as text
+      if (text.trim()) {
+        return NextResponse.json({ text: text.trim() });
+      }
+      
+      throw new Error("Empty response from model");
     } catch (e) {
-      console.warn("Failed to parse Selig response as JSON, returning raw text:", e);
-      return NextResponse.json({ text });
+      console.warn("Failed to parse Selig response as JSON or empty response:", e);
+      return NextResponse.json({ text: text || "I am with you, sister. Always." });
     }
   } catch (error) {
     console.error("Selig API Error:", error);

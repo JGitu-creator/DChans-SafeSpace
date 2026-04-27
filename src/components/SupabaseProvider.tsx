@@ -149,6 +149,39 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
               }
            }
         }
+
+        // Gratitude Grains
+        const { data: cloudGrains } = await supabase.from('gratitude_grains').select('*');
+        if (cloudGrains) {
+           for (const g of cloudGrains) {
+              const local = await db.gratitudeGrains.get(g.id);
+              if (!local) {
+                 await db.gratitudeGrains.put({
+                    id: g.id,
+                    date: new Date(g.date),
+                    text: g.text,
+                    type: g.type
+                 });
+              }
+           }
+        }
+
+        // Spanish Words
+        const { data: cloudWords } = await supabase.from('spanish_words').select('*');
+        if (cloudWords) {
+           for (const w of cloudWords) {
+              const local = await db.spanishWords.get(w.id);
+              if (!local) {
+                 await db.spanishWords.put({
+                    id: w.id,
+                    phrase: w.phrase,
+                    translation: w.translation,
+                    context: w.context,
+                    type: w.type
+                 });
+              }
+           }
+        }
       };
 
       // 2. Push from Dexie to Supabase (Local wins for fresh work)
@@ -184,6 +217,29 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
               game_type: p.gameType,
               item_id: p.itemId,
               completed_at: p.completedAt
+           });
+        }
+
+        const localGrains = await db.gratitudeGrains.toArray();
+        for (const g of localGrains) {
+           await supabase.from('gratitude_grains').upsert({
+              id: g.id,
+              user_id: user.id,
+              date: g.date,
+              text: g.text,
+              type: g.type
+           });
+        }
+
+        const localWords = await db.spanishWords.toArray();
+        for (const w of localWords) {
+           await supabase.from('spanish_words').upsert({
+              id: w.id,
+              user_id: user.id,
+              phrase: w.phrase,
+              translation: w.translation,
+              context: w.context,
+              type: w.type
            });
         }
       };

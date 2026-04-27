@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Sparkles, RefreshCw, Volume2, VolumeX, Bell, X } from 'lucide-react';
 import { Affirmation } from '@/lib/types';
 import AffirmationCard from './AffirmationCard';
+import { db } from '@/lib/db';
+import { useSupabase } from './SupabaseProvider';
 
 interface Message {
   role: 'user' | 'selig';
@@ -62,6 +64,7 @@ const LOADING_PHRASES = [
 ];
 
 export default function SeligChat() {
+  const { syncData } = useSupabase();
   const [messages, setMessages] = useState<Message[]>([
     { role: 'selig', content: "¡Hola, Hadassah! Selig is here with you. How is the road today, mi hermana?" }
   ]);
@@ -175,20 +178,44 @@ export default function SeligChat() {
       const data = await response.json();
       
       let newMsg: Message;
-      if (data.proverbHook) {
+      if (data.proverbHook || data.deepExegesis || data.growthWord) {
         newMsg = { 
           role: 'selig', 
-          content: data.deepExegesis || "Let me take that to the Word for you, Hadassah...", 
+          content: data.proverbHook || data.deepExegesis || "I have a word from the Spirit for you, Hadassah.", 
           affirmation: data 
         };
+
+        // Save vocabulary words
+        if (data.spanishPhrase) {
+          await db.spanishWords.add({
+            phrase: data.spanishPhrase.phrase,
+            translation: data.spanishPhrase.translation,
+            context: data.proverbHook || "Conversation with Selig",
+            type: 'Spanish'
+          });
+        }
+        if (data.growthWord) {
+          await db.spanishWords.add({
+            phrase: data.growthWord.word,
+            translation: data.growthWord.definition,
+            context: data.proverbHook || "Conversation with Selig",
+            type: 'English'
+          });
+        }
+        syncData();
+      } else if (data.text) {
+        newMsg = { role: 'selig', content: data.text };
+      } else if (data.error) {
+        newMsg = { role: 'selig', content: "I'm taking a moment to pray, mi hermana. My connection to the Word is a bit weak right now, but I am still right here with you." };
       } else {
-        newMsg = { role: 'selig', content: data.text || "I'm with you, sister." };
+        newMsg = { role: 'selig', content: "I am with you, sister. The road is long, but you are never alone." };
       }
       
       setMessages(prev => [...prev, newMsg]);
       if (autoTalk) speak(newMsg.content);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'selig', content: "I'm taking a moment to pray, mi hermana. Let's try again in a bit." }]);
+      console.error("Chat Error:", error);
+      setMessages(prev => [...prev, { role: 'selig', content: "I am with you, sister. Let's take a deep breath and try again in a moment." }]);
     } finally {
       setIsLoading(false);
     }

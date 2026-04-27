@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Save, Plus, Trash2, Calendar as CalendarIcon, RefreshCw, BookOpen, PenTool, Palette } from 'lucide-react';
 import { Affirmation, UserSettings } from '@/lib/types';
 import AffirmationCard from '@/components/AffirmationCard';
+import { useSupabase } from './SupabaseProvider';
 
 const PAINTS = [
   { name: 'Emerald', color: '#10b981', mood: 'Peace' },
@@ -18,6 +19,7 @@ const PAINTS = [
 ];
 
 export default function Journal({ currentMoodId, settings }: { currentMoodId: string, settings?: UserSettings }) {
+  const { syncData } = useSupabase();
   const [isAdding, setIsAdding] = useState(false);
   const [selectedPaint, setSelectedPaint] = useState(PAINTS[0]);
   const [newEntry, setNewEntry] = useState({ struggle: '', thoughts: '' });
@@ -52,11 +54,32 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
         thoughts: newEntry.thoughts
       });
 
+      if (affirmation.spanishPhrase) {
+        await db.spanishWords.add({
+          phrase: affirmation.spanishPhrase.phrase,
+          translation: affirmation.spanishPhrase.translation,
+          context: affirmation.proverbHook,
+          type: 'Spanish'
+        });
+      }
+
+      if (affirmation.growthWord) {
+        await db.spanishWords.add({
+          phrase: affirmation.growthWord.word,
+          translation: affirmation.growthWord.definition,
+          context: affirmation.proverbHook,
+          type: 'English'
+        });
+      }
+
       await db.ebenezerStones.add({
         date: new Date(),
         note: `Honesty: ${newEntry.struggle.substring(0, 20)}...`,
         intensity: 0.5
       });
+
+      // Trigger cloud sync
+      syncData();
 
       setNewEntry({ struggle: '', thoughts: '' });
       setIsAdding(false);
@@ -211,7 +234,15 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
             className="bg-white/80 border border-[#2c1a10]/5 rounded-2xl p-8 hover:shadow-lg transition-all group relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-all">
-              <button onClick={() => entry.id && db.journalEntries.delete(entry.id)} className="text-zinc-300 hover:text-red-500 p-2">
+              <button 
+                onClick={async () => {
+                  if (entry.id) {
+                    await db.journalEntries.delete(entry.id);
+                    syncData();
+                  }
+                }} 
+                className="text-zinc-300 hover:text-red-500 p-2"
+              >
                 <Trash2 size={16} />
               </button>
             </div>

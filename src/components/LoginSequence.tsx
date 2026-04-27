@@ -1,14 +1,16 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Crown, Sparkles } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { Crown, Sparkles, RefreshCw } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { useSupabase } from './SupabaseProvider';
 
 interface LoginSequenceProps {
   onComplete: () => void;
 }
 
 export default function LoginSequence({ onComplete }: LoginSequenceProps) {
+  const { isSyncing } = useSupabase();
   const fanfareRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -96,11 +98,26 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
               onClick={onComplete}
               className="mt-16 flex flex-col items-center gap-4 group"
             >
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40 group-hover:text-purple-400 transition-all ml-[0.8em]">
-                  Begin to Journal
-                </span>
-                <Sparkles size={16} className="text-purple-400 group-hover:animate-pulse" />
+              <div className="flex flex-col items-center gap-2">
+                <AnimatePresence>
+                  {isSyncing && (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-center gap-2 text-purple-400/60 text-[8px] font-black uppercase tracking-[0.4em] mb-4"
+                    >
+                      <RefreshCw size={10} className="animate-spin" />
+                      Fetching your journey...
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/40 group-hover:text-purple-400 transition-all ml-[0.8em]">
+                    Begin to Journal
+                  </span>
+                  <Sparkles size={16} className="text-purple-400 group-hover:animate-pulse" />
+                </div>
               </div>
               <motion.div
                 animate={{ y: [0, 5, 0] }}
