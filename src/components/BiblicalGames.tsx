@@ -53,7 +53,13 @@ const TRIVIA: TriviaQuestion[] = [
   { id: "t6", question: "Who recognized Jesus as the Messiah when he was presented at the Temple as a baby?", options: ["Simeon", "Nicodemus", "Zacchaeus", "Lazarus"], answer: "Simeon", explanation: "Simeon had been promised he wouldn't die before seeing the Lord's Christ (Luke 2:25-32)." },
   { id: "t7", question: "Which disciple was a tax collector before following Jesus?", options: ["Peter", "Andrew", "Matthew", "John"], answer: "Matthew", explanation: "Matthew (also called Levi) was sitting at the tax collector's booth when Jesus called him (Matthew 9:9)." },
   { id: "t8", question: "Who was the woman who had seven demons cast out of her?", options: ["Mary Magdalene", "Martha", "Lydia", "Priscilla"], answer: "Mary Magdalene", explanation: "Luke 8:2 mentions Mary called Magdalene, from whom seven demons had gone out." },
-  { id: "t9", question: "Which book of the Bible follows the Gospels?", options: ["Romans", "Acts", "Hebrews", "Revelation"], answer: "Acts", explanation: "The Acts of the Apostles follows the four Gospels." }
+  { id: "t9", question: "Which book of the Bible follows the Gospels?", options: ["Romans", "Acts", "Hebrews", "Revelation"], answer: "Acts", explanation: "The Acts of the Apostles follows the four Gospels." },
+  { id: "t10", question: "What is the shortest verse in the Bible?", options: ["Jesus wept.", "Rejoice evermore.", "Pray without ceasing.", "God is love."], answer: "Jesus wept.", explanation: "John 11:35 consists of only two words." },
+  { id: "t11", question: "Who was the first martyr of the early church?", options: ["Peter", "Stephen", "James", "Paul"], answer: "Stephen", explanation: "Acts 7 describes the stoning of Stephen." },
+  { id: "t12", question: "Which mountain did Moses receive the Ten Commandments on?", options: ["Mt. Nebo", "Mt. Carmel", "Mt. Sinai", "Mt. Ararat"], answer: "Mt. Sinai", explanation: "Exodus 19-20 tells of God meeting Moses on Sinai." },
+  { id: "t13", question: "How many books are in the New Testament?", options: ["27", "39", "66", "12"], answer: "27", explanation: "There are 27 books in the NT and 39 in the Old Testament." },
+  { id: "t14", question: "Who was the wife of Isaac?", options: ["Sarah", "Rebekah", "Rachel", "Leah"], answer: "Rebekah", explanation: "Genesis 24 tells how Rebekah became Isaac's wife." },
+  { id: "t15", question: "What was the name of the garden where Jesus prayed before his crucifixion?", options: ["Eden", "Gethsemane", "Sharon", "Carmel"], answer: "Gethsemane", explanation: "Jesus prayed in Gethsemane on the Mount of Olives (Matthew 26)." }
 ];
 
 const SCRAMBLE: ScrambleWord[] = [
@@ -68,7 +74,12 @@ const SCRAMBLE: ScrambleWord[] = [
   { id: "s9", scrambled: "GTEOHUSRENSIS", original: "RIGHTEOUSNESS", hint: "The breastplate of..." },
   { id: "s10", scrambled: "LREVEAOTIN", original: "REVELATION", hint: "The final book." },
   { id: "s11", scrambled: "SSTTEFADANE", original: "STEADFAST", hint: "Firm and unwavering." },
-  { id: "s12", scrambled: "GENCOURLY", original: "GENEROUSLY", hint: "God gives wisdom this way." }
+  { id: "s12", scrambled: "GENCOURLY", original: "GENEROUSLY", hint: "God gives wisdom this way." },
+  { id: "s13", scrambled: "HTIAF", original: "FAITH", hint: "The substance of things hoped for." },
+  { id: "s14", scrambled: "RVEIEDEM", original: "REDEEMER", hint: "I know that my ___ lives." },
+  { id: "s15", scrambled: "YCITNASUT", original: "SANCTUARY", hint: "A holy place." },
+  { id: "s16", scrambled: "CVIORYT", original: "VICTORY", hint: "Thanks be to God who gives us the ___." },
+  { id: "s17", scrambled: "EVOCNAN", original: "COVENANT", hint: "A sacred agreement or promise." }
 ];
 
 const WHO_AM_I: WhoAmI[] = [
@@ -79,7 +90,11 @@ const WHO_AM_I: WhoAmI[] = [
   { id: "w5", riddle: "I was a tax collector who climbed a sycamore tree to see Jesus. Who am I?", answer: "Zacchaeus", hint: "I was a wee little man." },
   { id: "w6", riddle: "I am the mother of John the Baptist and was once called barren. Who am I?", answer: "Elizabeth", hint: "Mary's relative." },
   { id: "w7", riddle: "I was a tentmaker who traveled with Paul. Who am I?", answer: "Priscilla", hint: "Wife of Aquila." },
-  { id: "w8", riddle: "I am the shortest book in the Old Testament. What am I?", answer: "Obadiah", hint: "Only one chapter." }
+  { id: "w8", riddle: "I am the shortest book in the Old Testament. What am I?", answer: "Obadiah", hint: "Only one chapter." },
+  { id: "w9", riddle: "I am the prophet who was taken to heaven in a whirlwind. Who am I?", answer: "Elijah", hint: "I left my cloak for Elisha." },
+  { id: "w10", riddle: "I was the first woman created. Who am I?", answer: "Eve", hint: "Mother of all living." },
+  { id: "w11", riddle: "I am the disciple who doubted Jesus' resurrection until I saw Him. Who am I?", answer: "Thomas", hint: "I am often called 'Doubting'." },
+  { id: "w12", riddle: "I was the brother of Moses and the first high priest. Who am I?", answer: "Aaron", hint: "I spoke for my brother." }
 ];
 
 export default function BiblicalGames() {
@@ -147,13 +162,14 @@ export default function BiblicalGames() {
 
     const fullData = m === 'trivia' ? TRIVIA : m === 'scramble' ? SCRAMBLE : WHO_AM_I;
     // ONLY show items she HAS NOT completed yet
-    const unseenData = fullData.filter(item => !completedIds.includes(item.id));
+    let unseenData = fullData.filter(item => !completedIds.includes(item.id));
     
     if (unseenData.length === 0) {
-      // If she finished all, tell her or generate a Selig Spark automatically
-      setShuffledData(shuffle(fullData).slice(0, 3)); // For now, show a few old ones if all are done, but we'll improve this
+      // If she finished all, show a mix of old ones to keep it fresh
+      setShuffledData(shuffle(fullData).slice(0, 5));
     } else {
-      setShuffledData(shuffle(unseenData));
+      // Show up to 5 unseen ones per session
+      setShuffledData(shuffle(unseenData).slice(0, 5));
     }
     
     setMode(m);
@@ -163,6 +179,7 @@ export default function BiblicalGames() {
   const checkAnswer = async (selected?: string) => {
     let isCorrect = false;
     const current = shuffledData[currentIndex];
+    const answerId = current.id || `spark-${current.question.substring(0, 20)}`;
     
     if (mode === 'trivia' || mode === 'selig-spark') {
       isCorrect = selected === current.answer;
@@ -176,14 +193,12 @@ export default function BiblicalGames() {
       setScore(s => s + 1);
       setStatus('correct');
       // SAVE PROGRESS: Mark as completed so it doesn't show up again
-      if (current.id) {
-        await db.gameProgress.add({
-          gameType: mode as string,
-          itemId: current.id,
-          completedAt: new Date()
-        });
-        syncData();
-      }
+      await db.gameProgress.add({
+        gameType: mode as string,
+        itemId: answerId,
+        completedAt: new Date()
+      });
+      syncData();
     } else {
       setStatus('wrong');
     }
