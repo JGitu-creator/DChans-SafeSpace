@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Playfair_Display, EB_Garamond, Great_Vibes } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display, EB_Garamond, Great_Vibes, Cinzel } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import { SupabaseProvider } from "@/components/SupabaseProvider";
@@ -25,6 +25,11 @@ const greatVibes = Great_Vibes({
   subsets: ["latin"],
 });
 
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "DChan's Safespace",
   description: "Chantal Hadassah's Biblical Best Friend App",
@@ -47,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${playfair.variable} ${garamond.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${playfair.variable} ${garamond.variable} ${greatVibes.variable} ${cinzel.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-black">
         <SupabaseProvider>

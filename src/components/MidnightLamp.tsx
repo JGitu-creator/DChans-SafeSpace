@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lamp, Moon, Sun, Wind, Heart, Bird, Volume2, VolumeX } from 'lucide-react';
+import { Lamp, Moon, Sun, Wind, Heart, Bird, Volume2 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export default function MidnightLamp() {
@@ -19,25 +19,40 @@ export default function MidnightLamp() {
       : 'https://www.soundjay.com/nature/sounds/cricket-chirping-1.mp3'
   };
 
-  const toggleSound = (soundType: 'ocean' | 'forest') => {
-    if (activeSound === soundType) {
+  useEffect(() => {
+    // Pre-initialize audio object
+    audioRef.current = new Audio();
+    audioRef.current.loop = true;
+    
+    return () => {
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
       }
+    };
+  }, []);
+
+  const toggleSound = (soundType: 'ocean' | 'forest') => {
+    if (!audioRef.current) return;
+
+    if (activeSound === soundType) {
+      audioRef.current.pause();
       setActiveSound('none');
       return;
     }
 
-    if (audioRef.current) audioRef.current.pause();
-
     const url = soundType === 'ocean' ? SOUNDS.ocean : SOUNDS.forest;
-    const audio = new Audio(url);
-    audio.loop = true;
-    audio.volume = 0.7; // SIGNIFICANTLY INCREASED VOLUME
-    audio.play().catch(e => console.error("Playback blocked"));
+    audioRef.current.src = url;
+    audioRef.current.volume = 0.9; // EXTRA LOUD
+    audioRef.current.load();
     
-    audioRef.current = audio;
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.error("Playback failed:", error);
+      });
+    }
+    
     setActiveSound(soundType);
   };
 
@@ -60,15 +75,11 @@ export default function MidnightLamp() {
     }
   };
 
-  useEffect(() => {
-    return () => { if (audioRef.current) audioRef.current.pause(); };
-  }, []);
-
   return (
     <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center min-h-[70vh] p-4 md:p-8 text-zinc-800 pb-32 relative">
       <div className="flex justify-center gap-2 mb-12 bg-zinc-200/50 p-1.5 rounded-2xl relative z-10 w-full max-w-[200px]">
-        <button onClick={() => { setMode('morning'); setActiveSound('none'); if(audioRef.current) audioRef.current.pause(); }} className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${mode === 'morning' ? 'bg-white text-amber-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'}`}><Sun size={16} /><span className="text-[9px] font-black uppercase tracking-widest">Day</span></button>
-        <button onClick={() => { setMode('night'); setActiveSound('none'); if(audioRef.current) audioRef.current.pause(); }} className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${mode === 'night' ? 'bg-white text-purple-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'}`}><Moon size={16} /><span className="text-[9px] font-black uppercase tracking-widest">Night</span></button>
+        <button onClick={() => { setMode('morning'); setActiveSound('none'); audioRef.current?.pause(); }} className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${mode === 'morning' ? 'bg-white text-amber-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'}`}><Sun size={16} /><span className="text-[9px] font-black uppercase tracking-widest">Day</span></button>
+        <button onClick={() => { setMode('night'); setActiveSound('none'); audioRef.current?.pause(); }} className={`flex-1 py-2 rounded-xl flex items-center justify-center gap-2 transition-all ${mode === 'night' ? 'bg-white text-purple-600 shadow-md' : 'text-zinc-400 hover:text-zinc-600'}`}><Moon size={16} /><span className="text-[9px] font-black uppercase tracking-widest">Night</span></button>
       </div>
 
       <motion.div animate={{ scale: isGlowing ? [1, 1.05, 1] : 1, opacity: isGlowing ? [0.8, 1, 0.8] : 1 }} transition={{ duration: 4, repeat: Infinity }} className="relative mb-16 z-10">
@@ -84,7 +95,7 @@ export default function MidnightLamp() {
         
         <div className="flex gap-4 pt-10">
           <button onClick={() => toggleSound('ocean')} className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all shadow-lg ${activeSound === 'ocean' ? 'bg-sky-50 border-sky-300 text-sky-600 scale-110' : 'bg-white border-zinc-100 text-zinc-300'}`}><Wind size={24} /><span className="text-[8px] font-black uppercase tracking-widest italic">Ocean Waves</span></button>
-          <button onClick={() => toggleSound('forest')} className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all shadow-lg ${activeSound === 'forest' ? 'bg-emerald-50 border-emerald-300 text-emerald-600 scale-110' : 'bg-white border-zinc-100 text-zinc-300'}`}>{mode === 'morning' ? <Bird size={24} /> : <Heart size={24} />}<span className="text-[8px] font-black uppercase tracking-widest italic">{mode === 'morning' ? 'Forest Birds' : 'Peace Drone'}</span></button>
+          <button onClick={() => toggleSound('forest')} className={`flex flex-col items-center gap-3 p-6 rounded-2xl border-2 transition-all shadow-lg ${activeSound === 'forest' ? 'bg-emerald-50 border-emerald-300 text-emerald-600 scale-110' : 'bg-white border-zinc-100 text-zinc-300'}`}>{mode === 'morning' ? <Bird size={24} /> : <Heart size={24} />}<span className="text-[8px] font-black uppercase tracking-widest italic">{mode === 'morning' ? 'Forest Birds' : 'Peace Mode'}</span></button>
         </div>
 
         <AnimatePresence>

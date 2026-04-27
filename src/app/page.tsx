@@ -27,11 +27,11 @@ import BiblicalGames from '@/components/BiblicalGames';
 import GoldenThread from '@/components/GoldenThread';
 
 const LOCK_SCREEN_BIKES = [
-  'https://images.unsplash.com/photo-1558981806-ec527fa84c09?auto=format&fit=crop&q=80&w=2070',
+  '/hadassah-bike.png',
+  '/hadassah-bike-alt.png',
+  '/hadassah-art.png',
   'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=2070',
-  'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070',
-  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&q=80&w=2070',
 ];
 
 const getDailyAffirmation = (routeId: string): Affirmation => {
@@ -226,22 +226,22 @@ export default function Home() {
                     <Crown size={42} strokeWidth={1.5} className="drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
                   </motion.div>
                   <h1 className="flex flex-col items-center gap-0">
-                    <span className="text-5xl md:text-7xl font-garamond font-bold italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan</span>
-                    <span className="text-6xl md:text-[8rem] font-normal text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-purple-600 to-purple-900 font-great-vibes px-10 py-4 block drop-shadow-[0_0_20px_rgba(147,51,234,0.3)]">SafeSpace</span>
+                    <span className="text-6xl md:text-8xl font-garamond font-black italic tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-purple-600 to-purple-900 drop-shadow-2xl leading-none">DChan&apos;s</span>
+                    <span className="text-7xl md:text-[10rem] font-normal text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 font-great-vibes px-10 py-4 block drop-shadow-[0_0_20px_rgba(251,191,36,0.3)]">SafeSpace</span>
                   </h1>
                 </div>
-                <p className="text-[10px] font-medium tracking-[0.8em] text-white/30 uppercase -mt-4 font-playfair italic">Chantal Hadassah</p>
+                <p className="text-[12px] font-cinzel font-black tracking-[0.8em] text-white/40 uppercase -mt-4 italic">Chantal Hadassah</p>
               </div>
 
               <div className="w-full flex flex-col gap-6 max-w-sm mt-4">
                 <div className="relative group">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-sky-400 to-amber-400 rounded-2xl blur opacity-30 group-focus-within:opacity-100 transition duration-1000"></div>
+                  <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-sky-400 to-amber-400 rounded-2xl blur opacity-40 group-focus-within:opacity-100 transition duration-1000"></div>
                   <input 
                     type="password" 
                     value={passcode} 
                     onChange={(e) => setPasscode(e.target.value)} 
                     placeholder="ENTER PIN" 
-                    className="relative w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[0.8em] focus:outline-none focus:border-white/30 backdrop-blur-md text-white placeholder:text-white/10 placeholder:tracking-widest placeholder:text-[9px] transition-all font-light" 
+                    className="relative w-full bg-black/60 border border-white/10 rounded-2xl px-6 py-5 text-center text-3xl tracking-[0.8em] focus:outline-none focus:border-white/30 backdrop-blur-md text-white placeholder:text-white/20 placeholder:tracking-widest placeholder:text-[9px] transition-all font-cinzel font-black" 
                     onKeyDown={(e) => e.key === 'Enter' && handleUnlock()} 
                   />
                 </div>
@@ -255,7 +255,7 @@ export default function Home() {
                   
                   <div className="relative flex items-center justify-center gap-4">
                     <div className="w-6 h-px bg-white/20 group-hover:w-10 transition-all" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.5em] text-white group-hover:text-amber-400 transition-colors">Enter Sanctuary</span>
+                    <span className="text-[10px] font-cinzel font-black uppercase tracking-[0.5em] text-white group-hover:text-amber-400 transition-colors">Enter Sanctuary</span>
                     <div className="w-6 h-px bg-white/20 group-hover:w-10 transition-all" />
                   </div>
                 </button>
@@ -426,7 +426,7 @@ export default function Home() {
                       </motion.div>
                     )}
 
-                    {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentRoute.id} settings={settings} /></motion.div>}
+                    {activeView === 'journal' && <motion.div key="journal-view" className="w-full"><Journal currentMoodId={currentMoodId} settings={settings} /></motion.div>}
                     {activeView === 'chat' && <motion.div key="chat-view" className="w-full h-full min-h-[70vh]"><SeligChat /></motion.div>}
                     {activeView === 'trail' && <motion.div key="trail-view" className="w-full max-w-4xl"><TrailMap stones={stones} currentBike={currentRoute.bike} /></motion.div>}
                     {activeView === 'basket' && <motion.div key="basket-view" className="w-full max-w-2xl"><BlessingsJar /></motion.div>}
