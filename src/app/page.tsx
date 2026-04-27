@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIcon, LogOut, Code, Sparkles, Heart, RefreshCw } from 'lucide-react';
+import { Lock, Bike, MapPin, Zap, Settings, Book, MessageSquare, Menu, X as XIcon, LogOut, Code, Sparkles, Heart, RefreshCw, Crown } from 'lucide-react';
 import { ROUTES, RouteConfig, Affirmation, UserSettings, EbenezerStone, View, LOGIN_DECLARATIONS } from '@/lib/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/lib/db';
