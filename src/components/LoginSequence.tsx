@@ -12,15 +12,18 @@ export default function LoginSequence({ onComplete }: LoginSequenceProps) {
   const fanfareRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    // Majestic Fanfare Sound
-    const fanfareUrl = 'https://assets.mixkit.co/active_storage/sfx/2747/2747-preview.mp3';
+    // High-Definition Majestic Royal Fanfare
+    const fanfareUrl = 'https://www.soundjay.com/misc/sounds/trumpet-fanfare-01.mp3';
     fanfareRef.current = new Audio(fanfareUrl);
-    fanfareRef.current.volume = 0.6;
+    fanfareRef.current.volume = 0.5;
+    fanfareRef.current.preload = 'auto';
     
-    // Play fanfare immediately as the majestic sequence begins
+    // Play fanfare as the majestic sequence begins
     const playFanfare = setTimeout(() => {
-      fanfareRef.current?.play().catch(e => console.warn("Fanfare blocked by browser - interaction needed"));
-    }, 200);
+      if (fanfareRef.current) {
+        fanfareRef.current.play().catch(e => console.warn("Fanfare blocked - user interaction required"));
+      }
+    }, 100);
 
     return () => {
       clearTimeout(playFanfare);
