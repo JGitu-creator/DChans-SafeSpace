@@ -40,8 +40,8 @@ export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationP
               <Crown size={28} />
             </div>
             
-            <h2 className="text-sm md:text-base font-serif font-black text-[#8b4513] uppercase tracking-[0.2em] border-b border-[#d4af37]/50 pb-2">
-              Royal Affirmation
+            <h2 className="text-sm md:text-base font-serif font-black text-[#8b4513] uppercase tracking-[0.1em] border-b border-[#d4af37]/50 pb-2 text-center">
+              Royal Affirmations & Prayer
             </h2>
             
             <div className="space-y-4">
