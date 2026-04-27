@@ -222,7 +222,7 @@ export default function SeligChat() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col h-[75dvh] md:h-[70vh] bg-white border border-black/5 rounded-[3rem] overflow-hidden shadow-2xl relative">
+    <div className="w-full max-w-2xl mx-auto flex flex-col h-[85dvh] md:h-[85vh] bg-white border border-black/5 rounded-[3rem] overflow-hidden shadow-2xl relative">
       {/* Chat Header */}
       <div className="p-6 md:p-8 border-b border-zinc-100 bg-zinc-50/50 flex items-center justify-between z-20">
         <div className="flex items-center gap-4">
@@ -254,7 +254,7 @@ export default function SeligChat() {
       </div>
 
       {/* Messages area */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8 no-scrollbar bg-[#fdf6e3]/40 pb-32">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-8 no-scrollbar bg-[#fdf6e3]/40 pb-48">
         {messages.map((msg, i) => (
           <ChatMessage 
             key={i} 
