@@ -29,9 +29,9 @@ import GoldenThread from '@/components/GoldenThread';
 const LOCK_SCREEN_BIKES = [
   'https://images.unsplash.com/photo-1558981806-ec527fa84c09?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=2070',
+  'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070',
-  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&q=80&w=2070',
 ];
 
 const getDailyAffirmation = (routeId: string): Affirmation => {
@@ -180,6 +180,7 @@ export default function Home() {
       });
       const data = await response.json();
       setAffirmationMessage(data.deepExegesis || "The King is with you in this valley, Hadassah.");
+      setAffirmationRef(data.bibleVerse || "");
       setShowAffirmation(true);
       setStruggleInput('');
     } catch (e) {
@@ -225,8 +226,8 @@ export default function Home() {
                     <Crown size={42} strokeWidth={1.5} className="drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
                   </motion.div>
                   <h1 className="flex flex-col items-center gap-0">
-                    <span className="text-6xl md:text-8xl font-garamond font-bold italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan</span>
-                    <span className="text-7xl md:text-[10rem] font-normal text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-purple-600 to-purple-900 font-satisfy px-10 py-4 block drop-shadow-[0_0_20px_rgba(147,51,234,0.3)]">SafeSpace</span>
+                    <span className="text-5xl md:text-7xl font-garamond font-bold italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan</span>
+                    <span className="text-6xl md:text-[8rem] font-normal text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-purple-600 to-purple-900 font-great-vibes px-10 py-4 block drop-shadow-[0_0_20px_rgba(147,51,234,0.3)]">SafeSpace</span>
                   </h1>
                 </div>
                 <p className="text-[10px] font-medium tracking-[0.8em] text-white/30 uppercase -mt-4 font-playfair italic">Chantal Hadassah</p>
