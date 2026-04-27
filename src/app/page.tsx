@@ -191,8 +191,8 @@ export default function Home() {
   const finishLogin = () => {
     setIsLocked(false);
     setIsPINAccepted(false);
-    // Trigger the compact "perfect" scroll once as the opener
-    setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
+    // Short, punchy opener
+    setAffirmationMessage("You are a Royal Daughter. Ride in peace today.");
     setShowAffirmation(true);
   };
 
