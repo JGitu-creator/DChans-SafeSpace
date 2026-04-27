@@ -29,9 +29,9 @@ import GoldenThread from '@/components/GoldenThread';
 const LOCK_SCREEN_BIKES = [
   'https://images.unsplash.com/photo-1558981806-ec527fa84c09?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1558981403-c5f9199a28ad?auto=format&fit=crop&q=80&w=2070',
-  'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=2070',
   'https://images.unsplash.com/photo-1622185135505-2d795003994a?auto=format&fit=crop&q=80&w=2070',
+  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&q=80&w=2070',
 ];
 
 const getDailyAffirmation = (routeId: string): Affirmation => {
