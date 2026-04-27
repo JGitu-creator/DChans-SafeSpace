@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Playfair_Display, Great_Vibes } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display, EB_Garamond, Satisfy } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 import { SupabaseProvider } from "@/components/SupabaseProvider";
@@ -14,8 +14,13 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-const greatVibes = Great_Vibes({
-  variable: "--font-great-vibes",
+const garamond = EB_Garamond({
+  variable: "--font-garamond",
+  subsets: ["latin"],
+});
+
+const satisfy = Satisfy({
+  variable: "--font-satisfy",
   weight: "400",
   subsets: ["latin"],
 });
@@ -42,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${playfair.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${playfair.variable} ${garamond.variable} ${satisfy.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-black">
         <SupabaseProvider>

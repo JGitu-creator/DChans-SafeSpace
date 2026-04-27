@@ -5,10 +5,11 @@ import { Crown, Star } from 'lucide-react';
 
 interface RoyalAffirmationProps {
   message: string;
+  reference?: string;
   onClose: () => void;
 }
 
-export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationProps) {
+export default function RoyalAffirmation({ message, reference, onClose }: RoyalAffirmationProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -45,15 +46,22 @@ export default function RoyalAffirmation({ message, onClose }: RoyalAffirmationP
             </h2>
             
             <div className="space-y-4">
-              <p className="text-base md:text-lg font-serif italic text-[#5d2e0a] leading-relaxed px-2">
+              <p className="text-base md:text-lg font-garamond font-bold italic text-[#5d2e0a] leading-relaxed px-2">
                 &quot;{message}&quot;
               </p>
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-px w-8 bg-[#d4af37]/30" />
-                <p className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">
-                  Royal Word of Peace
-                </p>
-                <div className="h-px w-8 bg-[#d4af37]/30" />
+              <div className="flex flex-col items-center justify-center gap-1">
+                {reference && (
+                  <p className="text-[10px] font-black text-[#8b4513]/60 uppercase tracking-widest italic mb-1">
+                    {reference}
+                  </p>
+                )}
+                <div className="flex items-center gap-2">
+                  <div className="h-px w-8 bg-[#d4af37]/30" />
+                  <p className="text-[8px] font-bold text-[#d4af37] uppercase tracking-widest">
+                    Royal Word of Peace
+                  </p>
+                  <div className="h-px w-8 bg-[#d4af37]/30" />
+                </div>
               </div>
             </div>
 

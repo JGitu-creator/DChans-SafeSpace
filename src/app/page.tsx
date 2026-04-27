@@ -107,6 +107,7 @@ export default function Home() {
   const [lockImageIndex, setLockImageIndex] = useState(0);
   const [showAffirmation, setShowAffirmation] = useState(false);
   const [affirmationMessage, setAffirmationMessage] = useState('');
+  const [affirmationRef, setAffirmationRef] = useState('');
   const [struggleInput, setStruggleInput] = useState('');
   const [isTransforming, setIsTransforming] = useState(false);
   
@@ -194,6 +195,7 @@ export default function Home() {
     // Pick a random Biblical verse from the declarations list
     const randomVerse = LOGIN_DECLARATIONS[Math.floor(Math.random() * LOGIN_DECLARATIONS.length)];
     setAffirmationMessage(randomVerse.text);
+    setAffirmationRef(randomVerse.reference);
     setShowAffirmation(true);
   };
 
@@ -210,7 +212,7 @@ export default function Home() {
 
       <AnimatePresence>
         {isPINAccepted && <LoginSequence onComplete={finishLogin} />}
-        {showAffirmation && <RoyalAffirmation message={affirmationMessage} onClose={() => setShowAffirmation(false)} />}
+        {showAffirmation && <RoyalAffirmation message={affirmationMessage} reference={affirmationRef} onClose={() => setShowAffirmation(false)} />}
 
         {isLocked ? (
           <motion.div key="lock-screen" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, scale: 1.05 }} className="relative z-50 flex min-h-screen flex-col items-center justify-center p-6 text-white overflow-hidden">
@@ -223,8 +225,8 @@ export default function Home() {
                     <Crown size={42} strokeWidth={1.5} className="drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
                   </motion.div>
                   <h1 className="flex flex-col items-center gap-0">
-                    <span className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan&apos;s</span>
-                    <span className="text-6xl md:text-9xl font-normal text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-sky-400 font-great-vibes px-10 py-4 block">Safespace</span>
+                    <span className="text-6xl md:text-8xl font-garamond font-bold italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan</span>
+                    <span className="text-7xl md:text-[10rem] font-normal text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-sky-400 font-satisfy px-10 py-4 block">SafeSpace</span>
                   </h1>
                 </div>
                 <p className="text-[10px] font-medium tracking-[0.8em] text-white/30 uppercase -mt-4 font-playfair italic">Chantal Hadassah</p>
