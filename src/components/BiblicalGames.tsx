@@ -59,7 +59,17 @@ const TRIVIA: TriviaQuestion[] = [
   { id: "t12", question: "Which mountain did Moses receive the Ten Commandments on?", options: ["Mt. Nebo", "Mt. Carmel", "Mt. Sinai", "Mt. Ararat"], answer: "Mt. Sinai", explanation: "Exodus 19-20 tells of God meeting Moses on Sinai." },
   { id: "t13", question: "How many books are in the New Testament?", options: ["27", "39", "66", "12"], answer: "27", explanation: "There are 27 books in the NT and 39 in the Old Testament." },
   { id: "t14", question: "Who was the wife of Isaac?", options: ["Sarah", "Rebekah", "Rachel", "Leah"], answer: "Rebekah", explanation: "Genesis 24 tells how Rebekah became Isaac's wife." },
-  { id: "t15", question: "What was the name of the garden where Jesus prayed before his crucifixion?", options: ["Eden", "Gethsemane", "Sharon", "Carmel"], answer: "Gethsemane", explanation: "Jesus prayed in Gethsemane on the Mount of Olives (Matthew 26)." }
+  { id: "t15", question: "What was the name of the garden where Jesus prayed before his crucifixion?", options: ["Eden", "Gethsemane", "Sharon", "Carmel"], answer: "Gethsemane", explanation: "Jesus prayed in Gethsemane on the Mount of Olives (Matthew 26)." },
+  { id: "t16", question: "Who was the first king of Israel?", options: ["David", "Saul", "Solomon", "Samuel"], answer: "Saul", explanation: "Saul was anointed by Samuel as the first king (1 Samuel 10)." },
+  { id: "t17", question: "Which sea did the Israelites cross to escape Egypt?", options: ["Dead Sea", "Red Sea", "Mediterranean Sea", "Sea of Galilee"], answer: "Red Sea", explanation: "God parted the Red Sea for them to cross on dry ground (Exodus 14)." },
+  { id: "t18", question: "How many days and nights did it rain during the Great Flood?", options: ["7", "12", "40", "100"], answer: "40", explanation: "It rained for 40 days and 40 nights (Genesis 7:12)." },
+  { id: "t19", question: "Who was thrown into a den of lions?", options: ["Daniel", "Shadrach", "Meshach", "Abednego"], answer: "Daniel", explanation: "Daniel was protected by God in the lions' den (Daniel 6)." },
+  { id: "t20", question: "What did God use to create Eve?", options: ["Dust", "A rib from Adam", "A flower", "His word alone"], answer: "A rib from Adam", explanation: "God made Eve from one of Adam's ribs (Genesis 2:22)." },
+  { id: "t21", question: "Which prophet was swallowed by a great fish?", options: ["Elijah", "Elisha", "Jonah", "Amos"], answer: "Jonah", explanation: "Jonah spent three days in the belly of the fish (Jonah 1)." },
+  { id: "t22", question: "What was the occupation of Peter before becoming a disciple?", options: ["Tax collector", "Fisherman", "Carpenter", "Tentmaker"], answer: "Fisherman", explanation: "Peter and Andrew were fishermen (Matthew 4:18)." },
+  { id: "t23", question: "Who received the coat of many colors?", options: ["Joseph", "Benjamin", "Reuben", "Judah"], answer: "Joseph", explanation: "Jacob loved Joseph more and gave him the coat (Genesis 37)." },
+  { id: "t24", question: "How many tribes of Israel were there?", options: ["3", "7", "10", "12"], answer: "12", explanation: "There were 12 tribes named after the sons of Jacob." },
+  { id: "t25", question: "Who wrote the majority of the Psalms?", options: ["Solomon", "David", "Moses", "Asaph"], answer: "David", explanation: "King David is the primary author of the Psalms." }
 ];
 
 const SCRAMBLE: ScrambleWord[] = [
@@ -79,7 +89,15 @@ const SCRAMBLE: ScrambleWord[] = [
   { id: "s14", scrambled: "RVEIEDEM", original: "REDEEMER", hint: "I know that my ___ lives." },
   { id: "s15", scrambled: "YCITNASUT", original: "SANCTUARY", hint: "A holy place." },
   { id: "s16", scrambled: "CVIORYT", original: "VICTORY", hint: "Thanks be to God who gives us the ___." },
-  { id: "s17", scrambled: "EVOCNAN", original: "COVENANT", hint: "A sacred agreement or promise." }
+  { id: "s17", scrambled: "EVOCNAN", original: "COVENANT", hint: "A sacred agreement or promise." },
+  { id: "s18", scrambled: "YOLAL", original: "LOYAL", hint: "Ruth was this to Naomi." },
+  { id: "s19", scrambled: "EPACE", original: "PEACE", hint: "My ___ I give to you." },
+  { id: "s20", scrambled: "SREMYC", original: "MERCY", hint: "His ___ endures forever." },
+  { id: "s21", scrambled: "LREVOE", original: "LOVE", hint: "The greatest of these is ___." },
+  { id: "s22", scrambled: "HITEGUSROU", original: "RIGHTEOUS", hint: "The prayer of a ___ man avails much." },
+  { id: "s23", scrambled: "LREVOYRE", original: "GLORY", hint: "The heavens declare the ___ of God." },
+  { id: "s24", scrambled: "RELPUP", original: "PURPLE", hint: "The color of royalty." },
+  { id: "s25", scrambled: "YIIGNTD", original: "DIGNITY", hint: "She is clothed with strength and ___." }
 ];
 
 const WHO_AM_I: WhoAmI[] = [
@@ -94,7 +112,15 @@ const WHO_AM_I: WhoAmI[] = [
   { id: "w9", riddle: "I am the prophet who was taken to heaven in a whirlwind. Who am I?", answer: "Elijah", hint: "I left my cloak for Elisha." },
   { id: "w10", riddle: "I was the first woman created. Who am I?", answer: "Eve", hint: "Mother of all living." },
   { id: "w11", riddle: "I am the disciple who doubted Jesus' resurrection until I saw Him. Who am I?", answer: "Thomas", hint: "I am often called 'Doubting'." },
-  { id: "w12", riddle: "I was the brother of Moses and the first high priest. Who am I?", answer: "Aaron", hint: "I spoke for my brother." }
+  { id: "w12", riddle: "I was the brother of Moses and the first high priest. Who am I?", answer: "Aaron", hint: "I spoke for my brother." },
+  { id: "w13", riddle: "I am the strongest man who ever lived, but my hair was my secret. Who am I?", answer: "Samson", hint: "Watch out for Delilah." },
+  { id: "w14", riddle: "I built an ark to save my family from the flood. Who am I?", answer: "Noah", hint: "I used gopher wood." },
+  { id: "w15", riddle: "I am the man after God's own heart. Who am I?", answer: "David", hint: "I wrote many Psalms." },
+  { id: "w16", riddle: "I am the wisest king who ever lived. Who am I?", answer: "Solomon", hint: "I built the Temple." },
+  { id: "w17", riddle: "I was sold into slavery by my brothers and became second only to Pharaoh. Who am I?", answer: "Joseph", hint: "I have a coat of many colors." },
+  { id: "w18", riddle: "I am the mother of Jesus. Who am I?", answer: "Mary", hint: "Blessed among women." },
+  { id: "w19", riddle: "I led the Israelites out of Egypt. Who am I?", answer: "Moses", hint: "I held the staff that parted the sea." },
+  { id: "w20", riddle: "I am the first martyr of the church. Who am I?", answer: "Stephen", hint: "I saw heaven opened." }
 ];
 
 export default function BiblicalGames() {
