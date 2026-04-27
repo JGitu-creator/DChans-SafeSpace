@@ -226,7 +226,7 @@ export default function Home() {
                   </motion.div>
                   <h1 className="flex flex-col items-center gap-0">
                     <span className="text-6xl md:text-8xl font-garamond font-bold italic tracking-tighter uppercase text-white drop-shadow-2xl leading-none">DChan</span>
-                    <span className="text-7xl md:text-[10rem] font-normal text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-sky-400 font-satisfy px-10 py-4 block">SafeSpace</span>
+                    <span className="text-7xl md:text-[10rem] font-normal text-transparent bg-clip-text bg-gradient-to-b from-purple-400 via-purple-600 to-purple-900 font-satisfy px-10 py-4 block drop-shadow-[0_0_20px_rgba(147,51,234,0.3)]">SafeSpace</span>
                   </h1>
                 </div>
                 <p className="text-[10px] font-medium tracking-[0.8em] text-white/30 uppercase -mt-4 font-playfair italic">Chantal Hadassah</p>
@@ -262,7 +262,10 @@ export default function Home() {
               
               <div className="flex flex-col items-center gap-4 mt-2">
                  <div className="h-px w-20 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                 <p className="text-[7px] font-black uppercase tracking-[0.5em] text-white/20 italic">For Her Heart Alone</p>
+                 <div className="flex items-center gap-2 text-white/20">
+                   <Lock size={8} strokeWidth={3} />
+                   <p className="text-[7px] font-black uppercase tracking-[0.5em] italic">For Her Heart Alone</p>
+                 </div>
               </div>
             </motion.div>
 
