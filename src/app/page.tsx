@@ -148,11 +148,6 @@ export default function Home() {
 
         return { ...prev, lastOpened: now };
       });
-
-      if (Math.random() > 0.8) {
-        setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
-        setShowAffirmation(true);
-      }
     }
   }, [isLocked, rescueMode]);
 
@@ -196,6 +191,9 @@ export default function Home() {
   const finishLogin = () => {
     setIsLocked(false);
     setIsPINAccepted(false);
+    // Trigger the compact "perfect" scroll once as the opener
+    setAffirmationMessage("Hadassah, you were called for such a time as this. Your worth is royal, and the King is well-pleased with you.");
+    setShowAffirmation(true);
   };
 
   return (
