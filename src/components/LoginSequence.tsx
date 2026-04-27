@@ -2,12 +2,35 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crown, Sparkles } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 interface LoginSequenceProps {
   onComplete: () => void;
 }
 
 export default function LoginSequence({ onComplete }: LoginSequenceProps) {
+  const fanfareRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Majestic Fanfare Sound
+    const fanfareUrl = 'https://assets.mixkit.co/active_storage/sfx/2747/2747-preview.mp3';
+    fanfareRef.current = new Audio(fanfareUrl);
+    fanfareRef.current.volume = 0.6;
+    
+    // Play fanfare immediately as the majestic sequence begins
+    const playFanfare = setTimeout(() => {
+      fanfareRef.current?.play().catch(e => console.warn("Fanfare blocked by browser - interaction needed"));
+    }, 200);
+
+    return () => {
+      clearTimeout(playFanfare);
+      if (fanfareRef.current) {
+        fanfareRef.current.pause();
+        fanfareRef.current = null;
+      }
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 overflow-hidden">
       <motion.div
