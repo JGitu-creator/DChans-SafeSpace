@@ -46,6 +46,14 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
       const affirmation = await response.json();
       setLastAffirmation(affirmation);
 
+      console.log("Attempting to save journal entry to Dexie:", {
+        date: new Date(),
+        moodId: currentMoodId,
+        struggle: newEntry.struggle,
+        affirmation: JSON.stringify(affirmation),
+        thoughts: newEntry.thoughts
+      });
+
       await db.journalEntries.add({
         date: new Date(),
         moodId: currentMoodId,
@@ -53,6 +61,7 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
         affirmation: JSON.stringify(affirmation),
         thoughts: newEntry.thoughts
       });
+      console.log("Journal entry saved to Dexie.");
 
       if (affirmation.spanishPhrase) {
         await db.spanishWords.add({
@@ -85,7 +94,8 @@ export default function Journal({ currentMoodId, settings }: { currentMoodId: st
       setIsAdding(false);
     } catch (error) {
       console.error(error);
-      alert("Selig is offline for a moment, but your struggle is saved.");
+      // Removed the alert as per user request.
+      // Consider adding a toast notification or similar non-blocking UI feedback here.
     } finally {
       setIsLoading(false);
     }

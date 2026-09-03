@@ -37,7 +37,7 @@ export default function SyncStatus() {
         </AnimatePresence>
         
         <span className="text-[9px] font-black uppercase tracking-widest">
-          {isSyncing ? 'Syncing...' : error ? 'Sync Error' : isSynced ? 'Cloud Synced' : 'Local Only'}
+          {isSyncing ? 'Syncing...' : error ? error : isSynced ? 'Cloud Synced' : 'Local Only'}
         </span>
 
         {error && (

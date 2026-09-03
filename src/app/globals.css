@@ -1,92 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-serif: "Libre Baskerville", "Times New Roman", serif;
-  --font-hand: "Satisfy", "Brush Script MT", "Cursive", cursive;
-}
-
-:root {
-  --background: #121212;
-  --foreground: #ffffff;
-  --accent-purple: #8b5cf6;
-  --accent-sky: #0ea5e9;
-  --paper: #fdf6e3;
-  --ink: #2d1b4d; /* Deep Purple Ink for high readability */
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", "Times New Roman", serif;
+  --font-script: "Great Vibes", "Brush Script MT", "Cursive", cursive;
 }
 
 @layer base {
   body {
-    @apply bg-zinc-950 text-white selection:bg-purple-500/30 overflow-x-hidden;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    -webkit-overflow-scrolling: touch;
+    @apply bg-[#faf5ff] text-slate-800 font-sans antialiased selection:bg-[#a855f7] selection:text-white;
   }
 }
 
-/* Painter's Canvas UI Layout - Optimized for mobile & scrolling */
-.canvas-container {
-  @apply relative mx-auto w-full max-w-4xl min-h-[90dvh] bg-[#f8f5f0] shadow-[0_40px_100px_rgba(0,0,0,0.5)] rounded-lg overflow-y-auto transition-all duration-700 border-[4px] md:border-[12px] border-[#2c1a10]; /* Thinner border on mobile */
-  background-image: 
-    linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.canvas-surface {
-  @apply relative w-full p-4 md:p-12 text-[#1a1a1a]; /* Reduced padding on mobile */
-  background-color: var(--canvas-bg, #f8f5f0);
-}
-
-/* Nature Painting Accents */
-.nature-accent {
-  @apply absolute pointer-events-none opacity-40 mix-blend-multiply transition-all duration-1000;
-}
-
-/* Lined Paper replaced with subtle canvas texture */
-.canvas-texture {
-  background-image: url("https://www.transparenttextures.com/patterns/canvas-orange.png");
-}
-
-/* Typography */
-.handwritten {
-  font-family: var(--font-hand);
-}
-
-.serif-italic {
-  font-family: var(--font-serif);
-  @apply italic;
-}
-
-/* Luminous Tech Touches - High Contrast */
-.glow-text-purple {
-  text-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
-  @apply text-purple-700;
-}
-
-.glow-box-sky {
-  box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
-  @apply border-sky-400/50;
-}
-
-/* Utils */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.glass-dark {
-  @apply bg-black/80 backdrop-blur-3xl border border-white/20; 
-}
-
-/* Input Highlighting - Fix for 'white on white' */
-input, textarea {
-  @apply text-inherit placeholder:text-zinc-500 border border-zinc-200 bg-white/50 backdrop-blur-sm rounded-xl px-4 py-2;
-}
-
-.notebook-page input, .notebook-page textarea {
-  @apply text-[#2d1b4d] placeholder:text-[#2d1b4d]/30 border-[#2d1b4d]/10 bg-white/20;
+.bg-floral {
+  background-color: #faf5ff;
+  background-image: radial-gradient(#bae6fd 0.75px, transparent 0.75px), radial-gradient(#ddd6fe 0.75px, #faf5ff 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
 }
