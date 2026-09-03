@@ -30,8 +30,21 @@ const marcellus = Marcellus({
 });
 
 export const metadata: Metadata = {
-  title: "Chan & Jim — Wedding",
-  description: "Wedding Invitation for Chan & Jim",
+  title: "Chan & Jim — Wedding Celebration",
+  description: "Join us in celebrating our holy matrimony on Friday, October 30, 2026 at GracePoint Church, Kikuyu. Clothed in Faith.",
+  openGraph: {
+    title: "Chan & Jim — Wedding Celebration",
+    description: "Friday, October 30, 2026 • GracePoint Church, Kikuyu",
+    url: "https://dchans-safespace.vercel.app",
+    images: [
+      {
+        url: "https://dchans-safespace.vercel.app/C&J.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Chan & Jim Wedding Invitation",
+      },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
