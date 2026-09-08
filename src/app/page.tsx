@@ -17,8 +17,7 @@ import {
   Volume2,
   VolumeX,
   Music,
-  PlusCircle,
-  Image as ImageIcon
+  PlusCircle
 } from "lucide-react";
 
 declare global {
@@ -28,11 +27,11 @@ declare global {
   }
 }
 
-export default function AppleLiquidGlassWeddingInvite() {
+export default function WeddingInvite() {
   const [unlocked, setUnlocked] = useState(false);
   const [activeTab, setActiveTab] = useState<"invite" | "album" | "giving" | "rsvp">("invite");
   
-  // RSVP Form States (State-Bound)
+  // RSVP Form States (State-Bound & Duplicate Guarded)
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [attendance, setAttendance] = useState("Attending");
@@ -43,11 +42,11 @@ export default function AppleLiquidGlassWeddingInvite() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Audio State for Pompi ft. Limoblaze - Answers By Fire
+  // Audio State for "Nakupenda Msichana" by Kichwatah
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const ytPlayerRef = useRef<any>(null);
 
-  // Album Photos (Supports photo1.jpg, photo2.jpg, etc. + Live Phone Uploads)
+  // Album Photos
   const defaultPhotos = [
     { src: "/photo1.jpg", title: "Chan & Jim — Clothed in Faith" },
     { src: "/photo2.jpg", title: "Walking in God's Grace" },
@@ -66,7 +65,7 @@ export default function AppleLiquidGlassWeddingInvite() {
   const waterStreamCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const burstCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 1. Initialize YouTube Background Player for "Pompi - Answers By Fire"
+  // 1. Initialize YouTube Background Player for "Nakupenda Msichana" (XHChjB1rKxI)
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
@@ -79,18 +78,18 @@ export default function AppleLiquidGlassWeddingInvite() {
       ytPlayerRef.current = new window.YT.Player("yt-player", {
         height: "1",
         width: "1",
-        videoId: "csE_J72i2kk", // Pompi, Limoblaze - Answers By Fire
+        videoId: "XHChjB1rKxI", // Kichwatah - Nakupenda Msichana
         playerVars: {
           autoplay: 0,
           loop: 1,
-          playlist: "csE_J72i2kk",
+          playlist: "XHChjB1rKxI",
           controls: 0,
           showinfo: 0,
           modestbranding: 1
         },
         events: {
           onReady: (event: any) => {
-            event.target.setVolume(50);
+            event.target.setVolume(55);
           }
         }
       });
@@ -108,11 +107,10 @@ export default function AppleLiquidGlassWeddingInvite() {
     }
   }, []);
 
-  // 3. Verify Photos & Load Saved Local Photos
+  // 3. Load Verified Photos & Local Gallery
   useEffect(() => {
     const verified: { src: string; title: string }[] = [];
     
-    // Load any user-uploaded photos stored locally
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("cj_custom_album_photos");
       if (stored) {
@@ -136,7 +134,6 @@ export default function AppleLiquidGlassWeddingInvite() {
       img.src = p.src;
     });
 
-    // Fallback so album is NEVER blank
     if (verified.length > 0) {
       setActivePhotos(verified);
     } else {
@@ -149,7 +146,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     }
   }, []);
 
-  // 4. Handle Direct Photo Upload from Device into the Album
+  // 4. Handle Direct Photo Upload from Device
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -220,7 +217,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     ctx.restore();
   };
 
-  // 8. Water Stream & Floating Love Hearts Canvas
+  // 8. Flowing Water Stream with Heart Petals
   useEffect(() => {
     const canvas = waterStreamCanvasRef.current;
     if (!canvas) return;
@@ -311,7 +308,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     };
   }, []);
 
-  // 9. Petal Burst
+  // 9. Sky Blue & Purple Petal Burst
   const triggerPetalBurst = () => {
     const canvas = burstCanvasRef.current;
     if (!canvas) return;
@@ -367,7 +364,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     renderBurst();
   };
 
-  // 10. Unlock & Play "Answers By Fire"
+  // 10. Unlock & Play "Nakupenda Msichana"
   const handleUnlock = () => {
     if (ytPlayerRef.current && ytPlayerRef.current.playVideo) {
       ytPlayerRef.current.playVideo();
@@ -422,9 +419,10 @@ export default function AppleLiquidGlassWeddingInvite() {
     document.body.removeChild(link);
   };
 
-  // 11. ZERO-FAIL RSVP BEACON (Bypasses all CORS blocks & guarantees Sheet write)
+  // 11. SINGLE-SUBMISSION RSVP (Duplicate Prevention Lock)
   const handleRsvpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading || submitted) return; // Prevents double click / duplicate row
     setLoading(true);
 
     const nameToSend = guestName.trim() || "Guest";
@@ -444,27 +442,24 @@ export default function AppleLiquidGlassWeddingInvite() {
     const APPS_SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbyg3F2Pj2rfOze7Fqjbg-YMRheqODk2q03-lair9z6yATp-buxJO0RWnFU4HWTLnoGn/exec";
 
-    // Image Beacon: 100% immune to CORS or domain restrictions
+    // SINGLE Image Beacon submission (Guaranteed exact 1 row in Google Sheet)
     const beacon = new Image();
-    beacon.src = `${APPS_SCRIPT_URL}?${params}&t=${Date.now()}`;
-
-    // Parallel fetch for redundancy
-    fetch(`${APPS_SCRIPT_URL}?${params}`, { mode: "no-cors" }).catch(() => {});
+    beacon.src = `${APPS_SCRIPT_URL}?${params}&_t=${Date.now()}`;
 
     setTimeout(() => {
       setSubmitted(true);
       setLoading(false);
       triggerPetalBurst();
-    }, 600);
+    }, 500);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#faf5ff] text-slate-900 font-sans flex flex-col items-center justify-center p-2 sm:p-4 relative overflow-x-hidden selection:bg-purple-600 selection:text-white">
       
-      {/* Hidden YouTube Iframe for "Answers By Fire - Pompi ft. Limoblaze" */}
+      {/* Hidden YouTube Iframe for "Nakupenda Msichana — Kichwatah" */}
       <div id="yt-player" style={{ position: "absolute", opacity: 0, pointerEvents: "none", zIndex: -10 }} />
 
-      {/* Hidden File Input for Device Photo Uploads into the Album */}
+      {/* Hidden File Input for Device Photo Uploads */}
       <input
         type="file"
         ref={fileInputRef}
@@ -483,7 +478,7 @@ export default function AppleLiquidGlassWeddingInvite() {
           {isPlayingMusic ? (
             <>
               <Volume2 className="w-4 h-4 text-purple-700 animate-pulse" />
-              <span className="hidden sm:inline">Answers By Fire — Pompi 🎵</span>
+              <span className="hidden sm:inline">Nakupenda Msichana — Kichwatah 🎵</span>
               <span className="flex gap-0.5">
                 <span className="w-1 h-3 bg-purple-600 animate-bounce"></span>
                 <span className="w-1 h-4 bg-sky-500 animate-bounce delay-75"></span>
@@ -493,7 +488,7 @@ export default function AppleLiquidGlassWeddingInvite() {
           ) : (
             <>
               <VolumeX className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline text-slate-600">Play "Answers By Fire" 🎵</span>
+              <span className="hidden sm:inline text-slate-600">Play "Nakupenda Msichana" 🎵</span>
             </>
           )}
         </button>
@@ -571,7 +566,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </button>
               <p className="text-amber-200 text-xs mt-4 tracking-widest uppercase animate-pulse flex items-center gap-1.5 justify-center">
                 <Music className="w-4 h-4 text-sky-300" />
-                <span>Tap to Open & Play "Answers By Fire" ✨</span>
+                <span>Tap to Open & Play Music ✨</span>
               </p>
             </motion.div>
           )}
@@ -636,7 +631,7 @@ export default function AppleLiquidGlassWeddingInvite() {
                   </p>
                 </div>
 
-                {/* Date & Venue Box */}
+                {/* Date & Venue */}
                 <div className="py-3.5 px-6 rounded-2xl bg-white/50 backdrop-blur-xl border border-white/60 shadow-md max-w-sm mx-auto mb-5">
                   <p className="font-bold text-slate-950 text-base sm:text-lg tracking-wide">
                     Friday, October 30, 2026
@@ -647,7 +642,7 @@ export default function AppleLiquidGlassWeddingInvite() {
                   <p className="text-slate-500 text-xs">Kiambu County, Kenya</p>
                 </div>
 
-                {/* Countdown Timer */}
+                {/* Countdown */}
                 <div className="grid grid-cols-4 gap-2 max-w-xs mx-auto mb-4 text-center">
                   <div className="bg-white/40 backdrop-blur-xl p-2.5 rounded-2xl border border-white/60 shadow-sm">
                     <span className="block font-serif text-3xl font-bold text-purple-950">{timeLeft.days}</span>
@@ -695,7 +690,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </motion.div>
             )}
 
-            {/* TAB 2: ALBUM (NEVER BLANK + DIRECT ADD PHOTO BUTTON) */}
+            {/* TAB 2: ALBUM (WITH DIRECT ADD PHOTO) */}
             {activeTab === "album" && (
               <motion.div
                 key="album"
@@ -721,7 +716,6 @@ export default function AppleLiquidGlassWeddingInvite() {
                   Chan & Jim • Clothed in Faith
                 </p>
 
-                {/* Main Photo Frame */}
                 <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-900 aspect-[4/3] flex items-center justify-center">
                   <img
                     src={activePhotos[currentSlide]?.src}
@@ -846,7 +840,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </motion.div>
             )}
 
-            {/* TAB 4: ZERO-FAIL STATE-BOUND RSVP */}
+            {/* TAB 4: ZERO-DUPLICATE STATE-BOUND RSVP */}
             {activeTab === "rsvp" && (
               <motion.div
                 key="rsvp"
@@ -867,124 +861,4 @@ export default function AppleLiquidGlassWeddingInvite() {
                     <strong className="text-base block text-purple-950 mb-1">
                       Thank you, {guestName || "cherished guest"}!
                     </strong>
-                    Your RSVP has been saved directly to our Google Sheet. We look forward to worshiping and celebrating with you at GracePoint Church, Kikuyu!
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={handleRsvpSubmit}
-                    className="space-y-3 text-left text-xs max-w-sm mx-auto"
-                  >
-                    <div>
-                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Your Full Name</label>
-                      <input
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        required
-                        placeholder="e.g., Steve Kiteto"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Email Address</label>
-                      <input
-                        type="email"
-                        value={guestEmail}
-                        onChange={(e) => setGuestEmail(e.target.value)}
-                        required
-                        placeholder="your.email@example.com"
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Will You Attend?</label>
-                      <select
-                        value={attendance}
-                        onChange={(e) => setAttendance(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/70 backdrop-blur-xl text-sm"
-                      >
-                        <option value="Attending">Delightfully Attending</option>
-                        <option value="Declining">Regretfully Declining</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Party Size (+1s)</label>
-                      <input
-                        type="number"
-                        min="1"
-                        max="4"
-                        value={guestCount}
-                        onChange={(e) => setGuestCount(e.target.value)}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Prayer / Note for Chan & Jim</label>
-                      <textarea
-                        rows={2}
-                        value={guestMessage}
-                        onChange={(e) => setGuestMessage(e.target.value)}
-                        placeholder="Leave a prayer or message for the couple..."
-                        className="w-full px-3.5 py-2 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full bg-gradient-to-r from-purple-800 to-sky-700 hover:opacity-95 text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs shadow-xl transition active:scale-95 flex items-center justify-center gap-2 border border-white/30"
-                    >
-                      <Send className="w-4 h-4" />
-                      <span>{loading ? "Recording RSVP..." : "Confirm RSVP ✨"}</span>
-                    </button>
-                  </form>
-                )}
-              </motion.div>
-            )}
-
-          </AnimatePresence>
-        </div>
-
-        {/* BOTTOM LIQUID GLASS TABS */}
-        <nav className="p-3 bg-white/40 backdrop-blur-2xl border-t border-white/50 flex items-center justify-around z-20">
-          <button
-            onClick={() => setActiveTab("invite")}
-            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
-              activeTab === "invite" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            Invite
-          </button>
-          <button
-            onClick={() => setActiveTab("album")}
-            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
-              activeTab === "album" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            Album
-          </button>
-          <button
-            onClick={() => setActiveTab("giving")}
-            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
-              activeTab === "giving" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            Giving
-          </button>
-          <button
-            onClick={() => setActiveTab("rsvp")}
-            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
-              activeTab === "rsvp" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            RSVP
-          </button>
-        </nav>
-      </main>
-
-      {/* Footer */}
-      <footer className="mt-4 text-center text-xs text-slate-500 font-medium z-10">
-        Chan & Jim • October 30, 2026 • GracePoint Church, Kikuyu
-      </footer>
-    </div>
-  );
-}
+                    Your RSVP has been saved directly to our
