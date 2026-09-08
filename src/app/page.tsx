@@ -861,4 +861,124 @@ export default function WeddingInvite() {
                     <strong className="text-base block text-purple-950 mb-1">
                       Thank you, {guestName || "cherished guest"}!
                     </strong>
-                    Your RSVP has been saved directly to our
+                    Your RSVP has been saved directly to our Google Sheet. We look forward to worshiping and celebrating with you at GracePoint Church, Kikuyu!
+                  </div>
+                ) : (
+                  <form
+                    onSubmit={handleRsvpSubmit}
+                    className="space-y-3 text-left text-xs max-w-sm mx-auto"
+                  >
+                    <div>
+                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Your Full Name</label>
+                      <input
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        required
+                        placeholder="e.g., Steve Kiteto"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Email Address</label>
+                      <input
+                        type="email"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        required
+                        placeholder="your.email@example.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Will You Attend?</label>
+                      <select
+                        value={attendance}
+                        onChange={(e) => setAttendance(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/70 backdrop-blur-xl text-sm"
+                      >
+                        <option value="Attending">Delightfully Attending</option>
+                        <option value="Declining">Regretfully Declining</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Party Size (+1s)</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="4"
+                        value={guestCount}
+                        onChange={(e) => setGuestCount(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Prayer / Note for Chan & Jim</label>
+                      <textarea
+                        rows={2}
+                        value={guestMessage}
+                        onChange={(e) => setGuestMessage(e.target.value)}
+                        placeholder="Leave a prayer or message for the couple..."
+                        className="w-full px-3.5 py-2 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading || submitted}
+                      className="w-full bg-gradient-to-r from-purple-800 to-sky-700 hover:opacity-95 text-white font-bold py-3.5 rounded-xl uppercase tracking-widest text-xs shadow-xl transition active:scale-95 flex items-center justify-center gap-2 border border-white/30 disabled:opacity-50"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>{loading ? "Recording RSVP..." : "Confirm RSVP ✨"}</span>
+                    </button>
+                  </form>
+                )}
+              </motion.div>
+            )}
+
+          </AnimatePresence>
+        </div>
+
+        {/* BOTTOM LIQUID GLASS TABS */}
+        <nav className="p-3 bg-white/40 backdrop-blur-2xl border-t border-white/50 flex items-center justify-around z-20">
+          <button
+            onClick={() => setActiveTab("invite")}
+            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
+              activeTab === "invite" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
+            }`}
+          >
+            Invite
+          </button>
+          <button
+            onClick={() => setActiveTab("album")}
+            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
+              activeTab === "album" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
+            }`}
+          >
+            Album
+          </button>
+          <button
+            onClick={() => setActiveTab("giving")}
+            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
+              activeTab === "giving" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
+            }`}
+          >
+            Giving
+          </button>
+          <button
+            onClick={() => setActiveTab("rsvp")}
+            className={`text-xs font-bold py-1.5 px-4 rounded-xl transition ${
+              activeTab === "rsvp" ? "text-purple-950 bg-white/60 shadow-sm border border-white/60" : "text-slate-500 hover:text-slate-900"
+            }`}
+          >
+            RSVP
+          </button>
+        </nav>
+      </main>
+
+      {/* Footer */}
+      <footer className="mt-4 text-center text-xs text-slate-500 font-medium z-10">
+        Chan & Jim • October 30, 2026 • GracePoint Church, Kikuyu
+      </footer>
+    </div>
+  );
+}
