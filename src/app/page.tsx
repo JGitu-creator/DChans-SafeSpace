@@ -14,52 +14,93 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Send, 
-  LockOpen,
   Volume2,
   VolumeX,
-  Music,
-  ImageIcon
+  Music
 } from "lucide-react";
+
+declare global {
+  interface Window {
+    onYouTubeIframeAPIReady?: () => void;
+    YT?: any;
+  }
+}
 
 export default function AppleLiquidGlassWeddingInvite() {
   const [unlocked, setUnlocked] = useState(false);
   const [activeTab, setActiveTab] = useState<"invite" | "album" | "giving" | "rsvp">("invite");
-  const [guestName, setGuestName] = useState("");
-  const [copiedMpesa, setCopiedMpesa] = useState(false);
   
-  // Audio State
+  // RSVP Form States (Bound directly to React State)
+  const [guestName, setGuestName] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+  const [attendance, setAttendance] = useState("Attending");
+  const [guestCount, setGuestCount] = useState("1");
+  const [guestMessage, setGuestMessage] = useState("");
+
+  const [copiedMpesa, setCopiedMpesa] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Audio / YouTube State for "Back at One" by Brian McKnight
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const ytPlayerRef = useRef<any>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Album Photos (Checks your public folder images)
+  // Album Photos (Safe URL encoding for &)
   const candidatePhotos = [
+    { src: "/C%26J.jpeg", title: "Chan & Jim — Clothed in Faith" },
+    { src: "/C%26J.png", title: "Chan & Jim — Clothed in Faith" },
+    { src: "/C%26J.jpg", title: "Chan & Jim — Clothed in Faith" },
     { src: "/C&J.jpeg", title: "Chan & Jim — Clothed in Faith" },
-    { src: "/C&J.jpg", title: "Chan & Jim — Clothed in Faith" },
-    { src: "/C&J.png", title: "Chan & Jim — Clothed in Faith" },
     { src: "/db10fc26.jpeg", title: "Our Wedding Journey" },
     { src: "/poster.jpg", title: "Wedding Celebration" },
-    { src: "/photo1.jpg", title: "Moments of Love" },
-    { src: "/photo2.jpg", title: "Walking in Faith" }
+    { src: "/photo1.jpg", title: "Walking in Grace" }
   ];
 
   const [activePhotos, setActivePhotos] = useState<{ src: string; title: string }[]>([
-    { src: "/C&J.jpeg", title: "Chan & Jim — Clothed in Faith" }
+    { src: "/C%26J.jpeg", title: "Chan & Jim — Clothed in Faith" }
   ]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
-  // RSVP Form States
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
   // Countdown State
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-  
-  // Canvas References
   const waterStreamCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const burstCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 1. Personalized URL Token (?guest=Name or ?name=Name)
+  // 1. Initialize YouTube Background Player for "Back at One - Brian McKnight"
+  useEffect(() => {
+    // Load YouTube Iframe API
+    if (!window.YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      ytPlayerRef.current = new window.YT.Player("yt-player", {
+        height: "1",
+        width: "1",
+        videoId: "rXPfovXw2tw", // Brian McKnight - Back At One
+        playerVars: {
+          autoplay: 0,
+          loop: 1,
+          playlist: "rXPfovXw2tw",
+          controls: 0,
+          showinfo: 0,
+          modestbranding: 1
+        },
+        events: {
+          onReady: (event: any) => {
+            event.target.setVolume(45);
+          }
+        }
+      });
+    };
+  }, []);
+
+  // 2. Read URL Token (?guest=Name)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -70,31 +111,22 @@ export default function AppleLiquidGlassWeddingInvite() {
     }
   }, []);
 
-  // 2. Pre-verify which images exist in /public so the album is never blank
+  // 3. Pre-verify which images exist in public
   useEffect(() => {
     const verified: { src: string; title: string }[] = [];
-    let checkedCount = 0;
-
-    candidatePhotos.forEach((photo) => {
+    candidatePhotos.forEach((p) => {
       const img = new Image();
       img.onload = () => {
-        verified.push(photo);
-        checkedCount++;
-        if (checkedCount === candidatePhotos.length && verified.length > 0) {
-          setActivePhotos(verified);
+        if (!verified.some((item) => item.src === p.src)) {
+          verified.push(p);
+          setActivePhotos([...verified]);
         }
       };
-      img.onerror = () => {
-        checkedCount++;
-        if (checkedCount === candidatePhotos.length && verified.length > 0) {
-          setActivePhotos(verified);
-        }
-      };
-      img.src = photo.src;
+      img.src = p.src;
     });
   }, []);
 
-  // 3. Countdown to October 30, 2026
+  // 4. Countdown to October 30, 2026
   useEffect(() => {
     const targetDate = new Date("2026-10-30T10:00:00+03:00").getTime();
     const timer = setInterval(() => {
@@ -112,7 +144,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     return () => clearInterval(timer);
   }, []);
 
-  // 4. Slideshow Auto-advance
+  // 5. Slideshow Auto-advance
   useEffect(() => {
     if (!isPlaying || activePhotos.length <= 1) return;
     const interval = setInterval(() => {
@@ -121,7 +153,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     return () => clearInterval(interval);
   }, [isPlaying, activePhotos.length]);
 
-  // 5. HELPER: Draw True Heart Path on HTML5 Canvas
+  // 6. Draw Heart Helper
   const drawHeart = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, rotation: number) => {
     ctx.save();
     ctx.translate(x, y);
@@ -138,7 +170,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     ctx.restore();
   };
 
-  // 6. CONTINUOUS WATER RIPPLES & FLOATING HEART PETALS (VISIBLE THROUGH GLASS)
+  // 7. Water Stream & Floating Love Hearts (Visible through Liquid Glass)
   useEffect(() => {
     const canvas = waterStreamCanvasRef.current;
     if (!canvas) return;
@@ -155,9 +187,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     };
     window.addEventListener("resize", handleResize);
 
-    // Vibrant Sky Blue & Royal Purple Heart Petals
     const streamColors = ["#0284c7", "#38bdf8", "#8b5cf6", "#7c3aed", "#c084fc", "#93c5fd"];
-
     const streamPetals: {
       x: number;
       y: number;
@@ -191,7 +221,6 @@ export default function AppleLiquidGlassWeddingInvite() {
     const renderStream = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // A. Fluid Water Ripples
       step += 0.015;
       ctx.save();
       for (let w = 0; w < 4; w++) {
@@ -208,7 +237,6 @@ export default function AppleLiquidGlassWeddingInvite() {
       }
       ctx.restore();
 
-      // B. Floating Love Heart Petals
       streamPetals.forEach((p) => {
         p.y += p.speedY;
         p.x = p.baseX + Math.sin(step * p.oscSpeed * 50) * p.oscAmp;
@@ -233,7 +261,7 @@ export default function AppleLiquidGlassWeddingInvite() {
     };
   }, []);
 
-  // 7. CELEBRATORY PETAL BURST (Sky Blue & Purple Explosion)
+  // 8. Petal Burst
   const triggerPetalBurst = () => {
     const canvas = burstCanvasRef.current;
     if (!canvas) return;
@@ -271,7 +299,6 @@ export default function AppleLiquidGlassWeddingInvite() {
     let count = 0;
     const renderBurst = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       burstParticles.forEach((p) => {
         p.x += p.speedX;
         p.y += p.speedY;
@@ -287,30 +314,40 @@ export default function AppleLiquidGlassWeddingInvite() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
     };
-
     renderBurst();
   };
 
+  // 9. Unlock & Start Playing "Back at One"
   const handleUnlock = () => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.35;
-      audioRef.current.play()
-        .then(() => setIsPlayingMusic(true))
-        .catch(() => setIsPlayingMusic(false));
+    if (ytPlayerRef.current && ytPlayerRef.current.playVideo) {
+      ytPlayerRef.current.playVideo();
+      setIsPlayingMusic(true);
+    } else if (audioRef.current) {
+      audioRef.current.volume = 0.4;
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
     }
     triggerPetalBurst();
     setUnlocked(true);
   };
 
   const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (isPlayingMusic) {
-      audioRef.current.pause();
-      setIsPlayingMusic(false);
-    } else {
-      audioRef.current.play()
-        .then(() => setIsPlayingMusic(true))
-        .catch(() => setIsPlayingMusic(false));
+    if (ytPlayerRef.current && ytPlayerRef.current.getPlayerState) {
+      const state = ytPlayerRef.current.getPlayerState();
+      if (state === 1) { // playing
+        ytPlayerRef.current.pauseVideo();
+        setIsPlayingMusic(false);
+      } else {
+        ytPlayerRef.current.playVideo();
+        setIsPlayingMusic(true);
+      }
+    } else if (audioRef.current) {
+      if (isPlayingMusic) {
+        audioRef.current.pause();
+        setIsPlayingMusic(false);
+      } else {
+        audioRef.current.play();
+        setIsPlayingMusic(true);
+      }
     }
   };
 
@@ -346,25 +383,28 @@ export default function AppleLiquidGlassWeddingInvite() {
     document.body.removeChild(link);
   };
 
-  // 8. ZERO-FAIL RSVP SUBMISSION (Clean GET Beacon to Google Apps Script)
-  const handleRsvpSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // 10. Guaranteed State-Bound RSVP Submission
+  const handleRsvpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
+    const nameToSend = guestName.trim() || "Guest";
+    const emailToSend = guestEmail.trim() || "";
+    const attendanceToSend = attendance || "Attending";
+    const guestCountToSend = guestCount || "1";
+    const messageToSend = guestMessage.trim() || "";
+
     const params = new URLSearchParams({
-      name: String(formData.get("name") || ""),
-      email: String(formData.get("email") || ""),
-      attendance: String(formData.get("attendance") || ""),
-      guestCount: String(formData.get("guestCount") || "1"),
-      message: String(formData.get("message") || ""),
-      timestamp: new Date().toISOString()
+      name: nameToSend,
+      email: emailToSend,
+      attendance: attendanceToSend,
+      guestCount: guestCountToSend,
+      message: messageToSend
     }).toString();
 
     const APPS_SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbyFIssp-Gfi7efBQOW0wbjMjy1AeE9lchHihGoJ_Xfo_KyChNjF4mOx3jKhP6cisGjm/exec";
+      "https://script.google.com/macros/s/AKfycbyg3F2Pj2rfOze7Fqjbg-YMRheqODk2q03-lair9z6yATp-buxJO0RWnFU4HWTLnoGn/exec";
 
-    // Native GET request: never blocked by CORS preflight or iframe restrictions
     fetch(`${APPS_SCRIPT_URL}?${params}`, { mode: "no-cors" })
       .then(() => {
         setSubmitted(true);
@@ -381,38 +421,22 @@ export default function AppleLiquidGlassWeddingInvite() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#faf5ff] text-slate-900 font-sans flex flex-col items-center justify-center p-2 sm:p-4 relative overflow-x-hidden selection:bg-purple-600 selection:text-white">
       
-      {/* 1. BACKGROUND CANVAS: FLOWING WATER RIPPLES & FLOATING LOVE HEARTS */}
-      <canvas ref={waterStreamCanvasRef} className="fixed inset-0 pointer-events-none z-0 w-full h-full" />
+      {/* Hidden YouTube Iframe for "Back at One - Brian McKnight" */}
+      <div id="yt-player" style={{ position: "absolute", opacity: 0, pointerEvents: "none", zIndex: -10 }} />
 
-      {/* 2. BURST CANVAS: SKY BLUE & PURPLE EXPLOSION */}
-      <canvas ref={burstCanvasRef} className="fixed inset-0 pointer-events-none z-50 w-full h-full" />
+      {/* Local MP3 Fallback */}
+      <audio ref={audioRef} loop src="/wedding-music.mp3" />
 
-      {/* Background Audio */}
-      <audio 
-        ref={audioRef} 
-        loop 
-        preload="auto"
-        src="/wedding-music.mp3"
-        onError={(e) => {
-          const target = e.currentTarget;
-          if (!target.src.includes("pixabay.com")) {
-            target.src = "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3?filename=romantic-piano-wedding-love-10901.mp3";
-            target.load();
-            if (isPlayingMusic) target.play().catch(() => {});
-          }
-        }}
-      />
-
-      {/* Top Right Liquid Glass Music Toggle */}
+      {/* Floating Liquid Glass Music Widget */}
       <div className="fixed top-4 right-4 z-50">
         <button
           onClick={toggleMusic}
-          className="bg-white/40 backdrop-blur-xl border border-white/60 shadow-lg px-3 py-2 rounded-full flex items-center gap-2 text-xs font-semibold text-purple-950 hover:bg-white/60 transition ring-1 ring-white/40"
+          className="bg-white/50 backdrop-blur-xl border border-white/70 shadow-lg px-3.5 py-2 rounded-full flex items-center gap-2 text-xs font-semibold text-purple-950 hover:bg-white/70 transition ring-1 ring-white/50"
         >
           {isPlayingMusic ? (
             <>
               <Volume2 className="w-4 h-4 text-purple-700 animate-pulse" />
-              <span className="hidden sm:inline">Music Playing</span>
+              <span className="hidden sm:inline">Back at One — Brian McKnight 🎵</span>
               <span className="flex gap-0.5">
                 <span className="w-1 h-3 bg-purple-600 animate-bounce"></span>
                 <span className="w-1 h-4 bg-sky-500 animate-bounce delay-75"></span>
@@ -422,11 +446,15 @@ export default function AppleLiquidGlassWeddingInvite() {
           ) : (
             <>
               <VolumeX className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline text-slate-600">Play Music</span>
+              <span className="hidden sm:inline text-slate-600">Play "Back at One" 🎵</span>
             </>
           )}
         </button>
       </div>
+
+      {/* Background Water Ripples & Floating Love Hearts Canvas */}
+      <canvas ref={waterStreamCanvasRef} className="fixed inset-0 pointer-events-none z-0 w-full h-full" />
+      <canvas ref={burstCanvasRef} className="fixed inset-0 pointer-events-none z-50 w-full h-full" />
 
       {/* Personalized Greeting Header */}
       <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-3 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
@@ -442,12 +470,10 @@ export default function AppleLiquidGlassWeddingInvite() {
         </p>
       </aside>
 
-      {/* ========================================================== */}
-      {/* MAIN 9:16 APPLE LIQUID GLASS INVITATION CARD               */}
-      {/* ========================================================== */}
+      {/* MAIN APPLE LIQUID GLASS CARD */}
       <main className="w-full max-w-lg bg-white/35 backdrop-blur-2xl rounded-[2.5rem] border border-white/60 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.12)] ring-1 ring-white/50 overflow-hidden relative min-h-[790px] flex flex-col justify-between z-10">
 
-        {/* ================= GATED UNLOCK OVERLAY ================= */}
+        {/* UNLOCK COVER */}
         <AnimatePresence>
           {!unlocked && (
             <motion.div 
@@ -497,18 +523,18 @@ export default function AppleLiquidGlassWeddingInvite() {
                 </div>
               </button>
               <p className="text-amber-200 text-xs mt-4 tracking-widest uppercase animate-pulse flex items-center gap-1.5 justify-center">
-                <Sparkles className="w-4 h-4 text-sky-300" />
-                <span>Tap Blossom to Open & Burst Petals ✨</span>
+                <Music className="w-4 h-4 text-sky-300" />
+                <span>Tap to Open & Play "Back at One" ✨</span>
               </p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* ================= TAB CONTENT CONTAINER ================= */}
+        {/* TAB CONTENTS */}
         <div className="flex-1 flex flex-col justify-center">
           <AnimatePresence mode="wait">
             
-            {/* TAB 1: FORMAL INVITATION */}
+            {/* TAB 1: INVITATION */}
             {activeTab === "invite" && (
               <motion.div
                 key="invite"
@@ -622,7 +648,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </motion.div>
             )}
 
-            {/* TAB 2: ALBUM (NEVER BLANK) */}
+            {/* TAB 2: ALBUM */}
             {activeTab === "album" && (
               <motion.div
                 key="album"
@@ -639,15 +665,11 @@ export default function AppleLiquidGlassWeddingInvite() {
                   Chan & Jim • Clothed in Faith
                 </p>
 
-                {/* Main Photo Frame */}
                 <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/80 bg-slate-900 aspect-[4/3] flex items-center justify-center">
                   <img
-                    src={activePhotos[currentSlide]?.src || "/C&J.jpeg"}
+                    src={activePhotos[currentSlide]?.src || "/C%26J.jpeg"}
                     alt="Chan & Jim Wedding"
                     className="w-full h-full object-cover transition-all duration-700"
-                    onError={(e) => {
-                      (e.target as HTMLElement).style.display = "none";
-                    }}
                   />
                   
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 text-white text-left">
@@ -708,7 +730,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </motion.div>
             )}
 
-            {/* TAB 3: BUDGET & GIFTING (FULLY STYLED GLASS CARDS) */}
+            {/* TAB 3: BUDGET & GIFTING */}
             {activeTab === "giving" && (
               <motion.div
                 key="giving"
@@ -767,7 +789,7 @@ export default function AppleLiquidGlassWeddingInvite() {
               </motion.div>
             )}
 
-            {/* TAB 4: ZERO-FAIL RSVP FORM */}
+            {/* TAB 4: STATE-BOUND RSVP */}
             {activeTab === "rsvp" && (
               <motion.div
                 key="rsvp"
@@ -798,8 +820,8 @@ export default function AppleLiquidGlassWeddingInvite() {
                     <div>
                       <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Your Full Name</label>
                       <input
-                        name="name"
-                        defaultValue={guestName}
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
                         required
                         placeholder="e.g., Steve Kiteto"
                         className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
@@ -809,7 +831,8 @@ export default function AppleLiquidGlassWeddingInvite() {
                       <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Email Address</label>
                       <input
                         type="email"
-                        name="email"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
                         required
                         placeholder="your.email@example.com"
                         className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm shadow-inner"
@@ -818,7 +841,8 @@ export default function AppleLiquidGlassWeddingInvite() {
                     <div>
                       <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Will You Attend?</label>
                       <select
-                        name="attendance"
+                        value={attendance}
+                        onChange={(e) => setAttendance(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/70 backdrop-blur-xl text-sm"
                       >
                         <option value="Attending">Delightfully Attending</option>
@@ -829,18 +853,19 @@ export default function AppleLiquidGlassWeddingInvite() {
                       <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Party Size (+1s)</label>
                       <input
                         type="number"
-                        name="guestCount"
                         min="1"
                         max="4"
-                        defaultValue="1"
+                        value={guestCount}
+                        onChange={(e) => setGuestCount(e.target.value)}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
                       />
                     </div>
                     <div>
                       <label className="block text-[11px] uppercase font-bold text-slate-700 mb-0.5">Prayer / Note for Chan & Jim</label>
                       <textarea
-                        name="message"
                         rows={2}
+                        value={guestMessage}
+                        onChange={(e) => setGuestMessage(e.target.value)}
                         placeholder="Leave a prayer or message for the couple..."
                         className="w-full px-3.5 py-2 rounded-xl border border-white/60 outline-none focus:border-purple-600 bg-white/60 backdrop-blur-xl text-sm"
                       />
@@ -862,7 +887,7 @@ export default function AppleLiquidGlassWeddingInvite() {
           </AnimatePresence>
         </div>
 
-        {/* BOTTOM LIQUID GLASS TAB BAR */}
+        {/* BOTTOM LIQUID GLASS TABS */}
         <nav className="p-3 bg-white/40 backdrop-blur-2xl border-t border-white/50 flex items-center justify-around z-20">
           <button
             onClick={() => setActiveTab("invite")}
@@ -899,7 +924,6 @@ export default function AppleLiquidGlassWeddingInvite() {
         </nav>
       </main>
 
-      {/* Footer */}
       <footer className="mt-4 text-center text-xs text-slate-500 font-medium z-10">
         Chan & Jim • October 30, 2026 • GracePoint Church, Kikuyu
       </footer>
