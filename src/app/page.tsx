@@ -412,7 +412,7 @@ export default function WeddingInvite() {
 
       {/* Personalized Welcome Badge */}
       {guestName && (
-        <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-2.5 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
+        <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-2 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
           <div className="flex items-center justify-center gap-2">
             <span className="text-amber-300">❀</span>
             <span className="text-sm font-sans font-semibold tracking-wide">
@@ -503,21 +503,28 @@ export default function WeddingInvite() {
               className="w-full bg-white/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/70 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.12)] ring-1 ring-white/50 p-6 sm:p-12 text-center relative overflow-hidden z-20 font-garamond"
             >
               
-              {/* REAL FLORAL CENTERPIECE (From Your Photo) */}
-              <div className="w-full flex justify-center mb-6">
-                <div className="relative w-64 sm:w-80 h-44 sm:h-52 rounded-3xl overflow-hidden shadow-xl border-2 border-white/80 ring-1 ring-purple-200/60 bg-white/30">
+              {/* SEAMLESSLY BLENDED BOTANICAL FLORAL HEADER (NO HARSH BOX EDGES) */}
+              <div className="w-full flex justify-center mb-6 px-2">
+                <div className="relative w-full max-w-sm h-48 sm:h-56 flex items-center justify-center">
+                  {/* Soft Pastel Ambient Glow Behind Flowers */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-sky-300/30 via-purple-300/35 to-pink-200/25 rounded-full blur-2xl pointer-events-none" />
+                  
+                  {/* Soft Feathered Floral Artwork (Seamless Vignette Blend) */}
                   <img
                     src="/floral-header.png"
                     alt="Chan & Jim Wedding Floral Centerpiece"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-95 transition-opacity"
+                    style={{
+                      maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)",
+                      WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)"
+                    }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       if (!target.src.includes("unsplash")) {
-                        target.src = "https://images.unsplash.com/photo-1519225429980-715cb0215aed?auto=format&fit=crop&w=800&q=80";
+                        target.src = "https://images.unsplash.com/photo-1519225429980-715cb0215aed?auto=format&fit=crop&w=900&q=80";
                       }
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
 
