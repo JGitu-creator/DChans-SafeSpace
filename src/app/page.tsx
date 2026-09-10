@@ -412,7 +412,7 @@ export default function WeddingInvite() {
 
       {/* Personalized Welcome Badge */}
       {guestName && (
-        <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-2 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
+        <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-2.5 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
           <div className="flex items-center justify-center gap-2">
             <span className="text-amber-300">❀</span>
             <span className="text-sm font-sans font-semibold tracking-wide">
@@ -503,51 +503,22 @@ export default function WeddingInvite() {
               className="w-full bg-white/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/70 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.12)] ring-1 ring-white/50 p-6 sm:p-12 text-center relative overflow-hidden z-20 font-garamond"
             >
               
-              {/* Floral Bouquet Header (Matching Table Photo) */}
+              {/* REAL FLORAL CENTERPIECE (From Your Photo) */}
               <div className="w-full flex justify-center mb-6">
-                <svg className="w-88 h-32 text-purple-950" viewBox="0 0 380 120" fill="none">
-                  <path d="M 30 75 C 110 35, 270 35, 350 75" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M 50 70 C 130 45, 250 45, 330 70" stroke="#fef08a" strokeWidth="1.2" strokeDasharray="3 3" />
-
-                  {/* Sage Green Leaves */}
-                  <path d="M 120 40 C 105 25, 95 35, 105 50 Z" fill="#4d7c0f" opacity="0.85" />
-                  <path d="M 260 40 C 275 25, 285 35, 275 50 Z" fill="#4d7c0f" opacity="0.85" />
-                  <path d="M 85 55 C 70 45, 65 55, 75 68 Z" fill="#15803d" opacity="0.8" />
-                  <path d="M 295 55 C 310 45, 315 55, 305 68 Z" fill="#15803d" opacity="0.8" />
-
-                  {/* Sky-Blue Hydrangea Clusters */}
-                  <g transform="translate(100, 62)">
-                    <circle cx="-6" cy="-4" r="6" fill="#38bdf8" />
-                    <circle cx="6" cy="-4" r="6" fill="#38bdf8" />
-                    <circle cx="0" cy="5" r="6" fill="#0284c7" />
-                    <circle cx="0" cy="0" r="2.5" fill="#ffffff" />
-                  </g>
-                  <g transform="translate(280, 62)">
-                    <circle cx="-6" cy="-4" r="6" fill="#38bdf8" />
-                    <circle cx="6" cy="-4" r="6" fill="#38bdf8" />
-                    <circle cx="0" cy="5" r="6" fill="#0284c7" />
-                    <circle cx="0" cy="0" r="2.5" fill="#ffffff" />
-                  </g>
-
-                  {/* Cream & Ivory Peonies */}
-                  <g transform="translate(145, 52)">
-                    <ellipse cx="0" cy="0" rx="18" ry="16" fill="#fef3c7" />
-                    <path d="M -10 -4 C -14 -10, -3 -14, 0 -8 C 3 -14, 14 -10, 10 -4 C 14 2, 7 8, 0 10 C -7 8, -14 2, -10 -4 Z" fill="#fffbeb" />
-                  </g>
-
-                  {/* Soft Lilac & Lavender Garden Roses */}
-                  <g transform="translate(235, 52)">
-                    <ellipse cx="0" cy="0" rx="18" ry="16" fill="#e9d5ff" />
-                    <path d="M -10 -4 C -14 -10, -3 -14, 0 -8 C 3 -14, 14 -10, 10 -4 C 14 2, 7 8, 0 10 C -7 8, -14 2, -10 -4 Z" fill="#d8b4fe" />
-                  </g>
-
-                  {/* Center Deep Royal Purple Rose */}
-                  <g transform="translate(190, 46)">
-                    <path d="M -22 -9 C -30 -22, -12 -32, 0 -24 C 12 -32, 30 -22, 22 -9 C 28 5, 14 22, 0 24 C -14 22, -28 5, -22 -9 Z" fill="#4a044e" />
-                    <path d="M -14 -5 C -20 -14, -8 -20, 0 -15 C 8 -20, 20 -14, 14 -5 C 18 3, 8 14, 0 15 C -8 14 -18 3 -14 -5 Z" fill="#6b21a8" />
-                    <circle cx="0" cy="0" r="3" fill="#faf5ff" />
-                  </g>
-                </svg>
+                <div className="relative w-64 sm:w-80 h-44 sm:h-52 rounded-3xl overflow-hidden shadow-xl border-2 border-white/80 ring-1 ring-purple-200/60 bg-white/30">
+                  <img
+                    src="/floral-header.png"
+                    alt="Chan & Jim Wedding Floral Centerpiece"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes("unsplash")) {
+                        target.src = "https://images.unsplash.com/photo-1519225429980-715cb0215aed?auto=format&fit=crop&w=800&q=80";
+                      }
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
+                </div>
               </div>
 
               {/* Top Line */}
@@ -560,7 +531,7 @@ export default function WeddingInvite() {
                 <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
                   Chan Hadassah
                 </h1>
-                <div className="text-3xl font-garamond italic text-amber-600 font-light my-2">
+                <div className="text-3xl font-garamond italic text-amber-600 my-1 font-light">
                   &
                 </div>
                 <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
