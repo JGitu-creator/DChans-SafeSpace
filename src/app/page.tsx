@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Heart, 
   MapPin, 
   Calendar as CalendarIcon, 
   Copy, 
@@ -14,10 +13,7 @@ import {
   ExternalLink,
   Volume2,
   VolumeX,
-  Clock,
-  Shirt,
-  Send,
-  ChevronDown
+  Send 
 } from "lucide-react";
 
 declare global {
@@ -27,30 +23,29 @@ declare global {
   }
 }
 
-export default function ConceptOneLiquidGlassWeddingInvite() {
+export default function WeddingInvite() {
+  const [unrolled, setUnrolled] = useState(false);
+  
+  // Streamlined RSVP Form States (No Prayer Note)
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [attendance, setAttendance] = useState("Attending");
-  const [guestMessage, setGuestMessage] = useState("");
 
   const [copiedMpesa, setCopiedMpesa] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Audio State for "Nakupenda Msichana" by Kichwatah (STRICTLY MUTED BY DEFAULT)
+  // Audio State for "Nakupenda Msichana" by Kichwatah (MUTED BY DEFAULT)
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const ytPlayerRef = useRef<any>(null);
 
-  // Accordion Toggles for Event Details
-  const [showProgramme, setShowProgramme] = useState(false);
-  const [showAttire, setShowAttire] = useState(false);
-
   // Countdown State
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-  const waterStreamCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const burstCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // 1. YouTube Player for "Nakupenda Msichana" by Kichwatah (Starts Muted)
+  // Touch Swipe Gesture Tracking
+  const touchStartY = useRef<number | null>(null);
+
+  // 1. YouTube Background Player (Starts Strictly Muted)
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
@@ -81,7 +76,7 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
     };
   }, []);
 
-  // 2. Personalized Link Token (?guest=Name)
+  // 2. Read URL Token (?guest=Name)
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -110,7 +105,21 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
     return () => clearInterval(timer);
   }, []);
 
-  // 4. Toggle Music
+  // 4. Swipe Gesture Handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diff = Math.abs(touchEndY - touchStartY.current);
+    if (diff > 40) {
+      setUnrolled(true);
+    }
+    touchStartY.current = null;
+  };
+
   const toggleMusic = () => {
     if (ytPlayerRef.current && ytPlayerRef.current.getPlayerState) {
       const state = ytPlayerRef.current.getPlayerState();
@@ -122,170 +131,6 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
         setIsPlayingMusic(true);
       }
     }
-  };
-
-  // 5. Draw True Heart Helper on Canvas
-  const drawHeart = (ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, rotation: number) => {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate((rotation * Math.PI) / 180);
-    ctx.scale(size / 30, size / 30);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(-12, -15, -24, 0, 0, 20);
-    ctx.bezierCurveTo(24, 0, 12, -15, 0, 0);
-    ctx.fillStyle = color;
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 8;
-    ctx.fill();
-    ctx.restore();
-  };
-
-  // 6. Water Stream with Floating Love Hearts (Visible through Liquid Glass)
-  useEffect(() => {
-    const canvas = waterStreamCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-
-    const handleResize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    };
-    window.addEventListener("resize", handleResize);
-
-    const streamColors = ["#0284c7", "#38bdf8", "#8b5cf6", "#7c3aed", "#c084fc", "#93c5fd"];
-    const streamPetals: {
-      x: number;
-      y: number;
-      size: number;
-      color: string;
-      speedY: number;
-      oscSpeed: number;
-      oscAmp: number;
-      baseX: number;
-      rotation: number;
-      rotSpeed: number;
-    }[] = [];
-
-    for (let i = 0; i < 45; i++) {
-      const x = Math.random() * width;
-      streamPetals.push({
-        x: x,
-        baseX: x,
-        y: Math.random() * height,
-        size: Math.random() * 18 + 12,
-        color: streamColors[Math.floor(Math.random() * streamColors.length)],
-        speedY: Math.random() * 0.85 + 0.45,
-        oscSpeed: Math.random() * 0.02 + 0.01,
-        oscAmp: Math.random() * 35 + 15,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 1.5,
-      });
-    }
-
-    let step = 0;
-    const renderStream = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      step += 0.015;
-      ctx.save();
-      for (let w = 0; w < 4; w++) {
-        ctx.beginPath();
-        ctx.moveTo(0, height);
-        for (let x = 0; x <= width; x += 20) {
-          const y = height * 0.35 + w * 160 + Math.sin(x * 0.005 + step + w) * 30 + Math.cos(x * 0.003 - step) * 18;
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(width, height);
-        ctx.closePath();
-        ctx.fillStyle = w % 2 === 0 ? "rgba(186, 230, 253, 0.28)" : "rgba(233, 213, 255, 0.22)";
-        ctx.fill();
-      }
-      ctx.restore();
-
-      streamPetals.forEach((p) => {
-        p.y += p.speedY;
-        p.x = p.baseX + Math.sin(step * p.oscSpeed * 50) * p.oscAmp;
-        p.rotation += p.rotSpeed;
-
-        if (p.y > height + 40) {
-          p.y = -30;
-          p.x = p.baseX = Math.random() * width;
-        }
-
-        drawHeart(ctx, p.x, p.y, p.size, p.color, p.rotation);
-      });
-
-      animId = requestAnimationFrame(renderStream);
-    };
-
-    renderStream();
-
-    return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  // 7. Confetti Burst
-  const triggerPetalBurst = () => {
-    const canvas = burstCanvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const burstColors = ["#0075FF", "#38bdf8", "#7c3aed", "#8b5cf6", "#c084fc", "#e879f9", "#fbbf24"];
-    const burstParticles: {
-      x: number;
-      y: number;
-      size: number;
-      color: string;
-      speedX: number;
-      speedY: number;
-      rotation: number;
-      rotSpeed: number;
-    }[] = [];
-
-    for (let i = 0; i < 85; i++) {
-      burstParticles.push({
-        x: canvas.width / 2 + (Math.random() - 0.5) * 60,
-        y: canvas.height / 2 + (Math.random() - 0.5) * 60,
-        size: Math.random() * 20 + 10,
-        color: burstColors[Math.floor(Math.random() * burstColors.length)],
-        speedX: (Math.random() - 0.5) * 16,
-        speedY: (Math.random() - 0.5) * 18 - 7,
-        rotation: Math.random() * 360,
-        rotSpeed: (Math.random() - 0.5) * 8,
-      });
-    }
-
-    let count = 0;
-    const renderBurst = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      burstParticles.forEach((p) => {
-        p.x += p.speedX;
-        p.y += p.speedY;
-        p.speedY += 0.25;
-        p.rotation += p.rotSpeed;
-        drawHeart(ctx, p.x, p.y, p.size, p.color, p.rotation);
-      });
-
-      count++;
-      if (count < 140) {
-        requestAnimationFrame(renderBurst);
-      } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      }
-    };
-    renderBurst();
   };
 
   const handleCopyMpesa = () => {
@@ -320,7 +165,7 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
     document.body.removeChild(link);
   };
 
-  // 8. Single-Beacon Guaranteed RSVP Submission (Zero Duplicates)
+  // 5. Clean, Single-Beacon RSVP Submission (No Prayer Note)
   const handleRsvpSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (loading || submitted) return;
@@ -329,14 +174,13 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
     const nameToSend = guestName.trim() || "Guest";
     const emailToSend = guestEmail.trim() || "";
     const attendanceToSend = attendance || "Attending";
-    const messageToSend = guestMessage.trim() || "";
 
     const params = new URLSearchParams({
       name: nameToSend,
       email: emailToSend,
       attendance: attendanceToSend,
       guestCount: "1",
-      message: messageToSend
+      message: ""
     }).toString();
 
     const APPS_SCRIPT_URL =
@@ -348,21 +192,32 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
     setTimeout(() => {
       setSubmitted(true);
       setLoading(false);
-      triggerPetalBurst();
     }, 500);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#faf5ff] text-slate-900 font-serif flex flex-col items-center justify-center p-3 sm:p-6 relative overflow-x-hidden selection:bg-purple-200 antialiased">
+    <div className="min-h-screen bg-[#f5efe6] text-slate-800 flex flex-col items-center justify-center p-3 sm:p-6 antialiased selection:bg-purple-200 relative overflow-x-hidden font-serif">
       
-      {/* Hidden YouTube Iframe */}
+      {/* Typography: Cormorant Garamond (Body) + Cursive Calligraphy (Names) */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Pinyon+Script&family=Alex+Brush&family=Great+Vibes&display=swap');
+        
+        .font-garamond {
+          font-family: 'Cormorant Garamond', Garamond, 'Times New Roman', serif;
+        }
+        .font-calligraphy {
+          font-family: 'Peach Cake', 'Pinyon Script', 'Alex Brush', 'Great Vibes', cursive;
+        }
+      `}</style>
+
+      {/* Hidden YouTube Iframe for Music */}
       <div id="yt-player" style={{ position: "absolute", opacity: 0, pointerEvents: "none", zIndex: -10 }} />
 
-      {/* Floating Glass Music Toggle (Muted by Default) */}
+      {/* Floating Music Widget (Starts Muted) */}
       <div className="fixed top-4 right-4 z-50">
         <button
           onClick={toggleMusic}
-          className="bg-white/50 backdrop-blur-xl border border-white/70 shadow-lg px-3.5 py-2 rounded-full flex items-center gap-2 text-xs font-sans font-semibold text-purple-950 hover:bg-white/70 transition ring-1 ring-white/50"
+          className="bg-white/85 backdrop-blur-md border border-amber-300 shadow-md px-3.5 py-2 rounded-full flex items-center gap-2 text-xs font-garamond font-semibold text-purple-950 hover:bg-white transition"
         >
           {isPlayingMusic ? (
             <>
@@ -377,427 +232,410 @@ export default function ConceptOneLiquidGlassWeddingInvite() {
           ) : (
             <>
               <VolumeX className="w-4 h-4 text-slate-400" />
-              <span className="hidden sm:inline text-slate-600">Play "Nakupenda Msichana" 🎵</span>
+              <span className="hidden sm:inline text-slate-600">Play Song 🎵</span>
             </>
           )}
         </button>
       </div>
 
-      {/* Background Canvases */}
-      <canvas ref={waterStreamCanvasRef} className="fixed inset-0 pointer-events-none z-0 w-full h-full" />
-      <canvas ref={burstCanvasRef} className="fixed inset-0 pointer-events-none z-50 w-full h-full" />
-
-      {/* Personalized Guest Badge */}
+      {/* Personalized Welcome Badge */}
       {guestName && (
-        <aside className="w-full max-w-lg bg-gradient-to-r from-sky-600/80 via-purple-700/85 to-purple-950/90 backdrop-blur-xl text-white py-2.5 px-5 rounded-2xl mb-3 shadow-xl text-center z-20 border border-white/40 ring-1 ring-white/30">
-          <div className="flex items-center justify-center gap-2">
-            <span className="text-amber-300">❀</span>
-            <span className="text-sm font-sans font-semibold tracking-wide">
-              Karibu Sana, {guestName}!
-            </span>
-            <span className="text-amber-300">❀</span>
-          </div>
+        <aside className="w-full max-w-xl text-center mb-3">
+          <span className="text-xs uppercase tracking-[0.25em] text-purple-950 font-garamond font-semibold bg-white/75 px-5 py-1.5 rounded-full border border-amber-200 shadow-sm inline-flex items-center gap-2">
+            <span className="text-purple-600">❀</span>
+            Karibu Sana, {guestName}
+            <span className="text-sky-600">❀</span>
+          </span>
         </aside>
       )}
 
-      {/* MAIN APPLE LIQUID GLASS CARD */}
-      <main className="w-full max-w-lg bg-white/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/70 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.12)] ring-1 ring-white/50 overflow-hidden relative z-10 p-6 sm:p-10 text-center">
-
-        {/* ======================================================== */}
-        {/* LUSH BOTANICAL PETAL GARLAND (HEADER)                    */}
-        {/* ======================================================== */}
-        <div className="w-full flex justify-center mb-4">
-          <svg className="w-84 h-24 text-purple-950" viewBox="0 0 340 90" fill="none">
-            {/* Gilded Golden Vine */}
-            <path d="M 20 50 C 90 20, 250 20, 320 50" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" />
-            <path d="M 40 45 C 110 25, 230 25, 300 45" stroke="#fef08a" strokeWidth="1" strokeDasharray="3 3" />
-
-            {/* Deep Royal Purple Center Rose (Organic Layered Petals) */}
-            <g transform="translate(170, 35)">
-              <path d="M-18,-8 C-25,-18 -10,-28 0,-20 C10,-28 25,-18 18,-8 C24,5 12,20 0,22 C-12,20 -24,5 -18,-8 Z" fill="#581c87" />
-              <path d="M-12,-5 C-18,-12 -8,-18 0,-14 C8,-18 18,-12 12,-5 C16,4 8,14 0,15 C-8,14 -16,4 -12,-5 Z" fill="#7e22ce" />
-              <path d="M-6,-3 C-10,-7 -4,-10 0,-8 C4,-10 10,-7 6,-3 C8,2 4,8 0,8 C-4,8 -8,2 -6,-3 Z" fill="#f3e8ff" />
-            </g>
-
-            {/* Lilac Blossoms (True Petals) */}
-            {[-45, 45].map((xOffset, i) => (
-              <g key={i} transform={`translate(${170 + xOffset}, 40)`}>
-                <circle cx="-8" cy="-5" r="7" fill="#c084fc" />
-                <circle cx="8" cy="-5" r="7" fill="#c084fc" />
-                <circle cx="0" cy="6" r="7" fill="#c084fc" />
-                <circle cx="0" cy="0" r="3" fill="#ffffff" />
-              </g>
-            ))}
-
-            {/* Sky Blue Hydrangea Florets */}
-            {[-100, 100].map((xOffset, i) => (
-              <g key={i} transform={`translate(${170 + xOffset}, 45)`}>
-                <circle cx="-7" cy="-7" r="6" fill="#38bdf8" />
-                <circle cx="7" cy="-7" r="6" fill="#38bdf8" />
-                <circle cx="-7" cy="7" r="6" fill="#0284c7" />
-                <circle cx="7" cy="7" r="6" fill="#38bdf8" />
-                <circle cx="0" cy="0" r="2.5" fill="#f0f9ff" />
-              </g>
-            ))}
-
-            {/* Gold Foliage Leaves */}
-            <path d="M 150 22 C 145 12, 135 15, 138 25 C 142 24, 147 23, 150 22 Z" fill="#d4af37" />
-            <path d="M 190 22 C 195 12, 205 15, 202 25 C 198 24, 193 23, 190 22 Z" fill="#d4af37" />
-            <path d="M 110 32 C 105 22, 95 25, 98 35 C 102 34, 107 33, 110 32 Z" fill="#d4af37" />
-            <path d="M 230 32 C 235 22, 245 25, 242 35 C 238 34, 233 33, 230 32 Z" fill="#d4af37" />
-          </svg>
-        </div>
-
-        {/* Top Header Line */}
-        <p className="font-sans text-xs uppercase tracking-[0.3em] text-slate-500 font-semibold mb-6 leading-relaxed">
-          Together with our families,<br />we invite you to celebrate our wedding
-        </p>
-
-        {/* FULL NAMES: Bold Regal Calligraphy */}
-        <div className="py-2 space-y-1">
-          <h1 className="text-4xl sm:text-5xl font-serif text-purple-950 font-bold tracking-tight leading-none drop-shadow-[0_2px_12px_rgba(88,28,135,0.18)]">
-            Chan Hadassah Njoki
-          </h1>
-          <div className="text-3xl text-sky-600 italic font-light my-2">
-            &
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-serif text-purple-950 font-bold tracking-tight leading-none drop-shadow-[0_2px_12px_rgba(88,28,135,0.18)]">
-            Jim Njuguna Gitu
-          </h1>
-        </div>
-
-        {/* Scripture: 1 John 4:19 */}
-        <div className="my-6 border-y border-white/70 py-3.5 max-w-sm mx-auto bg-white/30 backdrop-blur-md rounded-2xl px-4 shadow-sm">
-          <p className="italic text-slate-800 text-sm sm:text-base leading-relaxed">
-            "We love because He first loved us."
-          </p>
-          <p className="font-sans text-[10px] uppercase tracking-widest text-purple-900 font-bold mt-1">
-            1 John 4:19
-          </p>
-        </div>
-
-        {/* Instant Glance Details Box */}
-        <div className="my-6 p-5 rounded-3xl bg-white/50 backdrop-blur-xl border border-white/70 shadow-md max-w-sm mx-auto">
-          <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-purple-900 font-bold block mb-1">
-            Holy Matrimony & Wedding Celebration
-          </span>
-          <p className="text-2xl sm:text-3xl text-slate-950 font-bold tracking-wide">
-            Friday, October 30, 2026
-          </p>
-          <p className="text-lg text-purple-950 font-semibold mt-1">
-            GracePoint Church
-          </p>
-          <p className="text-xs text-slate-500 font-sans">
-            Kikuyu, Kenya
-          </p>
-        </div>
-
-        {/* Countdown Timer */}
-        <div className="grid grid-cols-4 gap-2 max-w-xs mx-auto my-6 text-center font-sans">
-          <div className="p-2.5 rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <span className="block text-xl sm:text-2xl font-serif text-purple-950 font-bold">{timeLeft.days}</span>
-            <span className="text-[9px] uppercase tracking-wider text-purple-700 font-bold">Days</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <span className="block text-xl sm:text-2xl font-serif text-purple-950 font-bold">{timeLeft.hours}</span>
-            <span className="text-[9px] uppercase tracking-wider text-purple-700 font-bold">Hours</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <span className="block text-xl sm:text-2xl font-serif text-purple-950 font-bold">{timeLeft.mins}</span>
-            <span className="text-[9px] uppercase tracking-wider text-purple-700 font-bold">Mins</span>
-          </div>
-          <div className="p-2.5 rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <span className="block text-xl sm:text-2xl font-serif text-purple-950 font-bold">{timeLeft.secs}</span>
-            <span className="text-[9px] uppercase tracking-wider text-purple-700 font-bold">Secs</span>
-          </div>
-        </div>
-
-        {/* Primary Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 font-sans text-xs mb-8">
-          <button
-            onClick={handleDownloadIcs}
-            className="inline-flex items-center gap-1.5 text-slate-800 bg-white/60 backdrop-blur-xl border border-white/80 hover:bg-white/90 px-4 py-2 rounded-full transition shadow-sm"
-          >
-            <CalendarIcon className="w-3.5 h-3.5 text-purple-800" />
-            <span>Save to Calendar</span>
-          </button>
-          <a
-            href="https://maps.google.com/?q=GracePoint+Church+Kikuyu"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-sky-900 bg-sky-50/70 backdrop-blur-xl border border-sky-200/80 hover:bg-sky-100 px-4 py-2 rounded-full transition shadow-sm font-semibold"
-          >
-            <MapPin className="w-3.5 h-3.5 text-sky-700" />
-            <span>GracePoint Directions</span>
-          </a>
-        </div>
-
-        {/* ======================================================== */}
-        {/* HELPFUL GUEST CARDS (Programme & Dress Code)              */}
-        {/* ======================================================== */}
-        <div className="space-y-3 my-8 font-sans text-left text-xs max-w-sm mx-auto">
-          {/* Programme Accordion */}
-          <div className="rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 overflow-hidden shadow-sm">
-            <button 
-              onClick={() => setShowProgramme(!showProgramme)}
-              className="w-full p-3.5 flex items-center justify-between text-slate-800 font-semibold"
+      {/* ================= WEDDING SCROLL CONTAINER ================= */}
+      <div 
+        className="w-full max-w-xl relative flex flex-col items-center select-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        
+        {/* ================= 1. SEALED SCROLL COVER ================= */}
+        <AnimatePresence>
+          {!unrolled && (
+            <motion.div 
+              initial={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scaleY: 0.8, y: -20 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="w-full bg-[#fffdfa] rounded-[2.5rem] border-2 border-amber-300 shadow-2xl p-8 sm:p-14 text-center relative overflow-hidden z-30 cursor-pointer"
+              onClick={() => setUnrolled(true)}
             >
-              <span className="flex items-center gap-2 text-purple-950">
-                <Clock className="w-4 h-4 text-purple-700" />
-                Order of Events (Programme)
-              </span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${showProgramme ? "rotate-180" : ""}`} />
-            </button>
-            {showProgramme && (
-              <div className="px-4 pb-4 space-y-2 text-slate-600 text-[11px] border-t border-white/40 pt-2">
-                <p><strong>10:00 AM:</strong> Guest Seating & Welcome Refreshments</p>
-                <p><strong>11:00 AM:</strong> Holy Matrimony Ceremony (Sanctuary)</p>
-                <p><strong>01:00 PM:</strong> Wedding Luncheon & Fellowship Feast</p>
-                <p className="text-[10px] text-slate-400 italic mt-1">GracePoint Church is accessible via Southern Bypass / Waiyaki Way. Ample secured parking on grounds.</p>
-              </div>
-            )}
-          </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-amber-50/40 via-transparent to-amber-50/40 pointer-events-none" />
 
-          {/* Dress Code Accordion */}
-          <div className="rounded-2xl bg-white/40 backdrop-blur-xl border border-white/60 overflow-hidden shadow-sm">
-            <button 
-              onClick={() => setShowAttire(!showAttire)}
-              className="w-full p-3.5 flex items-center justify-between text-slate-800 font-semibold"
-            >
-              <span className="flex items-center gap-2 text-purple-950">
-                <Shirt className="w-4 h-4 text-purple-700" />
-                Attire & Colour Harmony
-              </span>
-              <ChevronDown className={`w-4 h-4 transition-transform ${showAttire ? "rotate-180" : ""}`} />
-            </button>
-            {showAttire && (
-              <div className="px-4 pb-4 text-slate-600 text-[11px] border-t border-white/40 pt-2 leading-relaxed">
-                <p>Garden Elegance / Smart Formal. Guests are warmly invited to celebrate with touches of <strong>Sky Blue</strong>, <strong>Lilac</strong>, or <strong>Royal Purple</strong>, or your finest Sunday best.</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ======================================================== */}
-        {/* BE OUR WEDDING PHOTOGRAPHER (GOOGLE PHOTOS QR CODE)      */}
-        {/* ======================================================== */}
-        <section className="my-8 p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm max-w-sm mx-auto">
-          <div className="inline-flex items-center justify-center p-3 rounded-full bg-sky-100 text-sky-800 mb-2 shadow-inner">
-            <Camera className="w-5 h-5" />
-          </div>
-          
-          <h3 className="font-sans text-xs uppercase tracking-[0.25em] text-purple-950 font-bold mb-1">
-            Be Our Wedding Photographer!
-          </h3>
-          
-          <p className="italic text-slate-700 text-xs max-w-xs mx-auto leading-relaxed mb-4">
-            "Capture our day through your eyes! Scan the code or tap the button to upload wedding photos directly into our shared Google Album."
-          </p>
-
-          {/* Scannable QR Code */}
-          <div className="my-3 p-3 bg-white rounded-2xl border border-amber-200 shadow-md inline-block max-w-[170px] mx-auto">
-            <img 
-              src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=58-28-135&data=https%3A%2F%2Fphotos.app.goo.gl%2FRnGz5kPM74uaZUQL8" 
-              alt="Scan to add photos" 
-              className="w-32 h-32 mx-auto rounded-lg"
-            />
-            <p className="font-sans text-[9px] text-slate-400 mt-1.5 uppercase tracking-widest font-semibold">
-              Point Camera to Scan
-            </p>
-          </div>
-
-          <div>
-            <a
-              href="https://photos.app.goo.gl/RnGz5kPM74uaZUQL8"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-purple-800 hover:opacity-95 text-white font-sans font-bold px-5 py-2.5 rounded-xl shadow-md transition text-xs uppercase tracking-wider"
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>Open Album & Add Photos 📸</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </section>
-
-        {/* ======================================================== */}
-        {/* TASTEFUL WEDDING GIFTS & BLESSINGS                      */}
-        {/* ======================================================== */}
-        <section className="my-8 p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm max-w-sm mx-auto">
-          <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-purple-950 font-bold block mb-2">
-            Wedding Gifts & Blessings
-          </span>
-          
-          <p className="italic text-slate-700 text-xs max-w-xs mx-auto leading-relaxed mb-4">
-            "Your presence, love, and prayers on our special day are the greatest gifts of all. If you would like to bless us with a wedding gift as we begin our new home, cash gifts are warmly appreciated."
-          </p>
-
-          {/* M-PESA Glass Box */}
-          <div className="p-4 rounded-2xl bg-white/60 border border-emerald-300 shadow-sm text-left font-sans">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500"></span> M-PESA Contribution
-              </span>
-              <Gift className="w-3.5 h-3.5 text-purple-900" />
-            </div>
-            
-            <p className="text-xl font-mono font-bold text-slate-900 tracking-wider">0704656076</p>
-            <p className="text-xs text-slate-600">
-              Account Name: <strong>Lily Kyalo</strong>
-            </p>
-            <p className="text-[10px] text-slate-400 italic mb-2.5">
-              (Wedding Committee Treasurer / Family Trustee)
-            </p>
-
-            <button
-              onClick={handleCopyMpesa}
-              className="w-full bg-white hover:bg-purple-50 text-purple-950 border border-purple-200 font-semibold py-2 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2"
-            >
-              {copiedMpesa ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-purple-700" />}
-              <span>{copiedMpesa ? "Copied to Clipboard!" : "Copy M-PESA Number"}</span>
-            </button>
-          </div>
-        </section>
-
-        {/* ======================================================== */}
-        {/* INTIMATE ONLINE RSVP                                     */}
-        {/* ======================================================== */}
-        <section className="my-8 p-6 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm max-w-sm mx-auto text-left">
-          <div className="text-center mb-5">
-            <h3 className="font-sans text-xs uppercase tracking-[0.25em] text-slate-500 font-bold mb-1">
-              Kindly Respond
-            </h3>
-            <p className="italic text-xs text-slate-500">
-              Please RSVP by September 30, 2026
-            </p>
-          </div>
-
-          {submitted ? (
-            <div className="p-5 bg-sky-50/90 border border-sky-200 rounded-2xl text-center space-y-1">
-              <Sparkles className="w-6 h-6 text-purple-700 mx-auto mb-1" />
-              <p className="text-base text-purple-950 font-bold">
-                Thank you, {guestName || "cherished guest"}!
+              <p className="font-garamond text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-500 font-medium mb-3">
+                Together with our families
               </p>
-              <p className="text-xs text-slate-600 font-sans">
-                Your response has been saved. We look forward to celebrating together at GracePoint Church, Kikuyu!
+              
+              <p className="font-garamond text-xs uppercase tracking-[0.25em] text-purple-900 font-semibold mb-6">
+                We Invite You To Celebrate The Wedding Of
               </p>
-            </div>
-          ) : (
-            <form onSubmit={handleRsvpSubmit} className="space-y-3 font-sans text-xs">
-              <div>
-                <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
-                  required
-                  placeholder="Your Full Name"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-white/80 focus:border-purple-800 outline-none bg-white/70 text-slate-900 transition shadow-inner"
-                />
+
+              {/* Names in Calligraphy (Cover) */}
+              <div className="py-3 space-y-1">
+                <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
+                  Chan Hadassah Njoki
+                </h1>
+                <div className="text-3xl font-garamond italic text-amber-600 my-1 font-light">
+                  &
+                </div>
+                <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
+                  Jim Njuguna Gitu
+                </h1>
               </div>
 
-              <div>
-                <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={guestEmail}
-                  onChange={(e) => setGuestEmail(e.target.value)}
-                  required
-                  placeholder="your.email@example.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-white/80 focus:border-purple-800 outline-none bg-white/70 text-slate-900 transition shadow-inner"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
-                  Will You Attend?
-                </label>
-                <select
-                  value={attendance}
-                  onChange={(e) => setAttendance(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-white/80 focus:border-purple-800 outline-none bg-white/70 text-slate-900 transition"
+              {/* Wax Seal Monogram */}
+              <div className="my-8 flex flex-col items-center">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-24 h-24 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-200 p-1 shadow-[0_0_35px_rgba(212,175,55,0.4)] flex items-center justify-center border-2 border-white"
                 >
-                  <option value="Attending">Joyfully Attending</option>
-                  <option value="Declining">Regretfully Declining</option>
-                </select>
+                  <div className="w-full h-full rounded-full bg-[#4a044e] flex flex-col items-center justify-center border border-amber-300 shadow-inner">
+                    <span className="font-garamond text-xl font-bold text-amber-200 tracking-widest">
+                      C & J
+                    </span>
+                    <span className="text-[9px] uppercase tracking-widest text-amber-300/80 font-garamond">
+                      10 • 30 • 26
+                    </span>
+                  </div>
+                </motion.div>
+                
+                <p className="font-garamond text-xs uppercase tracking-[0.25em] text-amber-800 font-semibold mt-4 animate-pulse">
+                  Tap or Swipe to Open Scroll 📜
+                </p>
               </div>
 
-              <div>
-                <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
-                  A Prayer or Note for Chan & Jim
-                </label>
-                <textarea
-                  rows={2}
-                  value={guestMessage}
-                  onChange={(e) => setGuestMessage(e.target.value)}
-                  placeholder="Leave a blessing or warm word..."
-                  className="w-full px-3.5 py-2 rounded-xl border border-white/80 focus:border-purple-800 outline-none bg-white/70 text-slate-900 transition shadow-inner"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading || submitted}
-                className="w-full bg-gradient-to-r from-purple-950 to-sky-800 hover:opacity-95 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-[11px] transition shadow-md disabled:opacity-50 mt-2 flex items-center justify-center gap-2"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{loading ? "Recording RSVP..." : "Confirm RSVP ✨"}</span>
-              </button>
-            </form>
+              <p className="font-garamond italic text-slate-500 text-xs">
+                Friday, October 30, 2026 • GracePoint Church, Kikuyu
+              </p>
+            </motion.div>
           )}
-        </section>
+        </AnimatePresence>
 
-        {/* ======================================================== */}
-        {/* LUSH BOTANICAL PETAL GARLAND (FOOTER)                    */}
-        {/* ======================================================== */}
-        <footer className="mt-8 pt-4 text-center relative">
-          <div className="w-full flex justify-center mb-3">
-            <svg className="w-84 h-24 text-purple-950" viewBox="0 0 340 90" fill="none">
-              <path d="M 20 40 C 90 70, 250 70, 320 40" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" />
-              <path d="M 40 45 C 110 65, 230 65, 300 45" stroke="#fef08a" strokeWidth="1" strokeDasharray="3 3" />
+        {/* ================= 2. UNROLLED WEDDING CARD ================= */}
+        <AnimatePresence>
+          {unrolled && (
+            <motion.main 
+              initial={{ opacity: 0, scaleY: 0.85, originY: 0 }}
+              animate={{ opacity: 1, scaleY: 1 }}
+              transition={{ duration: 0.75, ease: "easeOut" }}
+              className="w-full bg-[#fffdfa] rounded-[2.5rem] border-2 border-amber-200/90 shadow-[0_25px_60px_-15px_rgba(90,60,30,0.18)] p-6 sm:p-12 text-center relative overflow-hidden z-20 font-garamond"
+            >
+              
+              {/* ================= REALISTIC LUSH BOTANICAL BOUQUET HEADER (MATCHING YOUR PHOTO) ================= */}
+              <div className="w-full flex justify-center mb-6">
+                <svg className="w-88 h-32 text-purple-950" viewBox="0 0 380 120" fill="none">
+                  {/* Flowing Gold Foliage Branches */}
+                  <path d="M 30 75 C 110 35, 270 35, 350 75" stroke="#d4af37" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M 50 70 C 130 45, 250 45, 330 70" stroke="#fef08a" strokeWidth="1.2" strokeDasharray="3 3" />
 
-              <g transform="translate(170, 55)">
-                <path d="M-18,8 C-25,18 -10,28 0,20 C10,28 25,18 18,8 C24,-5 12,-20 0,-22 C-12,-20 -24,-5 -18,8 Z" fill="#581c87" />
-                <path d="M-12,5 C-18,12 -8,18 0,14 C8,18 18,12 12,5 C16,-4 8,-14 0,-15 C-8,-14 -16,-4 -12,5 Z" fill="#7e22ce" />
-                <path d="M-6,3 C-10,7 -4,10 0,8 C4,10 10,7 6,3 C8,-2 4,-8 0,-8 C-4,-8 -8,-2 -6,3 Z" fill="#f3e8ff" />
-              </g>
+                  {/* Eucalyptus & Sage Green Leaves */}
+                  <path d="M 120 40 C 105 25, 95 35, 105 50 C 115 48, 118 42, 120 40 Z" fill="#4d7c0f" opacity="0.85" />
+                  <path d="M 260 40 C 275 25, 285 35, 275 50 C 265 48, 262 42, 260 40 Z" fill="#4d7c0f" opacity="0.85" />
+                  <path d="M 85 55 C 70 45, 65 55, 75 68 C 82 65, 84 58, 85 55 Z" fill="#15803d" opacity="0.8" />
+                  <path d="M 295 55 C 310 45, 315 55, 305 68 C 298 65, 296 58, 295 55 Z" fill="#15803d" opacity="0.8" />
 
-              {[-45, 45].map((xOffset, i) => (
-                <g key={i} transform={`translate(${170 + xOffset}, 50)`}>
-                  <circle cx="-8" cy="5" r="7" fill="#c084fc" />
-                  <circle cx="8" cy="5" r="7" fill="#c084fc" />
-                  <circle cx="0" cy="-6" r="7" fill="#c084fc" />
-                  <circle cx="0" cy="0" r="3" fill="#ffffff" />
-                </g>
-              ))}
+                  {/* Sky-Blue Hydrangea Clusters (Left & Right Flanks) */}
+                  <g transform="translate(100, 62)">
+                    <path d="M -15 -5 C -25 -15, -5 -25, 0 -15 C 5 -25, 25 -15, 15 -5 C 25 5, 5 25, 0 15 C -5 25, -25 5, -15 -5 Z" fill="#7dd3fc" />
+                    <circle cx="-6" cy="-4" r="5" fill="#38bdf8" />
+                    <circle cx="6" cy="-4" r="5" fill="#38bdf8" />
+                    <circle cx="0" cy="5" r="5" fill="#0284c7" />
+                    <circle cx="0" cy="0" r="2" fill="#ffffff" />
+                  </g>
+                  <g transform="translate(280, 62)">
+                    <path d="M -15 -5 C -25 -15, -5 -25, 0 -15 C 5 -25, 25 -15, 15 -5 C 25 5, 5 25, 0 15 C -5 25, -25 5, -15 -5 Z" fill="#7dd3fc" />
+                    <circle cx="-6" cy="-4" r="5" fill="#38bdf8" />
+                    <circle cx="6" cy="-4" r="5" fill="#38bdf8" />
+                    <circle cx="0" cy="5" r="5" fill="#0284c7" />
+                    <circle cx="0" cy="0" r="2" fill="#ffffff" />
+                  </g>
 
-              {[-100, 100].map((xOffset, i) => (
-                <g key={i} transform={`translate(${170 + xOffset}, 45)`}>
-                  <circle cx="-7" cy="7" r="6" fill="#38bdf8" />
-                  <circle cx="7" cy="7" r="6" fill="#38bdf8" />
-                  <circle cx="-7" cy="-7" r="6" fill="#0284c7" />
-                  <circle cx="7" cy="-7" r="6" fill="#38bdf8" />
-                  <circle cx="0" cy="0" r="2.5" fill="#f0f9ff" />
-                </g>
-              ))}
+                  {/* Cream & Ivory Peony Rose (Soft Center Left) */}
+                  <g transform="translate(145, 52)">
+                    <ellipse cx="0" cy="0" rx="20" ry="18" fill="#fef3c7" />
+                    <path d="M -12 -5 C -16 -12, -4 -16, 0 -10 C 4 -16, 16 -12, 12 -5 C 16 2, 8 10, 0 12 C -8 10, -16 2, -12 -5 Z" fill="#fffbeb" />
+                    <circle cx="0" cy="0" r="5" fill="#fde68a" />
+                  </g>
 
-              <path d="M 150 68 C 145 78, 135 75, 138 65 C 142 66, 147 67, 150 68 Z" fill="#d4af37" />
-              <path d="M 190 68 C 195 78, 205 75, 202 65 C 198 66, 193 67, 190 68 Z" fill="#d4af37" />
-            </svg>
-          </div>
+                  {/* Soft Lilac & Lavender Garden Rose (Soft Center Right) */}
+                  <g transform="translate(235, 52)">
+                    <ellipse cx="0" cy="0" rx="20" ry="18" fill="#e9d5ff" />
+                    <path d="M -12 -5 C -16 -12, -4 -16, 0 -10 C 4 -16, 16 -12, 12 -5 C 16 2, 8 10, 0 12 C -8 10, -16 2, -12 -5 Z" fill="#d8b4fe" />
+                    <circle cx="0" cy="0" r="6" fill="#c084fc" />
+                  </g>
 
-          <p className="font-serif italic text-slate-700 text-sm">
-            Chan Hadassah Njoki & Jim Njuguna Gitu
-          </p>
-          <p className="font-sans text-[11px] text-slate-400 mt-1 uppercase tracking-widest">
-            GracePoint Church, Kikuyu • October 30, 2026
-          </p>
-        </footer>
-      </main>
+                  {/* Center Deep Royal Purple Grand Rose */}
+                  <g transform="translate(190, 46)">
+                    <path d="M -24 -10 C -34 -24, -14 -36, 0 -26 C 14 -36, 34 -24, 24 -10 C 32 6, 16 26, 0 28 C -16 26, -32 6, -24 -10 Z" fill="#4a044e" />
+                    <path d="M -16 -6 C -24 -16, -10 -24, 0 -18 C 10 -24, 24 -16, 16 -6 C 22 4, 10 18, 0 19 C -10 18, -22 4, -16 -6 Z" fill="#6b21a8" />
+                    <path d="M -8 -3 C -13 -9, -5 -14, 0 -10 C 5 -14, 13 -9, 8 -3 C 11 2, 5 10, 0 10 C -5 10, -11 2, -8 -3 Z" fill="#d8b4fe" />
+                    <circle cx="0" cy="0" r="3" fill="#faf5ff" />
+                  </g>
+
+                  {/* Gold Leaf Accents */}
+                  <path d="M 170 30 C 165 20, 155 22, 158 32 Z" fill="#d4af37" />
+                  <path d="M 210 30 C 215 20, 225 22, 222 32 Z" fill="#d4af37" />
+                </svg>
+              </div>
+
+              {/* Top Invitation Line */}
+              <p className="font-garamond text-xs sm:text-sm uppercase tracking-[0.3em] text-slate-500 font-semibold mb-6 leading-relaxed">
+                Together with our families,<br />we invite you to celebrate our wedding
+              </p>
+
+              {/* NAMES: Calligraphy */}
+              <div className="py-2 space-y-1">
+                <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
+                  Chan Hadassah Njoki
+                </h1>
+                <div className="text-3xl font-garamond italic text-amber-600 font-light my-2">
+                  &
+                </div>
+                <h1 className="text-5xl sm:text-6xl font-calligraphy text-purple-950 font-normal leading-none drop-shadow-sm">
+                  Jim Njuguna Gitu
+                </h1>
+              </div>
+
+              {/* Scripture Verse: 1 John 4:19 */}
+              <div className="my-6 border-y border-amber-200 py-4 max-w-sm mx-auto bg-amber-50/30 rounded-2xl px-4 shadow-sm">
+                <p className="italic text-slate-800 text-base sm:text-lg leading-relaxed">
+                  "We love because He first loved us."
+                </p>
+                <p className="font-garamond text-xs uppercase tracking-widest text-purple-900 font-bold mt-1.5">
+                  1 John 4:19
+                </p>
+              </div>
+
+              {/* Details Capsule (WHO, WHAT, WHEN, WHERE) */}
+              <div className="my-6 p-6 rounded-3xl bg-[#faf7f2] border border-amber-200 shadow-sm max-w-sm mx-auto">
+                <span className="font-garamond text-xs uppercase tracking-[0.25em] text-purple-900 font-bold block mb-1">
+                  Wedding Celebration
+                </span>
+                <p className="text-2xl sm:text-3xl text-slate-950 font-semibold tracking-wide">
+                  Friday, October 30, 2026
+                </p>
+                <p className="text-lg text-purple-950 font-medium mt-1">
+                  GracePoint Church
+                </p>
+                <p className="text-xs text-slate-500 font-garamond">
+                  Kikuyu, Kenya
+                </p>
+              </div>
+
+              {/* Countdown Timer */}
+              <div className="grid grid-cols-4 gap-2 max-w-xs mx-auto my-6 text-center font-garamond">
+                <div className="p-2.5 rounded-2xl bg-[#faf7f2] border border-amber-100 shadow-sm">
+                  <span className="block text-xl sm:text-2xl font-bold text-purple-950">{timeLeft.days}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Days</span>
+                </div>
+                <div className="p-2.5 rounded-2xl bg-[#faf7f2] border border-amber-100 shadow-sm">
+                  <span className="block text-xl sm:text-2xl font-bold text-purple-950">{timeLeft.hours}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Hours</span>
+                </div>
+                <div className="p-2.5 rounded-2xl bg-[#faf7f2] border border-amber-100 shadow-sm">
+                  <span className="block text-xl sm:text-2xl font-bold text-purple-950">{timeLeft.mins}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Mins</span>
+                </div>
+                <div className="p-2.5 rounded-2xl bg-[#faf7f2] border border-amber-100 shadow-sm">
+                  <span className="block text-xl sm:text-2xl font-bold text-purple-950">{timeLeft.secs}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">Secs</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center justify-center gap-3 font-garamond text-xs mb-8">
+                <button
+                  onClick={handleDownloadIcs}
+                  className="inline-flex items-center gap-1.5 text-slate-700 bg-white border border-amber-200 hover:border-amber-400 px-4 py-2 rounded-full transition shadow-sm"
+                >
+                  <CalendarIcon className="w-3.5 h-3.5 text-purple-900" />
+                  <span>Save to Calendar</span>
+                </button>
+                <a
+                  href="https://maps.google.com/?q=GracePoint+Church+Kikuyu"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sky-800 bg-sky-50 border border-sky-200 hover:bg-sky-100 px-4 py-2 rounded-full transition shadow-sm font-semibold"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-sky-700" />
+                  <span>GracePoint Directions</span>
+                </a>
+              </div>
+
+              {/* ================= BE OUR WEDDING PHOTOGRAPHER (GOOGLE PHOTOS QR CODE) ================= */}
+              <section className="my-8 p-6 rounded-3xl bg-[#faf7f2] border border-amber-200 shadow-sm max-w-sm mx-auto">
+                <div className="inline-flex items-center justify-center p-3 rounded-full bg-sky-100 text-sky-800 mb-2 shadow-inner">
+                  <Camera className="w-5 h-5" />
+                </div>
+                
+                <h3 className="font-garamond text-xs uppercase tracking-[0.25em] text-purple-950 font-bold mb-1">
+                  Be Our Wedding Photographer!
+                </h3>
+                
+                <p className="italic text-slate-700 text-xs max-w-xs mx-auto leading-relaxed mb-4">
+                  "Capture our day through your eyes! Scan the code or tap the button to upload wedding photos directly into our shared Google Album."
+                </p>
+
+                {/* Scannable QR Code */}
+                <div className="my-3 p-3 bg-white rounded-2xl border border-amber-200 shadow-md inline-block max-w-[170px] mx-auto">
+                  <img 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=58-28-135&data=https%3A%2F%2Fphotos.app.goo.gl%2FRnGz5kPM74uaZUQL8" 
+                    alt="Scan to add photos" 
+                    className="w-32 h-32 mx-auto rounded-lg"
+                  />
+                  <p className="font-garamond text-[10px] text-slate-400 mt-1.5 uppercase tracking-widest font-semibold">
+                    Point Camera to Scan
+                  </p>
+                </div>
+
+                <div>
+                  <a
+                    href="https://photos.app.goo.gl/RnGz5kPM74uaZUQL8"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-sky-600 to-purple-800 hover:opacity-95 text-white font-garamond font-bold px-5 py-2.5 rounded-xl shadow-md transition text-xs uppercase tracking-wider"
+                  >
+                    <Camera className="w-3.5 h-3.5" />
+                    <span>Open Album & Add Photos 📸</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </section>
+
+              {/* ================= WEDDING GIFTS & BLESSINGS ================= */}
+              <section className="my-8 p-6 rounded-3xl bg-[#faf7f2] border border-amber-200 shadow-sm max-w-sm mx-auto">
+                <span className="font-garamond text-xs uppercase tracking-[0.25em] text-purple-950 font-bold block mb-2">
+                  Wedding Gifts & Blessings
+                </span>
+                
+                <p className="italic text-slate-700 text-xs max-w-xs mx-auto leading-relaxed mb-4">
+                  "Your presence, love, and prayers on our special day are the greatest gifts of all. If you would like to bless us with a wedding gift as we begin our new home, cash gifts are warmly appreciated."
+                </p>
+
+                {/* M-PESA Box */}
+                <div className="p-4 rounded-2xl bg-white border border-emerald-300 shadow-sm text-left font-garamond">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] uppercase font-bold text-emerald-700 tracking-wider flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span> M-PESA Contribution
+                    </span>
+                    <Gift className="w-3.5 h-3.5 text-purple-900" />
+                  </div>
+                  
+                  <p className="text-xl font-mono font-bold text-slate-900 tracking-wider">0704656076</p>
+                  <p className="text-xs text-slate-600">
+                    Account Name: <strong>Lily Kyalo</strong>
+                  </p>
+                  <p className="text-[10px] text-slate-400 italic mb-2.5">
+                    (Wedding Committee Treasurer / Family Trustee)
+                  </p>
+
+                  <button
+                    onClick={handleCopyMpesa}
+                    className="w-full bg-white hover:bg-purple-50 text-purple-950 border border-purple-200 font-semibold py-2 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2"
+                  >
+                    {copiedMpesa ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-purple-700" />}
+                    <span>{copiedMpesa ? "Copied to Clipboard!" : "Copy M-PESA Number"}</span>
+                  </button>
+                </div>
+              </section>
+
+              {/* ================= CLEAN, MINIMAL RSVP (NO PRAYER NOTE) ================= */}
+              <section className="my-8 p-6 rounded-3xl bg-[#faf7f2] border border-amber-200 shadow-sm max-w-sm mx-auto text-left">
+                <div className="text-center mb-5">
+                  <h3 className="font-garamond text-xs uppercase tracking-[0.25em] text-slate-500 font-bold mb-1">
+                    Kindly Respond
+                  </h3>
+                  <p className="italic text-xs text-slate-500">
+                    Please RSVP by September 30, 2026
+                  </p>
+                </div>
+
+                {submitted ? (
+                  <div className="p-5 bg-sky-50 border border-sky-200 rounded-2xl text-center space-y-1">
+                    <Sparkles className="w-6 h-6 text-purple-700 mx-auto mb-1" />
+                    <p className="text-base text-purple-950 font-bold">
+                      Thank you, {guestName || "cherished guest"}!
+                    </p>
+                    <p className="text-xs text-slate-600 font-garamond">
+                      Your response has been saved. We look forward to celebrating together at GracePoint Church, Kikuyu!
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleRsvpSubmit} className="space-y-3 font-garamond text-xs">
+                    <div>
+                      <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        required
+                        placeholder="Your Full Name"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-purple-800 outline-none bg-white text-slate-900 transition shadow-inner"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        required
+                        placeholder="your.email@example.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-purple-800 outline-none bg-white text-slate-900 transition shadow-inner"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] uppercase tracking-wider text-slate-700 font-bold mb-1">
+                        Will You Attend?
+                      </label>
+                      <select
+                        value={attendance}
+                        onChange={(e) => setAttendance(e.target.value)}
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-purple-800 outline-none bg-white text-slate-900 transition"
+                      >
+                        <option value="Attending">Joyfully Attending</option>
+                        <option value="Declining">Regretfully Declining</option>
+                      </select>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading || submitted}
+                      className="w-full bg-gradient-to-r from-purple-950 to-sky-800 hover:opacity-95 text-white font-bold py-3 rounded-xl uppercase tracking-widest text-[11px] transition shadow-md disabled:opacity-50 mt-3 flex items-center justify-center gap-2 font-garamond"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>{loading ? "Recording RSVP..." : "Confirm RSVP ✨"}</span>
+                    </button>
+                  </form>
+                )}
+              </section>
+
+              {/* ================= FOOTER ================= */}
+              <footer className="mt-8 pt-4 text-center relative font-garamond">
+                <p className="text-2xl font-calligraphy text-purple-950 font-normal">
+                  Chan Hadassah Njoki & Jim Njuguna Gitu
+                </p>
+                <p className="text-[11px] text-slate-400 mt-1 uppercase tracking-widest font-garamond">
+                  GracePoint Church, Kikuyu • October 30, 2026
+                </p>
+              </footer>
+            </motion.main>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
