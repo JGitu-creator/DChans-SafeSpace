@@ -503,29 +503,102 @@ export default function WeddingInvite() {
               className="w-full bg-white/40 backdrop-blur-2xl rounded-[2.5rem] border border-white/70 shadow-[0_30px_90px_-20px_rgba(0,0,0,0.12)] ring-1 ring-white/50 p-6 sm:p-12 text-center relative overflow-hidden z-20 font-garamond"
             >
               
-              {/* SEAMLESSLY BLENDED BOTANICAL FLORAL HEADER (NO HARSH BOX EDGES) */}
-              <div className="w-full flex justify-center mb-6 px-2">
-                <div className="relative w-full max-w-sm h-48 sm:h-56 flex items-center justify-center">
-                  {/* Soft Pastel Ambient Glow Behind Flowers */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-sky-300/30 via-purple-300/35 to-pink-200/25 rounded-full blur-2xl pointer-events-none" />
-                  
-                  {/* Soft Feathered Floral Artwork (Seamless Vignette Blend) */}
-                  <img
-                    src="/floral-header.png"
-                    alt="Chan & Jim Wedding Floral Centerpiece"
-                    className="w-full h-full object-cover rounded-full mix-blend-multiply opacity-95 transition-opacity"
-                    style={{
-                      maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)",
-                      WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 35%, rgba(0,0,0,0) 80%)"
-                    }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      if (!target.src.includes("unsplash")) {
-                        target.src = "https://images.unsplash.com/photo-1519225429980-715cb0215aed?auto=format&fit=crop&w=900&q=80";
-                      }
-                    }}
-                  />
-                </div>
+              {/* ================= GUARANTEED BOTANICAL FLORAL GARLAND (NEVER BREAKS) ================= */}
+              <div className="w-full flex justify-center mb-6">
+                <svg viewBox="0 0 500 150" className="w-full max-w-sm h-auto" fill="none">
+                  <defs>
+                    <radialGradient id="rosePurple" cx="45%" cy="40%" r="60%">
+                      <stop offset="0%" stopColor="#9333ea" />
+                      <stop offset="40%" stopColor="#6b21a8" />
+                      <stop offset="85%" stopColor="#4a044e" />
+                      <stop offset="100%" stopColor="#2e1065" />
+                    </radialGradient>
+                    <radialGradient id="lilacRose" cx="40%" cy="35%" r="65%">
+                      <stop offset="0%" stopColor="#faf5ff" />
+                      <stop offset="45%" stopColor="#d8b4fe" />
+                      <stop offset="85%" stopColor="#a855f7" />
+                      <stop offset="100%" stopColor="#7e22ce" />
+                    </radialGradient>
+                    <radialGradient id="creamPeony" cx="40%" cy="35%" r="65%">
+                      <stop offset="0%" stopColor="#ffffff" />
+                      <stop offset="50%" stopColor="#fef3c7" />
+                      <stop offset="85%" stopColor="#fde68a" />
+                      <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.6" />
+                    </radialGradient>
+                    <radialGradient id="bluePetal" cx="35%" cy="35%" r="65%">
+                      <stop offset="0%" stopColor="#e0f2fe" />
+                      <stop offset="50%" stopColor="#38bdf8" />
+                      <stop offset="100%" stopColor="#0284c7" />
+                    </radialGradient>
+                    <radialGradient id="deepBluePetal" cx="35%" cy="35%" r="65%">
+                      <stop offset="0%" stopColor="#bae6fd" />
+                      <stop offset="60%" stopColor="#0284c7" />
+                      <stop offset="100%" stopColor="#0369a1" />
+                    </radialGradient>
+                    <linearGradient id="leafGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#84cc16" />
+                      <stop offset="50%" stopColor="#4d7c0f" />
+                      <stop offset="100%" stopColor="#14532d" />
+                    </linearGradient>
+                    <linearGradient id="goldVine" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%" stopColor="#ca8a04" stopOpacity="0.3" />
+                      <stop offset="30%" stopColor="#eab308" />
+                      <stop offset="50%" stopColor="#fef08a" />
+                      <stop offset="70%" stopColor="#eab308" />
+                      <stop offset="100%" stopColor="#ca8a04" stopOpacity="0.3" />
+                    </linearGradient>
+                  </defs>
+
+                  {/* Golden Branches */}
+                  <path d="M 40 95 C 150 45, 350 45, 460 95" stroke="url(#goldVine)" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d="M 80 88 C 170 60, 330 60, 420 88" stroke="#fef08a" strokeWidth="1" strokeDasharray="4 4" opacity="0.8" />
+
+                  {/* Organic Eucalyptus Leaves */}
+                  <path d="M 120 70 C 90 45, 80 65, 95 85 C 110 80, 118 75, 120 70 Z" fill="url(#leafGrad)" opacity="0.9" />
+                  <path d="M 380 70 C 410 45, 420 65, 405 85 C 390 80, 382 75, 380 70 Z" fill="url(#leafGrad)" opacity="0.9" />
+                  <path d="M 160 50 C 145 25, 130 35, 140 58 C 150 55, 158 52, 160 50 Z" fill="url(#leafGrad)" opacity="0.85" />
+                  <path d="M 340 50 C 355 25, 370 35, 360 58 C 350 55, 342 52, 340 50 Z" fill="url(#leafGrad)" opacity="0.85" />
+
+                  {/* Sky-Blue Hydrangea Clusters Left */}
+                  <g transform="translate(145, 85)">
+                    <path d="M 0 -14 C -7 -14, -10 -4, 0 0 C 10 -4, 7 -14, 0 -14 Z" fill="url(#bluePetal)" />
+                    <path d="M 0 14 C -7 14, -10 4, 0 0 C 10 4, 7 14, 0 14 Z" fill="url(#bluePetal)" />
+                    <path d="M -14 0 C -14 -7, -4 -10, 0 0 C -4 10, -14 7, -14 0 Z" fill="url(#deepBluePetal)" />
+                    <path d="M 14 0 C 14 -7, 4 -10, 0 0 C 4 10, 14 7, 14 0 Z" fill="url(#deepBluePetal)" />
+                    <circle cx="0" cy="0" r="2" fill="#ffffff" />
+                  </g>
+
+                  {/* Sky-Blue Hydrangea Clusters Right */}
+                  <g transform="translate(355, 85)">
+                    <path d="M 0 -14 C -7 -14, -10 -4, 0 0 C 10 -4, 7 -14, 0 -14 Z" fill="url(#bluePetal)" />
+                    <path d="M 0 14 C -7 14, -10 4, 0 0 C 10 4, 7 14, 0 14 Z" fill="url(#bluePetal)" />
+                    <path d="M -14 0 C -14 -7, -4 -10, 0 0 C -4 10, -14 7, -14 0 Z" fill="url(#deepBluePetal)" />
+                    <path d="M 14 0 C 14 -7, 4 -10, 0 0 C 4 10, 14 7, 14 0 Z" fill="url(#deepBluePetal)" />
+                    <circle cx="0" cy="0" r="2" fill="#ffffff" />
+                  </g>
+
+                  {/* Cream & Ivory Peony Rose (Center-Left) */}
+                  <g transform="translate(195, 75)">
+                    <path d="M -26 0 C -34 -18, -12 -32, 0 -22 C 12 -32, 34 -18, 26 0 C 32 18, 14 30, 0 30 C -14 30, -32 18, -26 0 Z" fill="url(#creamPeony)" opacity="0.9" />
+                    <path d="M -18 0 C -24 -12, -8 -22, 0 -15 C 8 -22, 24 -12, 18 0 C 22 12, 8 20, 0 20 C -8 20, -22 12, -18 0 Z" fill="#ffffff" opacity="0.95" />
+                    <circle cx="0" cy="1" r="3" fill="#fde68a" />
+                  </g>
+
+                  {/* Soft Lilac & Lavender Garden Rose (Center-Right) */}
+                  <g transform="translate(305, 75)">
+                    <path d="M -26 0 C -34 -18, -12 -32, 0 -22 C 12 -32, 34 -18, 26 0 C 32 18, 14 30, 0 30 C -14 30, -32 18, -26 0 Z" fill="url(#lilacRose)" opacity="0.9" />
+                    <path d="M -18 0 C -24 -12, -8 -22, 0 -15 C 8 -22, 24 -12, 18 0 C 22 12, 8 20, 0 20 C -8 20, -22 12, -18 0 Z" fill="#faf5ff" opacity="0.95" />
+                    <circle cx="0" cy="1" r="3" fill="#c084fc" />
+                  </g>
+
+                  {/* Center Grand Deep Royal Purple Rose */}
+                  <g transform="translate(250, 68)">
+                    <path d="M -34 -5 C -44 -24, -16 -40, 0 -28 C 16 -40, 44 -24, 34 -5 C 42 18, 20 36, 0 38 C -20 36, -42 18, -34 -5 Z" fill="url(#rosePurple)" />
+                    <path d="M -22 -3 C -28 -16, -10 -26, 0 -18 C 10 -26, 28 -16, 22 -3 C 28 12, 12 24, 0 25 C -12 24, -28 12, -22 -3 Z" fill="#6b21a8" />
+                    <path d="M -14 -2 C -18 -10, -6 -16, 0 -11 C 6 -16, 18 -10, 14 -2 C 17 7, 7 15, 0 15 C -7 15, -17 7, -14 -2 Z" fill="#9333ea" />
+                    <circle cx="0" cy="1" r="2" fill="#ffffff" />
+                  </g>
+                </svg>
               </div>
 
               {/* Top Line */}
